@@ -1,0 +1,168 @@
+<div class="content-wrapper">
+  <br class="visible-xs" />
+  <br class="visible-xs" />
+  <form #verservicioForm="ngForm">
+    <section class="content">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="box">
+            <div class="box-header with-border">
+              <h3 class="box-title negritas">Nuevo servicio</h3>
+              <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                  <i class="fa fa-minus"></i>
+                </button>
+              </div>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <div class="input-group">
+                <div class="col-md-12">
+                  <mat-form-field class="full-width">
+                    <input matInput type="text" id="busqueda" name="busqueda" [(ngModel)]="text_busqueda" #busqueda="ngModel" placeholder="Buscar por: Orden de servicio, teléfono, dirección, nombre">
+                  </mat-form-field>
+                </div>
+                <!--<input type="text" id="busqueda" name="busqueda" [(ngModel)]="text_busqueda" #busqueda="ngModel" required placeholder="Buscar por: Orden de servicio, teléfono, dirección, nombre" class="form-control">-->
+                <span class="input-group-btn">
+                  <button type="submit" class="pull-center btn btn-default btn-default-rojo" (click)="buscar()" [disabled]="preventAbuse">
+                    {{ preventAbuse ? 'Buscando...' : 'Buscar' }}
+                  </button>
+                </span>
+                <span class="input-group-btn">
+                </span>
+                <span class="input-group-btn">
+                  <button routerLink="/addcliente" type="button" class="pull-center btn btn-default btn-default-rojo">Nuevo cliente</button>
+                </span>
+              </div>
+              <div *ngIf="valid"
+                   class="alert alert-danger col-md-8">
+                <div>
+                  Escribe un parametro de busqueda.
+                </div>
+              </div>
+              <br />
+              <div class="col-md-12">
+                <div class="col-md-12" *ngIf="isvisible_orden" style="padding:0;">
+                  <label>Orden de servicio</label>
+                  <div class="example-container mat-elevation-z2">
+                    <mat-table #table [dataSource]="dataSource_ordenes">
+
+                      <!-- Teléfono Column -->
+                      <ng-container matColumnDef="folio">
+                        <mat-header-cell *matHeaderCellDef> No. Servicio </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                          <a style="cursor:pointer; color:inherit" [routerLink]="['/serviciodetalle', element.id]">{{element.folio}}</a>
+                        </mat-cell>
+                      </ng-container>
+
+                      <ng-container matColumnDef="persona">
+                        <mat-header-cell *matHeaderCellDef> Cliente. </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                          <a style="cursor:pointer; color:inherit" [routerLink]="['/serviciodetalle', element.id]">{{element.persona}}</a>
+                        </mat-cell>
+                      </ng-container>
+
+                      <mat-header-row *matHeaderRowDef="displayed_ordenes"></mat-header-row>
+                      <mat-row *matRowDef="let row; columns: displayed_ordenes;"></mat-row>
+                    </mat-table>
+
+                  </div>
+                </div>
+                <!--<div class="col-md-12" *ngIf="result_ordenes == ''">
+                  <h4>No hay resultados</h4>
+                </div>-->
+
+                <div class="col-md-12" *ngIf="isvisible_telefono" style="padding:0;">
+                  <label>Teléfono</label>
+                  <div class="example-container mat-elevation-z2">
+                    <mat-table #table [dataSource]="dataSource_telefonos">
+
+                      <!-- Teléfono Column -->
+                      <ng-container matColumnDef="telefono">
+                        <mat-header-cell *matHeaderCellDef> Teléfono. </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                          <a style="cursor:pointer; color:inherit" [routerLink]="['/serviciodetalle', element.id]">{{element.telefono}}</a>
+                        </mat-cell>
+                      </ng-container>
+
+                      <ng-container matColumnDef="persona">
+                        <mat-header-cell *matHeaderCellDef> Cliente. </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                          <a style="cursor:pointer; color:inherit" [routerLink]="['/serviciodetalle', element.id]">{{element.persona}}</a>
+                        </mat-cell>
+                      </ng-container>
+
+                      <mat-header-row *matHeaderRowDef="displayed_telefonos"></mat-header-row>
+                      <mat-row *matRowDef="let row; columns: displayed_telefonos;"></mat-row>
+                    </mat-table>
+
+                  </div>
+                </div>
+
+                <div class="col-md-12" *ngIf="isvisible_direccion" style="padding:0;">
+                  <label>Dirección</label>
+                  <div class="example-container mat-elevation-z2">
+                    <mat-table #table [dataSource]="dataSource_direcciones">
+
+                      <!-- Teléfono Column -->
+                      <ng-container matColumnDef="direccion">
+                        <mat-header-cell *matHeaderCellDef> Dirección. </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                          <a style="cursor:pointer; color:inherit" [routerLink]="['/serviciodetalle', element.id]" >{{element.direccion}}</a>
+                        </mat-cell>
+                      </ng-container>
+
+                      <ng-container matColumnDef="persona">
+                        <mat-header-cell *matHeaderCellDef> Cliente. </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                          <a style="cursor:pointer; color:inherit" [routerLink]="['/serviciodetalle', element.id]" >{{element.persona}}</a>
+                        </mat-cell>
+                      </ng-container>
+
+                      <mat-header-row *matHeaderRowDef="displayed_direcciones"></mat-header-row>
+                      <mat-row *matRowDef="let row; columns: displayed_direcciones;"></mat-row>
+                    </mat-table>
+
+                  </div>
+                </div>
+
+                <div class="col-md-12" *ngIf="isvisible_persona" style="padding:0;">
+                  <label>Cliente</label>
+                  <div class="example-container mat-elevation-z2">
+                    <mat-table #table [dataSource]="dataSource_personas">
+
+                      <!-- Teléfono Column -->
+                      <ng-container matColumnDef="persona">
+                        <mat-header-cell *matHeaderCellDef> Cliente. </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                          <a style="cursor:pointer; color:inherit" [routerLink]="['/serviciodetalle', element.id]" >{{element.persona}}</a>
+                        </mat-cell>
+                      </ng-container>
+
+                      <ng-container matColumnDef="direccion">
+                        <mat-header-cell *matHeaderCellDef> Direccón. </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                          <a style="cursor:pointer; color:inherit" [routerLink]="['/serviciodetalle', element.id]" >{{element.direccion}}</a>
+                        </mat-cell>
+                      </ng-container>
+
+                      <mat-header-row *matHeaderRowDef="displayed_personas"></mat-header-row>
+                      <mat-row *matRowDef="let row; columns: displayed_personas;"></mat-row>
+                    </mat-table>
+
+                  </div>
+                </div>
+                <div class="col-md-12" *ngIf="result_personas == 0 && result_direcciones == 0 && result_telefonos == 0 && result_ordenes == 0">
+                  <h4>No hay resultados para la busqueda <span style="color:#A5000D; font-weight:bold;">{{text_busqueda}}</span></h4>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- /.box -->
+        </div>
+        <!-- /.col -->
+      </div>
+    </section>
+    <!-- /.content -->
+  </form>
+</div>

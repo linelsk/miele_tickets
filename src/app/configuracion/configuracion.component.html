@@ -1,0 +1,104 @@
+<div class="content-wrapper">
+  <br class="visible-xs" />
+  <br class="visible-xs" />
+  <section class="content">
+    <div class="row">
+      <form #cambiarForm="ngForm">
+        <div class="col-md-6">
+          <div class="box">
+            <div class="box-header with-border">
+              <h3 class="box-title negritas">Cambiar contraseña</h3>
+              <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                  <i class="fa fa-minus"></i>
+                </button>
+              </div>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <div class="col-xs-12" style="padding:0">
+                <div class="form-group col-xs-12">
+                  <label>Contraseña actual</label>
+                  <input type="password" class="form-control" id="old" name="old" [(ngModel)]="passold" #old="ngModel" required>
+                  <div *ngIf="old.invalid && (old.dirty || old.touched)"
+                       class="alert alert-danger">
+                    <div *ngIf="old.errors.required">
+                      Contraseña actual requerida.
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group col-xs-12">
+                  <label>Nueva contraseña</label>
+                  <input type="password" class="form-control" id="new" name="new" [(ngModel)]="passnew" #new="ngModel" required>
+                  <div *ngIf="new.invalid && (new.dirty || new.touched)"
+                       class="alert alert-danger">
+                    <div *ngIf="new.errors.required">
+                      Nueva contraseña requerida.
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group col-xs-12">
+                  <label>Repite la contraseña</label>
+                  <input type="password" class="form-control" id="repeat" name="repeat" [(ngModel)]="repeatpass" #repeat="ngModel" required (ngModelChange)="validacion_form($event)">
+                  <div *ngIf="repeat.invalid && (repeat.dirty || repeat.touched)"
+                       class="alert alert-danger">
+                    <div *ngIf="repeat.errors.required">
+                      Repite la contraseña.
+                    </div>
+                  </div>
+                  <div class="alert alert-danger" *ngIf="validar">
+                    <div>
+                      {{message}}
+                    </div>
+                  </div>
+                  <div class="alert" [className]="aviso" *ngIf="validar_pass">
+                    <span>{{message}}</span>
+                  </div>
+                </div>                
+              </div>
+            </div>
+          </div>
+          <div class="col-xs-12 text-center">
+            <button type="submit" class="pull-center btn btn-default btn-default-rojo" [disabled]="validar" (click)="cambiarpass($event)">
+              Guardar
+            </button>
+          </div>
+          <!-- /.box -->
+        </div>
+      </form>
+      <div class="col-md-6">
+        <div class="box">
+          <div class="box-header with-border">
+            <h3 class="box-title negritas">Configuración</h3>
+            <div class="box-tools pull-right">
+              <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                <i class="fa fa-minus"></i>
+              </button>
+            </div>
+          </div>
+          <!-- /.box-header -->
+          <div class="box-body">
+            <div class="col-xs-12" style="padding:0">
+              <div class="form-group col-xs-12">
+                <label>Cerrar sesión en todos tus dispositivos</label>
+                <div class="alert" [className]="aviso" *ngIf="validar_cerrar">
+                  <span>{{message_cerrar}}</span>
+                </div>
+                <div class="col-xs-12 text-center">
+                  <br />
+                  <button type="submit" class="pull-center btn btn-default btn-default-rojo" (click)="cerrarsesiones($event)">
+                    Da click aqui
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!-- /.box -->
+      </div>
+      <!-- /.col -->
+    </div>
+  </section>
+  <!-- /.content -->
+</div>

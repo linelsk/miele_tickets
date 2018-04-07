@@ -1,0 +1,72 @@
+<div class="login_wrapper">
+  <form #loginForm="ngForm">
+    <div>
+      <div class="text-center">
+        <img class="img-responsive" style="max-width:100%; max-height:80%" src="../assets/img/miele-logo-immer-besser.png" />
+      </div>
+      <div class="login-back">
+        <br />
+        <br />
+        <div class="margin-bottom txtpading">
+          <mat-form-field class="full-width">
+            <input matInput type="text" id="namelogin" name="namelogin" [(ngModel)]="email" #namelogin="ngModel" placeholder="Email" required pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,6})+$" >
+          </mat-form-field>
+          <div *ngIf="namelogin.invalid && (namelogin.dirty || namelogin.touched)"
+               class="alert alert-danger">
+            <div *ngIf="namelogin.errors.required">
+              Email requerido.
+            </div>
+            <div *ngIf="namelogin.errors && namelogin.errors.pattern">
+              El Email no es valido (ej. ej@do.com)
+            </div>
+          </div>
+        </div>
+        <div class="margin-bottom txtpading">
+          <mat-form-field class="full-width">
+            <input matInput type="password" id="pass" name="pass" [(ngModel)]="password" #pass="ngModel" placeholder="Contraseña" minlength="8" required>
+          </mat-form-field>
+          <div *ngIf="pass.invalid && (pass.dirty || pass.touched)"
+               class="alert alert-danger">
+            <div *ngIf="pass.errors.required">
+              Contraseña requerido.
+            </div>
+            <div *ngIf="pass.errors.minlength">
+              La contraseña debe tener por lo menos 8 caracteres.
+            </div>
+          </div>
+          <div class="alert alert-danger" *ngIf="validar">
+            <div>
+              {{message}}
+            </div>
+          </div>
+        </div>
+        
+        <div class="margin-bottom txtpading">
+          <div class="col-xs-12" style="padding:0;">
+            <div class="col-xs-12 col-lg-6 text-left" style="padding:0;">
+              <mat-checkbox style="padding-right:10px"
+                            [(ngModel)]="previsita"
+                            name="cb"
+                            value="1"
+                            (change)="isIndeterminate = false"
+                            [indeterminate]="isIndeterminate"
+                            [disabled]="isDisabled">
+                Recordarme
+              </mat-checkbox>
+            </div>
+            <div class="col-xs-12 col-lg-6 text-right" style="padding:0;">
+              <button type="submit" (click)="login($event)" class="pull-center btn btn-default" [disabled]="loginForm.invalid">Entrar</button>
+            </div>
+          </div>
+        </div>
+        <div class="text-center">
+          <br />
+          <br />
+          <a routerLink="/recuperarpassword" target="_blank" style="color: #A5000D; cursor:pointer; background: linear-gradient(right, #7e7e7e 0%, #fff 100%); left: 0;">¿Olvidaste tu contraseña?</a>
+        </div>
+        <br />
+      </div>
+      <br />
+    </div>
+  </form>
+</div>

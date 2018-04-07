@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Miele</title>
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <style>
+
+    .cssload-container {
+      position: relative;
+    }
+
+    .cssload-whirlpool,
+    .cssload-whirlpool::before,
+    .cssload-whirlpool::after {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      border: 3px solid rgb(165,0,13);
+      border-left-color: rgb(255,255,255);
+      border-radius: 2747px;
+      -o-border-radius: 2747px;
+      -ms-border-radius: 2747px;
+      -webkit-border-radius: 2747px;
+      -moz-border-radius: 2747px;
+    }
+
+    .cssload-whirlpool {
+      margin: -69px 0 0 -69px;
+      height: 138px;
+      width: 138px;
+      animation: cssload-rotate 1150ms linear infinite;
+      -o-animation: cssload-rotate 1150ms linear infinite;
+      -ms-animation: cssload-rotate 1150ms linear infinite;
+      -webkit-animation: cssload-rotate 1150ms linear infinite;
+      -moz-animation: cssload-rotate 1150ms linear infinite;
+    }
+
+      .cssload-whirlpool::before {
+        content: "";
+        margin: -63px 0 0 -63px;
+        height: 121px;
+        width: 121px;
+        animation: cssload-rotate 1150ms linear infinite;
+        -o-animation: cssload-rotate 1150ms linear infinite;
+        -ms-animation: cssload-rotate 1150ms linear infinite;
+        -webkit-animation: cssload-rotate 1150ms linear infinite;
+        -moz-animation: cssload-rotate 1150ms linear infinite;
+      }
+
+      .cssload-whirlpool::after {
+        content: "";
+        margin: -80px 0 0 -80px;
+        height: 154px;
+        width: 154px;
+        animation: cssload-rotate 2300ms linear infinite;
+        -o-animation: cssload-rotate 2300ms linear infinite;
+        -ms-animation: cssload-rotate 2300ms linear infinite;
+        -webkit-animation: cssload-rotate 2300ms linear infinite;
+        -moz-animation: cssload-rotate 2300ms linear infinite;
+      }
+
+
+
+    @keyframes cssload-rotate {
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    @-o-keyframes cssload-rotate {
+      100% {
+        -o-transform: rotate(360deg);
+      }
+    }
+
+    @-ms-keyframes cssload-rotate {
+      100% {
+        -ms-transform: rotate(360deg);
+      }
+    }
+
+    @-webkit-keyframes cssload-rotate {
+      100% {
+        -webkit-transform: rotate(360deg);
+      }
+    }
+
+    @-moz-keyframes cssload-rotate {
+      100% {
+        -moz-transform: rotate(360deg);
+      }
+    }
+  </style>
+</head>
+<body hold-transition style="background-color:#E2E1DD">
+  <app-root>
+    <div class="cssload-container">
+      <div class="cssload-whirlpool"></div>
+    </div>
+  </app-root>
+</body>
+</html>

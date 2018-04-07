@@ -1,0 +1,295 @@
+
+<div class="content-wrapper">
+  <br class="visible-xs" />
+  <br class="visible-xs" />
+  <form #registroForm="ngForm">
+    <section class="content">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="box">
+            <div class="box-header with-border">
+              <h3 class="box-title negritas">Nuevo técnico</h3>
+              <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                  <i class="fa fa-minus"></i>
+                </button>
+              </div>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <div class="col-xs-12" style="padding:0">
+                <div class="form-group col-md-4">
+                  <label>Número de almacen</label>
+                  <input type="text" class="form-control" id="noalmacen" name="noalmacen" [(ngModel)]="almacen" #noalmacen="ngModel" required (ngModelChange)="validacion_form($event)">
+                  <div *ngIf="noalmacen.invalid && (noalmacen.dirty || noalmacen.touched)"
+                       class="alert alert-danger">
+                    <div *ngIf="noalmacen.errors.required">
+                      Número de almacen requerido.
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group col-md-8">
+                  <label>Actividad</label><br />
+                  <mat-checkbox style="padding-right:10px"
+                                id="actividad"
+                                name="actividad"
+                                [(ngModel)]="previsita"
+                                #actividad="ngModel"
+                                value="1"
+                                (change)="check($event, 1)">
+                    Previsita
+                  </mat-checkbox>
+                  <br class="visible-xs" />
+                  <mat-checkbox style="padding-right:10px"
+                                [(ngModel)]="instalacion"
+                                name="cb"
+                                value="2"
+                                (change)="check($event, 2)">
+                    Instalación
+                  </mat-checkbox>
+                  <br class="visible-xs" />
+                  <mat-checkbox style="padding-right:10px"
+                                [(ngModel)]="reparacion"
+                                name="cb"
+                                value="3"
+                                (change)="check($event, 3)">
+                    Mant./Reparación
+                  </mat-checkbox>
+                  <br class="visible-xs" />
+                  <mat-checkbox style="padding-right:10px"
+                                [(ngModel)]="profesional"
+                                name="cb"
+                                value="4"
+                                (change)="check($event, 4)">
+                    Miele profesional
+                  </mat-checkbox>
+                  <div class="alert alert-danger" *ngIf="validar">
+                    <div>
+                      {{message}}
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="form-group col-md-4">
+                <label>Nombre(s)</label>
+                <input type="text" class="form-control" id="nombre" name="nombre" [(ngModel)]="name" #nombre="ngModel" required (ngModelChange)="validacion_form($event)">
+                <div *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)"
+                     class="alert alert-danger">
+                  <div *ngIf="nombre.errors.required">
+                    Nombres(s) requerido.
+                  </div>
+                </div>
+              </div>
+              <div class="form-group col-md-4">
+                <label>Apellido paterno</label>
+                <input type="text" class="form-control" id="aparteno" name="aparteno" #aparteno="ngModel" [(ngModel)]="paterno" required (ngModelChange)="validacion_form($event)">
+                <div *ngIf="aparteno.invalid && (aparteno.dirty || aparteno.touched)"
+                     class="alert alert-danger">
+                  <div *ngIf="aparteno.errors.required">
+                    Apellido paterno requerido.
+                  </div>
+                </div>
+              </div>
+              <div class="form-group col-md-4">
+                <label>Apellido materno</label>
+                <input type="text" class="form-control" id="amaterno" name="amaterno" #amaterno="ngModel" [(ngModel)]="materno">
+              </div>
+              <div class="col-xs-12" style="padding:0;">
+                <div class="form-group col-md-4">
+                  <label>Email</label>
+                  <input type="text" class="form-control" id="mail" name="mail" #mail="ngModel" [(ngModel)]="email" (ngModelChange)="validacion_form($event)" required pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,6})+$">
+                  <div *ngIf="mail.invalid && (mail.dirty || mail.touched)"
+                       class="alert alert-danger">
+                    <div *ngIf="mail.errors.required">
+                      Email requerido.
+                    </div>
+                    <div *ngIf="mail.errors && mail.errors.pattern">
+                      El Email no es valido (ej. ej@do.com)
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group col-md-4">
+                  <label>Télefono fijo</label>
+                  <input [textMask]="{mask: mask, guide: false}" type="text" class="form-control" name="telefono" [(ngModel)]="telefono">
+                </div>
+                <div class="form-group col-md-4">
+                  <label>Télefono celular</label>
+                  <input [textMask]="{mask: mask, guide: false}" type="text" class="form-control" id="movil" name="movil" #movil="ngModel" [(ngModel)]="celular" (ngModelChange)="validacion_form($event)" required>
+                  <div *ngIf="movil.invalid && (movil.dirty || movil.touched)"
+                       class="alert alert-danger">
+                    <div *ngIf="movil.errors.required">
+                      Télefono celular requerido.
+                    </div>
+                    <!--<div *ngIf="movil.errors && movil.errors.pattern">
+                      Télefono celular solo puede contener números.
+                    </div>--<!--pattern="[0-9]+"-->
+
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group col-md-4">
+                <label>Tipo de técnico</label>
+                <select type="text" class="form-control" id="tecnico" name="tecnico" #tecnico="ngModel" [(ngModel)]="tipotecnico" (ngModelChange)="validacion_form($event)" required>
+                  <option *ngFor='let value of tipo; trackBy: index;' value="{{value.id}}">{{value.desc_tipo}}</option>
+                  <!--<option value="1">Tipo 1</option>
+                  <option value="2">Tipo 2</option>-->
+                </select>
+                <div *ngIf="tecnico.invalid && (tecnico.dirty || tecnico.touched)"
+                     class="alert alert-danger">
+                  <div *ngIf="tecnico.errors.required">
+                    Tipo de técnico requerido.
+                  </div>
+                </div>
+              </div>
+              <!--<div class="form-group col-md-4">
+                <label>Área de cobertura</label>
+                <tag-input [(ngModel)]="tipocobertura" name="cobertura"
+                           [addOnBlur]="true"
+                           [clearOnBlur]="true"
+                           [onRemoving]="onRemoving"
+                           [onAdding]="onAdding">
+                  <tag-input-dropdown [autocompleteItems]="autocompleteItems"
+                                      [displayBy]="'name'"
+                                      [identifyBy]="'id'">
+                  </tag-input-dropdown>
+                </tag-input>
+              </div>-->
+              <div class="form-group col-md-4">
+                <label>Área de cobertura</label><br />
+                <mat-checkbox style="padding-right:10px"
+                              [(ngModel)]="region1"
+                              name="cb"
+                              value="1"
+                              (change)="check_cobertura($event, 1)">
+                  Región 1
+                </mat-checkbox>
+                <mat-checkbox style="padding-right:10px"
+                              [(ngModel)]="region2"
+                              name="cb"
+                              value="2"
+                              (change)="check_cobertura($event, 2)">
+                  Región 2
+                </mat-checkbox>
+                <mat-checkbox style="padding-right:10px"
+                              [(ngModel)]="region3"
+                              name="cb"
+                              value="3"
+                              (change)="check_cobertura($event, 3)">
+                  Región 3
+                </mat-checkbox>
+                <mat-checkbox style="padding-right:10px"
+                              [(ngModel)]="region4"
+                              name="cb"
+                              value="4"
+                              (change)="check_cobertura($event, 4)">
+                  Región 4
+                </mat-checkbox>
+                <br class="visible-xs" />
+                <mat-checkbox style="padding-right:10px"
+                              [(ngModel)]="region5"
+                              name="cb"
+                              value="5"
+                              (change)="check_cobertura($event, 5)">
+                  Región 5
+                </mat-checkbox>
+                <mat-checkbox style="padding-right:10px"
+                              [(ngModel)]="region6"
+                              name="cb"
+                              value="6"
+                              (change)="check_cobertura($event, 6)">
+                  Región 6
+                </mat-checkbox>
+                <div class="alert alert-danger" *ngIf="validar_cobertura">
+                  <div>
+                    {{message}}
+                  </div>
+                </div>
+              </div>
+              <div class="form-group col-md-4 col-xs-12 text-left">
+                <label>Productos</label><br />
+                <div *ngFor='let value of values; trackBy: index;'>
+                  <mat-slide-toggle class="example-margin"
+                                    name="{{ value.desc_producto }}"
+                                    [color]="color"
+                                    [checked]="false"
+                                    [disabled]="disabled"
+                                    (change)="slide($event, value.id, value.desc_producto)">
+                    {{ value.desc_producto }}
+                  </mat-slide-toggle>
+                </div>
+                <div class="alert alert-danger" *ngIf="validar_slide">
+                  <div>
+                    {{message_slide}}
+                  </div>
+                </div>
+                <!--<label style="padding-top: 5px; padding-bottom: 20px; padding-right:30px; width:250px; color:#000; font-size:15px">Refrigeración</label>
+                <mat-slide-toggle id="refrigeracion"
+                                  name="refrigeracion"
+                                  [(ngModel)]="refri"
+                                  #refrigeracion="ngModel"
+                                  value="1"
+                                  [color]="primary"
+                                  [checked]="false"
+                                  (change)="slide($event)">
+                </mat-slide-toggle><br />
+                <label style="padding-top: 5px; padding-bottom: 20px; padding-right:30px; width:250px; color:#000; font-size:15px">Línea blanca</label>
+                <mat-slide-toggle id="blanca"
+                                  name="blanca"
+                                  [(ngModel)]="lineablanca"
+                                  #blanca="ngModel"
+                                  value="2"
+                                  [color]="primary"
+                                  [checked]="false"
+                                  (change)="slide($event)">
+                </mat-slide-toggle><br />
+                <label style="padding-top: 5px; padding-bottom: 20px; padding-right:30px; width:250px; color:#000; font-size:15px">Equipos de cocción</label>
+                <mat-slide-toggle id="coccion"
+                                  name="coccion"
+                                  [(ngModel)]="equipococcion"
+                                  #coccion="ngModel"
+                                  value="3"
+                                  [color]="primary"
+                                  [checked]="false"
+                                  (change)="slide($event)">
+                </mat-slide-toggle><br />
+                <label style="padding-top: 5px; padding-bottom: 20px; padding-right:30px; width:250px; color:#000; font-size:15px">Aspiradoras</label>
+                <mat-slide-toggle id="aspiradoras"
+                                  name="aspiradoras"
+                                  [(ngModel)]="Aspi"
+                                  #aspiradoras="ngModel"
+                                  value="4"
+                                  [color]="primary"
+                                  [checked]="false"
+                                  (change)="slide($event)">
+                </mat-slide-toggle><br />-->
+
+              </div>
+            </div>
+          </div>
+          <div class="col-xs-12 text-center" style="margin-bottom:10px">
+            <div class="alert" [className]="aviso" *ngIf="validform_responde">
+              <span>{{message_response}}</span>
+            </div>
+          </div>
+          <div class="col-xs-12 text-center">
+            <button type="submit" (click)="registro($event)" class="pull-center btn btn-default btn-default-rojo" [disabled]="validform">
+              Guardar
+            </button>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <br class="visible-xs" />
+            <br class="visible-xs" />
+            <button type="button" class="pull-center btn btn-default" id="sendEmail" (click)="registroForm.resetForm({})">
+              Cancelar
+            </button>
+          </div>
+          <!-- /.box -->
+        </div>
+        <!-- /.col -->
+      </div>
+    </section>
+    <!-- /.content -->
+  </form>
+</div>

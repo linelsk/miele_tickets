@@ -1,0 +1,469 @@
+<div class="content-wrapper">
+  <br class="visible-xs" />
+  <br class="visible-xs" />
+  <section class="content">
+    <div class="row">
+      <form #cambiarForm="ngForm">
+        <div class="col-md-6">
+          <div class="box">
+            <div class="box-header with-border">
+              <h3 class="box-title negritas">Datos del cliente</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <div class="col-xs-12">
+                <div class="col-xs-12" style="margin-bottom:14px"></div>
+                <div class="form-group col-xs-12 col-md-6">
+                  <label *ngIf="detalle.nombre_comercial !=''">Nombre comercial</label>
+                  <label *ngIf="detalle.nombre !=''">Nombre</label><br />
+                  <span *ngIf="detalle.nombre_comercial !=''">{{detalle.nombre_comercial}}</span>
+                  <span *ngIf="detalle.nombre !=''">{{detalle.nombre}}</span><br /><br />
+                  <label>Teléfono fijo</label><br />
+                  <span>{{detalle.telefono}}</span><br /><br />
+                  <label>Email</label><br />
+                  <span>{{detalle.email}}</span>
+                </div>
+                <div class="form-group col-xs-12 col-md-6">
+                  <label *ngIf="detalle.nombre_comercial !=''">Nombre de contacto</label>
+                  <label *ngIf="detalle.nombre !=''">Apellidos</label><br />
+                  <span *ngIf="detalle.nombre_comercial !=''">{{detalle.nombre_contacto}}</span>
+                  <span *ngIf="detalle.nombre !=''">{{detalle.paterno}} {{detalle.materno}}</span><br /><br />
+                  <label>Teléfono celular</label><br />
+                  <span>{{detalle.telefono_movil}}</span><br /><br />
+                </div>
+                <div class="col-xs-12" style="margin-bottom:12px"></div>
+              </div>
+            </div>
+          </div>
+          <!-- /.box -->
+        </div>
+      </form>
+      <div class="col-md-6">
+        <div class="box">
+          <!-- /.box-header -->
+          <div class="box-body">
+            <div class="col-xs-12">
+              <div class="col-xs-12" style="margin-bottom:10px"></div>
+              <div class="form-group col-xs-12 col-md-6">
+                <button [routerLink]="['/nuevoservicio', detalle.id]" type="submit" class="btn btn-default btn-default-rojo col-md-12" style="padding: 40px 30px 40px 30px;">
+                  <span style="font-size:20px">Nuevo servicio</span>
+                </button>
+              </div>
+              <div class="form-group col-xs-12 col-md-6">
+                <button type="submit" class="btn btn-default btn-default-rojo col-md-12" style="padding: 40px 30px 40px 30px;" (click)="cerrarsesiones($event)">
+                  <span style="font-size:20px">Venta</span>
+                </button>
+              </div>
+              <div class="form-group col-xs-12 col-md-6">
+                <button type="submit" class="btn btn-default btn-default-rojo col-md-12" style="padding: 40px 30px 40px 30px;" (click)="cerrarsesiones($event)">
+                  <span style="font-size:20px">Quejas</span>
+                </button>
+              </div>
+              <div class="form-group col-xs-12 col-md-6">
+                <button type="submit" class="btn btn-default btn-default-rojo col-md-12" style="padding: 40px 30px 40px 30px;" (click)="cerrarsesiones($event)">
+                  <span style="font-size:20px">Encuesta</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /.box -->
+      </div>
+
+      <div class="col-md-6">
+        <div class="box">
+          <div class="box-header with-border">
+            <h3 class="box-title negritas">Dirección del cliente</h3>
+          </div>
+          <!-- /.box-header -->
+          <div class="box-body">
+            <div class="col-xs-12">
+              <div class="col-xs-12" style="margin-bottom:13px"></div>
+              <div class="form-group col-xs-12 col-md-6">
+                <label>Calle y número</label><br />
+                <span>{{detalle_direccion.calle_numero}}</span><br /><br />
+                <label>Estado</label><br />
+                <span>{{detalle_direccion.estado}}</span><br /><br />
+                <label>Colonia</label><br />
+                <span>{{detalle_direccion.colonia}}</span>
+              </div>
+              <div class="form-group col-xs-12 col-md-6">
+                <label>CP</label><br />
+                <span>{{detalle_direccion.cp}}</span><br /><br />
+                <label>Delegación / municipio</label><br />
+                <span>{{detalle_direccion.municipio}}</span><br /><br />
+                <label>Referencias</label><br />
+                <span>{{detalle.refrerencias}}</span><br /><br />
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /.box -->
+      </div>
+
+      <div class="col-md-6">
+        <div class="box">
+          <div class="box-header with-border">
+            <h3 class="box-title negritas">Datos fiscales</h3>
+          </div>
+          <!-- /.box-header -->
+          <div class="box-body">
+            <div class="col-xs-12">
+              <div class="col-xs-12" style="margin-bottom:13px"></div>
+              <div class="form-group col-xs-12 col-md-4">
+                <label>Razón social</label><br />
+                <span *ngIf="detalle.nombre_comercial !=''">{{detalle.nombre_comercial}}</span>
+                <span *ngIf="detalle.nombre !=''">{{detalle.nombre}}</span><br /><br />
+                <label>Estado</label><br />
+                <span>{{detalle_direccion.estado}}</span><br /><br />
+                <label>CP</label><br />
+                <span>{{detalle_direccion.cp}}</span><br /><br />
+              </div>
+              <div class="form-group col-xs-12 col-md-4">
+                <label>RFC</label><br />
+                <span>LUOG120686</span><br /><br />
+                <label>Delegación / municipio</label><br />
+                <span>{{detalle_direccion.municipio}}</span><br />
+                <label>Email</label><br />
+                <span>{{detalle.email}}</span><br /><br />
+              </div>
+
+              <div class="form-group col-xs-12 col-md-4">
+                <label>Calle y número</label><br />
+                <span>{{detalle_direccion.calle_numero}}</span><br /><br />
+                <label>Colonia</label><br />
+                <span>{{detalle_direccion.colonia}}</span><br /><br />
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /.box -->
+      </div>
+
+      <div class="col-md-12">
+        <div class="box">
+          <div class="box-header with-border">
+            <h3 class="box-title negritas">Productos y servicios</h3>
+            <div class="box-tools pull-right">
+              <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                <i class="fa fa-minus"></i>
+              </button>
+            </div>
+          </div>
+          <!-- /.box-header -->
+          <div class="box-body">
+            <div class="col-xs-12" style="padding:0">
+              <mat-tab-group class="demo-tab-group">
+                <mat-tab label="Equipos">
+                  <div class="demo-tab-content">
+                    <form #EquiposForm="ngForm">
+                      <div class="example-container mat-elevation-z4">
+                        <mat-table #table [dataSource]="dataSource">
+
+                          <!-- Folio Column -->
+                          <ng-container matColumnDef="#Servicio">
+                            <mat-header-cell *matHeaderCellDef> SKU </mat-header-cell>
+                            <mat-cell *matCellDef="let element"> {{element.sku}} </mat-cell>
+                          </ng-container>
+
+                          <!-- Position Column -->
+                          <ng-container matColumnDef="Modelo">
+                            <mat-header-cell *matHeaderCellDef> Modelo </mat-header-cell>
+                            <mat-cell *matCellDef="let element"> {{element.modelo}} </mat-cell>
+                          </ng-container>
+
+                          <!-- Name Column -->
+                          <ng-container matColumnDef="SKU">
+                            <mat-header-cell *matHeaderCellDef> SKU </mat-header-cell>
+                            <mat-cell *matCellDef="let element"> {{element.sku}} </mat-cell>
+                          </ng-container>
+
+                          <!-- Weight Column -->
+                          <ng-container matColumnDef="Tipo">
+                            <mat-header-cell *matHeaderCellDef> Tipo de equipo </mat-header-cell>
+                            <mat-cell *matCellDef="let element"> {{element.sublinea | slice:0:20 }}<span *ngIf="element.sublinea.length > 20">...</span> </mat-cell>
+                          </ng-container>
+
+                          <!-- Symbol Column -->
+                          <ng-container matColumnDef="Garantia">
+                            <mat-header-cell *matHeaderCellDef> Garantía </mat-header-cell>
+                            <mat-cell *matCellDef="let element"> {{element.garantia}} </mat-cell>
+                          </ng-container>
+
+                          <ng-container matColumnDef="Poliza">
+                            <mat-header-cell *matHeaderCellDef> Póliza </mat-header-cell>
+                            <mat-cell *matCellDef="let element"> {{element.poliza}} </mat-cell>
+                          </ng-container>
+
+                          <ng-container matColumnDef="Estatus">
+                            <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
+                            <mat-cell *matCellDef="let element"><a style="color:inherit; cursor:pointer" title="{{element.estatus}}">{{element.estatus | slice:0:20 }}<span *ngIf="element.estatus.length > 20">...</span></a> </mat-cell>
+                          </ng-container>
+
+                          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                          <mat-row *matRowDef="let row; columns: displayedColumns;">
+                          </mat-row>
+                        </mat-table>
+                      </div>
+                    </form>
+
+                  </div>
+                </mat-tab>
+                <mat-tab label="Pólizas de servicio">
+                  <ng-template mat-tab-label>
+                    Pólizas de servicio
+                  </ng-template>
+                  <div class="demo-tab-content">
+                    <form #EquiposForm="ngForm">
+                      <div class="col-xs-12">
+                        <div class="form-group col-xs-12 col-md-4">
+                          <label>Modelo</label>
+                          <input type="text" class="form-control" id="modelo" name="modelo" [(ngModel)]="equipomodelo" #modelo="ngModel" required>
+                          <div *ngIf="modelo.invalid && (modelo.dirty || modelo.touched)"
+                               class="alert alert-danger">
+                            <div *ngIf="modelo.errors.required">
+                              Modelo requerido.
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="form-group col-xs-12 col-md-4">
+                          <label>Tipo de producto</label>
+                          <select type="text" class="form-control" id="tipoproducto" name="tipoproducto" [(ngModel)]="equipotipo" #tipoproducto="ngModel" required>
+                            <option value="1">Tipo 1</option>
+                            <option value="2">Tipo 2</option>
+                          </select>
+                          <div *ngIf="tipoproducto.invalid && (tipoproducto.dirty || tipoproducto.touched)"
+                               class="alert alert-danger">
+                            <div *ngIf="tipoproducto.errors.required">
+                              Tipo de producto requerido.
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="form-group col-xs-12 col-md-4">
+                          <div style="margin-bottom:25px"></div>
+                          <button type="button" class="pull-center btn btn-default btn-default-rojo" [disabled]="preventAbuse">
+                            {{ preventAbuse ? 'Agregando...' : 'Agregar nuevo producto' }}
+                          </button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </mat-tab>
+                <mat-tab label="Garantías extendidas">
+                  <form #EquiposForm="ngForm">
+                    <div class="col-xs-12">
+                      <div class="form-group col-xs-12 col-md-4">
+                        <label>Modelo</label>
+                        <input type="text" class="form-control" id="modelo" name="modelo" [(ngModel)]="equipomodelo" #modelo="ngModel" required>
+                        <div *ngIf="modelo.invalid && (modelo.dirty || modelo.touched)"
+                             class="alert alert-danger">
+                          <div *ngIf="modelo.errors.required">
+                            Modelo requerido.
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="form-group col-xs-12 col-md-4">
+                        <label>Tipo de producto</label>
+                        <select type="text" class="form-control" id="tipoproducto" name="tipoproducto" [(ngModel)]="equipotipo" #tipoproducto="ngModel" required>
+                          <option value="1">Tipo 1</option>
+                          <option value="2">Tipo 2</option>
+                        </select>
+                        <div *ngIf="tipoproducto.invalid && (tipoproducto.dirty || tipoproducto.touched)"
+                             class="alert alert-danger">
+                          <div *ngIf="tipoproducto.errors.required">
+                            Tipo de producto requerido.
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="form-group col-xs-12 col-md-4">
+                        <div style="margin-bottom:25px"></div>
+                        <button type="button" class="pull-center btn btn-default btn-default-rojo" [disabled]="preventAbuse">
+                          {{ preventAbuse ? 'Agregando...' : 'Agregar nuevo producto' }}
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                </mat-tab>
+                <mat-tab label="Home program">
+                  <form #EquiposForm="ngForm">
+                    <div class="col-xs-12">
+                      <div class="form-group col-xs-12 col-md-4">
+                        <label>Modelo</label>
+                        <input type="text" class="form-control" id="modelo" name="modelo" [(ngModel)]="equipomodelo" #modelo="ngModel" required>
+                        <div *ngIf="modelo.invalid && (modelo.dirty || modelo.touched)"
+                             class="alert alert-danger">
+                          <div *ngIf="modelo.errors.required">
+                            Modelo requerido.
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="form-group col-xs-12 col-md-4">
+                        <label>Tipo de producto</label>
+                        <select type="text" class="form-control" id="tipoproducto" name="tipoproducto" [(ngModel)]="equipotipo" #tipoproducto="ngModel" required>
+                          <option value="1">Tipo 1</option>
+                          <option value="2">Tipo 2</option>
+                        </select>
+                        <div *ngIf="tipoproducto.invalid && (tipoproducto.dirty || tipoproducto.touched)"
+                             class="alert alert-danger">
+                          <div *ngIf="tipoproducto.errors.required">
+                            Tipo de producto requerido.
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="form-group col-xs-12 col-md-4">
+                        <div style="margin-bottom:25px"></div>
+                        <button type="button" class="pull-center btn btn-default btn-default-rojo" [disabled]="preventAbuse">
+                          {{ preventAbuse ? 'Agregando...' : 'Agregar nuevo producto' }}
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                </mat-tab>
+              </mat-tab-group>
+            </div>
+          </div>
+
+        </div>
+        <!-- /.box -->
+      </div>
+
+      <div class="col-md-12">
+        <div class="box">
+          <div class="box-header with-border">
+            <h3 class="box-title negritas">Direcciones de instalación</h3>
+            <div class="box-tools pull-right">
+              <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                <i class="fa fa-minus"></i>
+              </button>
+            </div>
+          </div>
+          <!-- /.box-header -->
+          <div class="box-body">
+            <div class="col-xs-12" style="padding:0">
+              <form #EquiposForm="ngForm">
+                <div class="col-xs-12">
+                  <div class="form-group col-xs-12 col-md-4">
+                    <label>Calle y número</label>
+                    <input type="text" class="form-control" id="numero" name="numero" [(ngModel)]="direccionnumero" #numero="ngModel" required>
+                    <div *ngIf="numero.invalid && (numero.dirty || numero.touched)"
+                         class="alert alert-danger">
+                      <div *ngIf="numero.errors.required">
+                        Calle y número requerido.
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group col-xs-12 col-md-4">
+                    <label>CP</label>
+                    <input type="text" class="form-control" id="cp" name="cp" [(ngModel)]="direccioncp" #cp="ngModel" required>
+                    <div *ngIf="cp.invalid && (cp.dirty || cp.touched)"
+                         class="alert alert-danger">
+                      <div *ngIf="cp.errors.required">
+                        CP
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group col-xs-12 col-md-4">
+                    <label>Estado</label>
+                    <select type="text" class="form-control" id="estado" name="estado" [(ngModel)]="direccionestado" #estado="ngModel" required>
+                      <!--<option value="1">Tipo 1</option>
+                      <option value="2">Tipo 2</option>-->
+                    </select>
+                    <div *ngIf="estado.invalid && (estado.dirty || estado.touched)"
+                         class="alert alert-danger">
+                      <div *ngIf="estado.errors.required">
+                        Estado requerido.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-xs-12">
+                  <div class="form-group col-xs-12 col-md-4">
+                    <label>Delegación / Municipio</label>
+                    <input type="text" class="form-control" id="municipio" name="municipio" [(ngModel)]="direccionmunicipio" #municipio="ngModel" required>
+                    <div *ngIf="municipio.invalid && (municipio.dirty || municipio.touched)"
+                         class="alert alert-danger">
+                      <div *ngIf="municipio.errors.required">
+                        Delegación / Municipio requerido.
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group col-xs-12 col-md-4">
+                    <label>Colonia</label>
+                    <input type="text" class="form-control" id="colonia" name="colonia" [(ngModel)]="direccioncolonia" #colonia="ngModel" required>
+                    <div *ngIf="colonia.invalid && (colonia.dirty || colonia.touched)"
+                         class="alert alert-danger">
+                      <div *ngIf="colonia.errors.required">
+                        CP
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group col-xs-12 col-md-4">
+                    <label>Teléfono</label>
+                    <select type="text" class="form-control" id="telefono" name="telefono" [(ngModel)]="direcciontelefono" #telefono="ngModel" required>
+                      <!--<option value="1">Tipo 1</option>
+                      <option value="2">Tipo 2</option>-->
+                    </select>
+                    <div *ngIf="telefono.invalid && (telefono.dirty || telefono.touched)"
+                         class="alert alert-danger">
+                      <div *ngIf="telefono.errors.required">
+                        Teléfono requerido.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-xs-12">
+                  <div class="col-xs-12" style="text-align:right">
+                    <button type="button" class="pull-center btn btn-default btn-default-rojo" [disabled]="preventAbuse">
+                      {{ preventAbuse ? 'Agregando...' : 'Agregar nueva dirección' }}
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+
+        </div>
+        <!-- /.box -->
+      </div>
+
+      <div class="col-md-12">
+        <div class="box">
+          <div class="box-header with-border">
+            <h3 class="box-title negritas">Historial de servicio</h3>
+            <div class="box-tools pull-right">
+              <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                <i class="fa fa-minus"></i>
+              </button>
+            </div>
+          </div>
+          <!-- /.box-header -->
+          <div class="box-body">
+            <div class="col-xs-12" style="padding:0">
+              <form #HistorialForm="ngForm">
+                <div class="col-xs-12">
+
+                </div>
+              </form>
+            </div>
+          </div>
+
+        </div>
+        <!-- /.box -->
+      </div>
+      <!-- /.col -->
+    </div>
+  </section>
+  <!-- /.content -->
+</div>

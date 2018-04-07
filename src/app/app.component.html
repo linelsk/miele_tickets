@@ -1,0 +1,14 @@
+<ng-progress #progressBar></ng-progress>
+<app-starter-header *ngIf="token"></app-starter-header>
+<!-- Left side column. contains the logo and sidebar -->
+<app-starter-left-side *ngIf="token"></app-starter-left-side>
+<!-- Content Wrapper. Contains page content -->
+<router-outlet></router-outlet>
+<!-- /.content-wrapper -->
+<!-- Main Footer -->
+<!--<app-starter-footer></app-starter-footer>-->
+<!-- Control Sidebar -->
+<app-starter-control-sidebar *ngIf="token"></app-starter-control-sidebar>
+<!-- /.control-sidebar -->
+<!-- Add the sidebar's background. This div must be placed
+     immediately after the control sidebar -->

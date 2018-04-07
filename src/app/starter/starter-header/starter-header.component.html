@@ -1,0 +1,108 @@
+<header class="main-header">
+  <!-- Logo -->
+  <a routerLink="/main" class="logo text-center">
+    <!-- mini logo for sidebar mini 50x50 pixels -->
+    <span class="logo-mini"><img class="img-responsive" src="../assets/img/miele-logo-immer-besser.png" /></span>
+    <!-- logo for regular state and mobile devices -->
+    <span class="logo-lg"><img class="img-responsive" style="padding:0 20px;" src="../assets/img/miele-logo-immer-besser.png" /></span>
+  </a>
+  <!-- Header Navbar -->
+  <nav class="navbar navbar-static-top" role="navigation">
+    <!-- Sidebar toggle button-->
+    <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+      <span class="sr-only">Toggle navigation</span>
+    </a>
+    <!-- Navbar Right Menu -->
+    <div class="navbar-custom-menu">
+      <ul class="nav navbar-nav">
+        <!-- Messages: style can be found in dropdown.less-->
+        <li class="dropdown messages-menu">
+          <!-- Menu toggle button -->
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            <i class="fa fa-envelope-o" style="font-size:33px"></i>
+            <span class="label label-success">4</span>
+          </a>
+          <ul class="dropdown-menu">
+            <li class="header">You have 4 messages</li>
+            <li>
+              <!-- inner menu: contains the messages -->
+              <ul class="menu">
+                <li>
+                  <!-- start message -->
+                  <a href="#">
+                    <div class="pull-left">
+                      <!-- User Image -->
+                      <img src="assets/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                    </div>
+                    <!-- Message title and timestamp -->
+                    <h4>
+                      Support Team
+                      <small><i class="fa fa-clock-o"></i> 5 mins</small>
+                    </h4>
+                    <!-- The message -->
+                    <p>Why not buy a new awesome theme?</p>
+                  </a>
+                </li>
+                <!-- end message -->
+              </ul>
+              <!-- /.menu -->
+            </li>
+            <li class="footer"><a href="#">See All Messages</a></li>
+          </ul>
+        </li>
+        <!-- /.messages-menu -->
+        <!-- Notifications Menu -->
+        <!-- User Account Menu -->
+        <li class="dropdown user user-menu">
+          <!-- Menu Toggle Button -->
+          <a href="#" class="dropdown-toggle" style="padding-top:20px; padding-bottom:20px" data-toggle="dropdown">
+            <!-- The user image in the navbar-->
+            <!--<img src="http://lorempixel.com/g/160/160" class="user-image-avatar" alt="User Image">-->
+            <span class="user-image-avatar">{{inicial}}</span>
+            <!-- hidden-xs hides the username on small devices so only the image appears. -->
+            <span class="hidden-xs">{{name}}</span>
+          </a>
+          <ul class="dropdown-menu">
+            <!-- The user image in the menu -->
+            <li class="user-header">
+              <!--<img src="assets/img/user2-160x160.jpg" class="img-circle" alt="User Image">-->
+              <!--<img src="http://lorempixel.com/g/160/160" class="img-circle" alt="User Image">-->
+              <div class="col-xs-12 text-center" style="padding:45px 45px 45px 45px;">
+                <span class="img-circle-avatar">{{inicial}}</span>
+              </div>
+                            
+              <p style="color:#808080">
+                {{name}}
+              </p>
+            </li>
+            <!-- Menu Body -->
+            <li class="user-body">
+              <div class="row">
+                <div class="col-xs-4 text-center">
+                  <a routerLink="/perfil">Perfil</a>
+                </div>
+                <div class="col-xs-4 text-center">
+                  <a routerLink="/configuracion">Configuración</a>
+                </div>
+                <div class="col-xs-4 text-center">
+                  <a href="#" (click)="salir($event)">Salir</a>
+                </div>
+              </div>
+              <!-- /.row -->
+            </li>
+            <!-- Menu Footer-->
+            <!--<li class="user-footer">
+              <div class="pull-left">
+                <a href="#" class="btn btn-default btn-flat">Mi perfil</a>
+              </div>
+              <div class="pull-right">
+                <a href="#" class="btn btn-default btn-flat" (click)="salir($event)">Salir</a>
+              </div>
+            </li>-->
+          </ul>
+        </li>
+        <!-- Control Sidebar Toggle Button -->
+      </ul>
+    </div>
+  </nav>
+</header>

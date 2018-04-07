@@ -1,0 +1,20 @@
+/* You can add global styles to this file, and also import other style files */
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+.content-wrapper {
+  background-color: #F4F4F4 !important;
+}
+
+.blue-snackbar {
+  background-color: #A5000D;
+  padding: 20px 20px 20px 20px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.btn-success {
+  background-color: #A5000D;
+  border-color: #A5000D;
+}

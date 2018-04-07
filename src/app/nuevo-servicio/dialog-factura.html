@@ -1,0 +1,132 @@
+<style>
+
+  .btn-default {
+    background-color: #EEEDEB;
+    color: #847d70;
+    border-color: #ddd;
+    padding-left: 50px;
+    padding-right: 50px;
+    font-weight: bold;
+  }
+
+  .btn-default-rojo {
+    background-color: #E60000;
+    color: #fff;
+    border-color: #E60000;
+  }
+
+    .btn-default-rojo:hover {
+      background-color: #E60000;
+      color: #fff;
+      border-color: #E60000;
+    }
+
+</style>
+<div mat-dialog-content>
+  <div class="row">
+    <div class="form-group col-xs-12">
+      <div class="col-xs-12 col-md-6" style="text-align:left; padding:0;">
+        <span style="display: inline-block; font-size: 18px; margin: 0; line-height: 1; font-weight: bold;">
+          Datos Fiscales
+        </span>
+      </div>
+      <div class="col-xs-12 col-md-6" style="text-align:right; padding:0;">
+        <i class="fa fa-times" aria-hidden="true" (click)="onNoClick()" style="font-size:large"></i>
+      </div>
+    </div>
+    <div class="col-xs-12" style="padding-left:0; padding-right:0; padding-bottom:10px">
+      <mat-divider></mat-divider>
+    </div>
+    <div class="form-group col-md-4">
+      <label>Razón social</label>
+      <input type="text" class="form-control" [(ngModel)]="data.razonsocial" required >
+      <!--<div *ngIf="noalmacen.invalid && (noalmacen.dirty || noalmacen.touched)"
+           class="alert alert-danger">
+        <div *ngIf="noalmacen.errors.required">
+          Número de almacen requerido.
+        </div>
+      </div>-->
+    </div>
+    <div class="form-group col-md-4">
+      <label>RFC</label>
+      <input type="text" class="form-control"[(ngModel)]="data.rfc" required >
+      <!--<div *ngIf="noalmacen.invalid && (noalmacen.dirty || noalmacen.touched)"
+           class="alert alert-danger">
+        <div *ngIf="noalmacen.errors.required">
+          Número de almacen requerido.
+        </div>
+      </div>-->
+    </div>
+    <div class="form-group col-md-4">
+      <label>Email</label>
+      <input type="text" class="form-control" [(ngModel)]="data.email" required>
+      <!--<div *ngIf="noalmacen.invalid && (noalmacen.dirty || noalmacen.touched)"
+       class="alert alert-danger">
+    <div *ngIf="noalmacen.errors.required">
+      Número de almacen requerido.
+    </div>
+  </div>-->
+    </div>
+
+    <div class="form-group col-md-4">
+      <label>Calle y número</label>
+      <input type="text" class="form-control" id="noalmacen" name="noalmacen" [(ngModel)]="almacen" #noalmacen="ngModel" required (ngModelChange)="validacion_form($event)">
+      <!--<div *ngIf="noalmacen.invalid && (noalmacen.dirty || noalmacen.touched)"
+           class="alert alert-danger">
+        <div *ngIf="noalmacen.errors.required">
+          Número de almacen requerido.
+        </div>
+      </div>-->
+    </div>
+    <div class="form-group col-md-4">
+      <label>CP</label>
+      <input type="text" class="form-control" id="noalmacen" name="noalmacen" [(ngModel)]="almacen" #noalmacen="ngModel" required (ngModelChange)="validacion_form($event)">
+      <!--<div *ngIf="noalmacen.invalid && (noalmacen.dirty || noalmacen.touched)"
+           class="alert alert-danger">
+        <div *ngIf="noalmacen.errors.required">
+          Número de almacen requerido.
+        </div>
+      </div>-->
+    </div>
+    <div class="form-group col-md-4">
+      <label>Estado</label>
+      <select type="text" class="form-control" id="tecnico" name="tecnico" #tecnico="ngModel" [(ngModel)]="tipotecnico" (ngModelChange)="validacion_form($event)" required>
+        <option value="1">Tipo 1</option>
+        <option value="2">Tipo 2</option>
+      </select>
+      <!--<div *ngIf="noalmacen.invalid && (noalmacen.dirty || noalmacen.touched)"
+           class="alert alert-danger">
+        <div *ngIf="noalmacen.errors.required">
+          Número de almacen requerido.
+        </div>
+      </div>-->
+    </div>
+
+    <div class="form-group col-md-4">
+      <label>Delegación / Municipio</label>
+      <select type="text" class="form-control" id="tecnico" name="tecnico" #tecnico="ngModel" [(ngModel)]="tipotecnico" (ngModelChange)="validacion_form($event)" required>
+        <option value="1">Tipo 1</option>
+        <option value="2">Tipo 2</option>
+      </select>
+      <!--<div *ngIf="noalmacen.invalid && (noalmacen.dirty || noalmacen.touched)"
+           class="alert alert-danger">
+        <div *ngIf="noalmacen.errors.required">
+          Número de almacen requerido.
+        </div>
+      </div>-->
+    </div>
+    <div class="form-group col-md-4">
+      <label>Colonia</label>
+      <input type="text" class="form-control" id="noalmacen" name="noalmacen" [(ngModel)]="almacen" #noalmacen="ngModel" required (ngModelChange)="validacion_form($event)">
+      <!--<div *ngIf="noalmacen.invalid && (noalmacen.dirty || noalmacen.touched)"
+           class="alert alert-danger">
+        <div *ngIf="noalmacen.errors.required">
+          Número de almacen requerido.
+        </div>
+      </div>-->
+    </div>
+  </div>
+</div>
+<div class="col-xs-12" style="text-align:center;">
+  <button mat-button [mat-dialog-close]="data" cdkFocusInitial class="btn-default btn-default-rojo">Guardar</button>
+</div>
