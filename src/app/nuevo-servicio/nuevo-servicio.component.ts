@@ -33,6 +33,7 @@ export class NuevoServicioComponent implements OnInit {
 
   //Valdaciones
   valid_tipo: boolean = true;
+  valid_tipo_taller: boolean = false;
   valid_solicitado_por: boolean = true;
   valid_solicitado_via: boolean = true;
   valid_autorizao: boolean = true;
@@ -99,7 +100,7 @@ export class NuevoServicioComponent implements OnInit {
 
   dataSource = new MatTableDataSource();
   dataSource_direccion = new MatTableDataSource();
-  //selection = new SelectionModel<Element>(true, []);
+  selection = new SelectionModel<Element>(true, []);
 
   /** Whether the number of selected elements matches the total number of rows. */
   //isAllSelected() {
@@ -109,8 +110,9 @@ export class NuevoServicioComponent implements OnInit {
   //  return numSelected === numRows;
   //}
 
-  ///** Selects all rows if they are not all selected; otherwise clear selection. */
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
   //masterToggle() {
+  //  console.log(this.dataSource.data);
   //  this.isAllSelected() ?
   //    this.selection.clear() :
   //    this.dataSource.data.forEach(row => this.selection.select());
@@ -120,12 +122,23 @@ export class NuevoServicioComponent implements OnInit {
 
   filteredOptions: Observable<any[]>;
 
-  set_productos(row) {
-    console.log(row);
-    //this.id_productos.push({
-    //  id_producto: row.id,
-    //  estatus: 1
-    //})
+  //chk_productos: any;
+  set_productos(event, row, index) {
+
+    if (event.checked) {
+      this.value_productos.push({
+        estatus: 1,
+        id_producto: row.id,
+      });
+    }
+    else {
+      for (var i = 0; i < this.value_productos.length; i++) {
+        if (this.value_productos[i].id_producto == row.id) {
+          this.value_productos.splice(i, 1);
+        }
+      }      
+    }
+
   };
 
   direccion(row) {
@@ -133,7 +146,14 @@ export class NuevoServicioComponent implements OnInit {
   };
 
   validacion_tipo() {
-    this.valid_tipo = this.heroService.validar_input(this.ddltipo_servicio);
+    if (this.ddltipo_servicio != 5) {
+      this.valid_tipo = this.heroService.validar_input(this.ddltipo_servicio);
+      this.valid_tipo_taller = false;
+    }
+    else {
+      this.valid_tipo_taller = true;
+    }
+
     return this.valid_tipo;
   }
 
@@ -157,7 +177,11 @@ export class NuevoServicioComponent implements OnInit {
   }
 
   validacion_contacto() {
-    return this.valid_contacto = this.heroService.validar_input(this.txtcontacto);
+    if (this.rdsolicitado == 2) {
+      this.valid_contacto = this.heroService.validar_input(this.txtcontacto);
+    }
+
+    return this.valid_contacto;
   }
 
   validacion_descripcion_actividades() {
@@ -165,18 +189,25 @@ export class NuevoServicioComponent implements OnInit {
   }
 
   validacion_categoria_servicio() {
-    if (this.ddltipo_servicio == 3 || this.ddltipo_servicio == 4) {
+    if (this.ddltipo_servicio == 3 || this.ddltipo_servicio == 4 || this.ddltipo_servicio == 5) {
       this.valid_categoria_servicio = true;
     }
     else {
       this.valid_categoria_servicio = this.heroService.validar_input(this.ddlcategoria_servicio);
     }
-    
+
     return this.valid_categoria_servicio;
   }
 
   Validacion_fecha_visita() {
-    return this.valid_fecha_visita = this.heroService.validar_input(this.txtfecha_cita);
+    if (this.ddltipo_servicio == 5) {
+      this.valid_fecha_visita = true;
+    }
+    else {
+      this.valid_fecha_visita = this.heroService.validar_input(this.txtfecha_cita);
+    }
+
+    return this.valid_fecha_visita;
   }
 
   validacion_tecnico_visita() {
@@ -184,7 +215,14 @@ export class NuevoServicioComponent implements OnInit {
   }
 
   validacion_hora_visita() {
-    return this.valid_hora_visita = this.heroService.validar_input(this.txthora_servicio);
+    if (this.ddltipo_servicio == 5) {
+      this.valid_hora_visita = true;
+    }
+    else {
+      this.valid_hora_visita = this.heroService.validar_input(this.txthora_servicio);
+    }
+
+    return this.valid_hora_visita;
   }
 
   //validacion_actividades_realizar() {
@@ -208,19 +246,13 @@ export class NuevoServicioComponent implements OnInit {
     this.validacion_hora_visita();
     //this.validacion_actividades_realizar();
     this.validacion_terminos_condiciones();
-
-    for (var i = 0; i < this.productos_cliente.length; i++) {
-      if (this.productos_cliente[i].checked) {
-        this.value_productos.push({
-          id_producto: this.productos_cliente[i].id,
-          estatus: 1,
-        });
-      }
-    }
-
+    console.log(this.value_productos);
+    
     if (this.validacion_tipo() && this.validacion_solicitado_por() && this.validacion_ddl_autorizacion() && this.validacion_contacto() && this.validacion_descripcion_actividades()
       && this.validacion_categoria_servicio() && this.Validacion_fecha_visita() && this.validacion_tecnico_visita() && this.validacion_hora_visita() &&
       this.validacion_terminos_condiciones()) {
+
+      //console.log(this.value_productos);
       this.heroService.service_general("servicios", {
         "id_cliente": this.id,
         "id_tipo_servicio": this.ddltipo_servicio,
@@ -369,7 +401,7 @@ export class NuevoServicioComponent implements OnInit {
     this.getdistribuidor();
     this.getestados();
     this.getfacturaestados();
-
+    
     this.filteredOptions = this.myControl.valueChanges
       .pipe(
       startWith(''),
@@ -422,10 +454,12 @@ export class NuevoServicioComponent implements OnInit {
   //llenar_productos
   getproductos(): void {
     this.productos_cliente = [];
+    this.value_productos = [];
     if (this.ddltipo_servicio != 0) {
       this.productos = false;
     }
-   // console.log(this.ddltipo_servicio);
+
+    // console.log(this.ddltipo_servicio);
     this.heroService.service_general("servicios/Productos_Servicio_Solicitado", {
       "id": this.ddltipo_servicio
     }).subscribe((value) => {
@@ -539,8 +573,20 @@ export class NuevoServicioComponent implements OnInit {
           }
         }
       }
+
+      for (var i = 0; i < this.productos_cliente.length; i++) {
+        if (this.productos_cliente[i].checked) {
+          this.value_productos.push({
+            estatus: 1,
+            id_producto: this.productos_cliente[i].id,
+          });
+        }
+      }
+
       //console.log(this.productos_cliente);
       this.dataSource.data = this.productos_cliente;
+      //console.log(this.dataSource.data[0].checked);
+
     });
 
     if (this.ddltipo_servicio == 1) {
@@ -599,7 +645,7 @@ export class NuevoServicioComponent implements OnInit {
       "id": id
     })
       .subscribe((value) => {
-        console.log(value);
+        //console.log(value);
         this.dataSource_direccion.data = value;
       });
   }
@@ -642,6 +688,7 @@ export class NuevoServicioComponent implements OnInit {
     switch (id) {
       case 1:
         this.mostrar_distribuidor = false;
+        this.ddldistribuidor_autorizado = 0;
         break;
       case 2:
         this.mostrar_distribuidor = true;
@@ -706,7 +753,7 @@ export class NuevoServicioComponent implements OnInit {
       });
     });
   }
-  
+
 }
 
 @Component({

@@ -17,5 +17,5 @@ export class Actividad {
 
 export class Productos_Servicio {
   id_producto: number;
-  estatus: number
+  estatus: number;
 }

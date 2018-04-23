@@ -223,7 +223,7 @@
                       </div>
                     </div>
 
-                    <div class="col-xs-12" style="padding:0;">
+                    <!--<div class="col-xs-12" style="padding:0;">
                       <div class="form-group col-xs-12 col-md-4">
                         <label>Calle y número</label><br />
                         <span>{{detalle_direccion.calle_numero}}</span>
@@ -251,7 +251,7 @@
                         <label>Teléfono</label><br />
                         <span>{{detalle.telefono}}</span>
                       </div>
-                    </div>
+                    </div>-->
                   </div>
                 </div>
               </div>
@@ -314,9 +314,10 @@
                         </div>
                       </div>
 
-                      <div class="col-xs-12" style="padding-left:0; padding-right:0">
+                      <div class="col-xs-12" style="padding-left:0; padding-right:0" *ngIf="value.factura">
                         <div class="form-group col-xs-12 col-md-4" style="padding-left:0;">
-                          <mat-checkbox>Requiere factura</mat-checkbox>
+                          <!--<mat-checkbox>Requiere factura</mat-checkbox>-->
+                          <i class="fa fa-check-square-o" aria-hidden="true"></i> <span>Requiere factura</span>
                         </div>
                       </div>
 
@@ -402,7 +403,7 @@
                           <!--<mat-divider></mat-divider>-->
                           <div class="form-group col-xs-12 col-md-12" style="padding:0;">
                             <div class="col-md-6">
-                              <label>Repuestos consumidos</label>
+                              <label>Refacciones utilizadas</label>
                             </div>
                             <div class="col-md-6">
                               <label>Unidades utilizadas</label>

@@ -155,6 +155,14 @@
                 </div>
               </div>
               <div class="form-group col-md-4">
+
+              </div>
+            </div>
+            <div class="col-xs-12" style="padding:0;" [hidden]="!mostrar_distribuidor">
+              <div class="form-group col-md-4">
+
+              </div>
+              <div class="form-group col-md-4">
                 <mat-form-field class="full-width">
                   <input type="text" matInput id="contacto" name="contacto" [(ngModel)]="txtcontacto" #contacto="ngModel" (ngModelChange)="validacion_contacto()" [appFocus]="!valid_contacto" placeholder="Contacto" required>
                 </mat-form-field>
@@ -164,6 +172,9 @@
                     Contacto requerido.
                   </div>
                 </div>
+              </div>
+              <div class="form-group col-md-4">
+
               </div>
             </div>
           </div>
@@ -195,10 +206,14 @@
                                     [indeterminate]="selection.hasValue() && !isAllSelected()">
                       </mat-checkbox>-->
                     </mat-header-cell>
-                    <mat-cell *matCellDef="let row">
+                    <mat-cell *matCellDef="let row; let i = index">
                       <div class="col-xs-12" style="text-align:center; padding:0;">
-                        <mat-checkbox (click)="$event ? set_productos(row) : null" [checked]="row.checked">
+                        <mat-checkbox (change)="set_productos($event, row, i)" [checked]="row.checked">
                         </mat-checkbox>
+                        <!--<mat-checkbox (change)="$event ? masterToggle() : null"
+                                      [checked]="selection.hasValue() && isAllSelected()"
+                                      [indeterminate]="selection.hasValue() && !isAllSelected()">
+                        </mat-checkbox>-->
                       </div>
                     </mat-cell>
                   </ng-container>
@@ -254,139 +269,142 @@
                 </div>
               </div>
             </div>
-            <div class="col-xs-12 col-md-4" style="padding-bottom:15px;" *ngIf="ddltipo_servicio != 4 && ddltipo_servicio != 5">
-              <mat-form-field class="full-width">
-                <mat-select placeholder="Categoría del servicio" id="categoria_servicio" name="categoria_servicio" #categoria_servicio="ngModel" [(ngModel)]="ddlcategoria_servicio" (ngModelChange)="validacion_categoria_servicio()" [appFocus]="!valid_categoria_servicio" required>
-                  <mat-option *ngFor="let value of categoriaservicio; trackBy: index;" [value]="value.id">
-                    {{value.desc_categoria_servicio}}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-              <div *ngIf="categoria_servicio.invalid && (categoria_servicio.dirty || categoria_servicio.touched) || !valid_categoria_servicio" class="alert alert-danger">
-                <div>
-                  Categoría del servicio requerido.
+            <div [hidden]="valid_tipo_taller">
+              <div class="col-xs-12 col-md-4" style="padding-bottom:15px;" *ngIf="ddltipo_servicio != 4 && ddltipo_servicio != 5">
+                <mat-form-field class="full-width">
+                  <mat-select placeholder="Categoría del servicio" id="categoria_servicio" name="categoria_servicio" #categoria_servicio="ngModel" [(ngModel)]="ddlcategoria_servicio" (ngModelChange)="validacion_categoria_servicio()" [appFocus]="!valid_categoria_servicio" required>
+                    <mat-option *ngFor="let value of categoriaservicio; trackBy: index;" [value]="value.id">
+                      {{value.desc_categoria_servicio}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <div *ngIf="categoria_servicio.invalid && (categoria_servicio.dirty || categoria_servicio.touched) || !valid_categoria_servicio" class="alert alert-danger">
+                  <div>
+                    Categoría del servicio requerido.
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="col-xs-12" style="padding-bottom:15px">
-              <label>Direcciones de instalción</label>
+              <div class="col-xs-12" style="padding-bottom:15px">
+                <label>Direcciones de instalción</label>
 
-              <div class="example-container mat-elevation-z4">
-                <mat-table #table [dataSource]="dataSource_direccion">
+                <div class="example-container mat-elevation-z4">
+                  <mat-table #table [dataSource]="dataSource_direccion">
 
-                  <!-- Checkbox Column -->
-                  <ng-container matColumnDef="select">
-                    <mat-header-cell *matHeaderCellDef>
-                      <!--<mat-checkbox (change)="$event ? masterToggle() : null"
-                                    [checked]="selection.hasValue() && isAllSelected()"
-                                    [indeterminate]="selection.hasValue() && !isAllSelected()">
-                      </mat-checkbox>-->
-                    </mat-header-cell>
-                    <mat-cell *matCellDef="let row">
-                      <div class="col-xs-12" style="text-align:center; padding:0;">
-                        <mat-radio-group id="test" name="test" style="padding:0 50% 0 30%">
-                          <mat-radio-button value="row" (click)="$event ? direccion(row) : null"></mat-radio-button>
-                        </mat-radio-group>
-                      </div>
-                    </mat-cell>
-                  </ng-container>
+                    <!-- Checkbox Column -->
+                    <ng-container matColumnDef="select">
+                      <mat-header-cell *matHeaderCellDef>
+                        <!--<mat-checkbox (change)="$event ? masterToggle() : null"
+                                      [checked]="selection.hasValue() && isAllSelected()"
+                                      [indeterminate]="selection.hasValue() && !isAllSelected()">
+                        </mat-checkbox>-->
+                      </mat-header-cell>
+                      <mat-cell *matCellDef="let row">
+                        <div class="col-xs-12" style="text-align:center; padding:0;">
+                          <mat-radio-group id="test" name="test" style="padding:0 50% 0 30%">
+                            <mat-radio-button value="row" (click)="$event ? direccion(row) : null"></mat-radio-button>
+                          </mat-radio-group>
+                        </div>
+                      </mat-cell>
+                    </ng-container>
 
-                  <!-- Position Column -->
-                  <ng-container matColumnDef="Calle">
-                    <mat-header-cell *matHeaderCellDef> Calle y número </mat-header-cell>
-                    <mat-cell *matCellDef="let element"><a style="color:inherit" title="{{element.calle}}">{{element.calle | slice:0:20 }}<span *ngIf="element.calle.length > 20">...</span></a> </mat-cell>
-                  </ng-container>
+                    <!-- Position Column -->
+                    <ng-container matColumnDef="Calle">
+                      <mat-header-cell *matHeaderCellDef> Calle y número </mat-header-cell>
+                      <mat-cell *matCellDef="let element"><a style="color:inherit" title="{{element.calle}}">{{element.calle | slice:0:20 }}<span *ngIf="element.calle.length > 20">...</span></a> </mat-cell>
+                    </ng-container>
 
-                  <!-- Name Column -->
-                  <ng-container matColumnDef="Colonia">
-                    <mat-header-cell *matHeaderCellDef> Colónia </mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{element.colonia}} </mat-cell>
-                  </ng-container>
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="Colonia">
+                      <mat-header-cell *matHeaderCellDef> Colónia </mat-header-cell>
+                      <mat-cell *matCellDef="let element"> {{element.colonia}} </mat-cell>
+                    </ng-container>
 
-                  <!-- Weight Column -->
-                  <ng-container matColumnDef="Estado">
-                    <mat-header-cell *matHeaderCellDef> Estado </mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{element.estado}} </mat-cell>
-                  </ng-container>
+                    <!-- Weight Column -->
+                    <ng-container matColumnDef="Estado">
+                      <mat-header-cell *matHeaderCellDef> Estado </mat-header-cell>
+                      <mat-cell *matCellDef="let element"> {{element.estado}} </mat-cell>
+                    </ng-container>
 
-                  <!-- Symbol Column -->
-                  <ng-container matColumnDef="Municipio">
-                    <mat-header-cell *matHeaderCellDef> Delegacion y/o municipio </mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{element.municipio}} </mat-cell>
-                  </ng-container>
+                    <!-- Symbol Column -->
+                    <ng-container matColumnDef="Municipio">
+                      <mat-header-cell *matHeaderCellDef> Delegacion y/o municipio </mat-header-cell>
+                      <mat-cell *matCellDef="let element"> {{element.municipio}} </mat-cell>
+                    </ng-container>
 
-                  <ng-container matColumnDef="CP">
-                    <mat-header-cell *matHeaderCellDef> C.P </mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{element.cp}} </mat-cell>
-                  </ng-container>
+                    <ng-container matColumnDef="CP">
+                      <mat-header-cell *matHeaderCellDef> C.P </mat-header-cell>
+                      <mat-cell *matCellDef="let element"> {{element.cp}} </mat-cell>
+                    </ng-container>
 
-                  <mat-header-row *matHeaderRowDef="displayedColumns_direccion"></mat-header-row>
-                  <mat-row *matRowDef="let row; columns: displayedColumns_direccion;">
-                  </mat-row>
-                </mat-table>
+                    <mat-header-row *matHeaderRowDef="displayedColumns_direccion"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns_direccion;">
+                    </mat-row>
+                  </mat-table>
+                </div>
+              </div>
+              <div class="col-xs-12" style="padding-bottom:15px">
+                <label>Agregar dirección</label>
+                <mat-divider></mat-divider>
+                <br />
+                <form #registroForm="ngForm">
+                  <div class="form-group col-xs-12 col-md-4" style="padding-left:0">
+                    <mat-form-field class="full-width">
+                      <input matInput id="calle_numero" type="text" name="calle_numero" #calle_numero="ngModel" [(ngModel)]="txtcalle_numero" placeholder="Calle y número">
+                    </mat-form-field>
+                  </div>
+
+                  <div class="form-group col-xs-12 col-md-4">
+                    <mat-form-field class="full-width">
+                      <input matInput id="cp" type="text" name="cp" #cp="ngModel" [(ngModel)]="txtcp" placeholder="C.P">
+                    </mat-form-field>
+                  </div>
+
+                  <div class="form-group col-xs-12 col-md-4" style="padding-right:0">
+                    <mat-form-field class="full-width">
+                      <mat-select placeholder="Estado" id="estado" name="estado" #estado="ngModel" [(ngModel)]="ddlestado" (change)="getmunicipios()">
+                        <mat-option *ngFor="let value of estados; trackBy: index;" [value]="value.id">
+                          {{value.desc_estado}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+
+                  <div class="form-group col-xs-12 col-md-4" style="padding-left:0">
+                    <mat-form-field class="full-width">
+                      <mat-select placeholder="Delegación / Municipio" id="municipio" name="municipio" #municipio="ngModel" [(ngModel)]="ddlmunicipio">
+                        <mat-option *ngFor="let value of municipios; trackBy: index;" [value]="value.id">
+                          {{value.municipio}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+
+                  <div class="form-group col-xs-12 col-md-4">
+                    <mat-form-field class="full-width">
+                      <input matInput id="colonia" type="text" name="colonia" #colonia="ngModel" [(ngModel)]="txtcolonia" placeholder="Cólonia">
+                    </mat-form-field>
+                  </div>
+
+                  <div class="form-group col-xs-12 col-md-4" style="padding-right:0;">
+                    <mat-form-field class="full-width">
+                      <input matInput [textMask]="{mask: mask_telefono, guide: false}" id="telefono" type="text" name="telefono" #telefono="ngModel" [(ngModel)]="txttelefono" placeholder="Télefono">
+                    </mat-form-field>
+                  </div>
+
+                  <div class="col-xs-12 text-right" style="padding:0;">
+                    <button type="submit" class="pull-center btn btn-default btn-default-rojo" (click)="guardar_direccion($event); registroForm.resetForm({})">Agregar</button>
+                  </div>
+                </form>
+
               </div>
             </div>
-            <div class="col-xs-12" style="padding-bottom:15px">
-              <label>Agregar dirección</label>
-              <mat-divider></mat-divider>
-              <br />
-              <form #registroForm="ngForm">
-                <div class="form-group col-xs-12 col-md-4" style="padding-left:0">
-                  <mat-form-field class="full-width">
-                    <input matInput id="calle_numero" type="text" name="calle_numero" #calle_numero="ngModel" [(ngModel)]="txtcalle_numero" placeholder="Calle y número">
-                  </mat-form-field>
-                </div>
 
-                <div class="form-group col-xs-12 col-md-4">
-                  <mat-form-field class="full-width">
-                    <input matInput id="cp" type="text" name="cp" #cp="ngModel" [(ngModel)]="txtcp" placeholder="C.P">
-                  </mat-form-field>
-                </div>
-
-                <div class="form-group col-xs-12 col-md-4" style="padding-right:0">
-                  <mat-form-field class="full-width">
-                    <mat-select placeholder="Estado" id="estado" name="estado" #estado="ngModel" [(ngModel)]="ddlestado" (change)="getmunicipios()">
-                      <mat-option *ngFor="let value of estados; trackBy: index;" [value]="value.id">
-                        {{value.desc_estado}}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                </div>
-
-                <div class="form-group col-xs-12 col-md-4" style="padding-left:0">
-                  <mat-form-field class="full-width">
-                    <mat-select placeholder="Municipio" id="municipio" name="municipio" #municipio="ngModel" [(ngModel)]="ddlmunicipio">
-                      <mat-option *ngFor="let value of municipios; trackBy: index;" [value]="value.id">
-                        {{value.municipio}}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                </div>
-
-                <div class="form-group col-xs-12 col-md-4">
-                  <mat-form-field class="full-width">
-                    <input matInput id="colonia" type="text" name="colonia" #colonia="ngModel" [(ngModel)]="txtcolonia" placeholder="Cólonia">
-                  </mat-form-field>
-                </div>
-
-                <div class="form-group col-xs-12 col-md-4" style="padding-right:0;">
-                  <mat-form-field class="full-width">
-                    <input matInput [textMask]="{mask: mask_telefono, guide: false}" id="telefono" type="text" name="telefono" #telefono="ngModel" [(ngModel)]="txttelefono" placeholder="Télefono">
-                  </mat-form-field>
-                </div>
-
-                <div class="col-xs-12 text-right" style="padding:0;">
-                  <button type="submit" class="pull-center btn btn-default btn-default-rojo" (click)="guardar_direccion($event); registroForm.resetForm({})">Agregar</button>
-                </div>
-              </form>
-
-            </div>
           </div>
         </div>
         <!-- /.box -->
       </div>
 
-      <div class="col-md-12">
+      <div class="col-md-12" [hidden]="valid_tipo_taller">
         <div class="box">
           <div class="box-header with-border">
             <h3 class="box-title negritas">Agenda</h3>
@@ -602,6 +620,30 @@
               </mat-tab-group>
               <div class="col-xs-12" style="padding-bottom:15px;"></div>
               <div class="col-xs-12" style="padding:0">
+                <div class="form-group col-xs-12 col-md-12">
+                  <mat-checkbox style="padding-right:10px"
+                                id="no_pago"
+                                name="no_pago"
+                                [(ngModel)]="chk_no_pago"
+                                #no_pago="ngModel"
+                                value="1">
+                    No hay pago
+                  </mat-checkbox>
+                  <mat-form-field *ngIf="chk_no_pago">
+                    <mat-select placeholder="Selecciona" id="no_pago_cat" name="no_pago_cat" #no_pago_cat="ngModel" [(ngModel)]="ddl_no_pago_cat">
+                      <mat-option value="Garantía">
+                        Garantía
+                      </mat-option>
+                      <mat-option value="Asegurado">
+                        Asegurado
+                      </mat-option>
+                      <mat-option value="Pendiente de Pago">
+                        Pendiente de Pago
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+
                 <div class="form-group col-xs-12 col-md-12">
                   <mat-checkbox style="padding-right:10px"
                                 id="terminos_condiciones_tarjeta"

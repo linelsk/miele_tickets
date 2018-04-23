@@ -18,6 +18,10 @@ html, body {
   min-height: 65px;
 }
 
+/*.skin-blue .main-header .navbar {
+  background-color: #EEEDEB !important;
+}*/
+
 .main-header .sidebar-toggle {
   float: left;
   font-size: 25px;

@@ -3,34 +3,7 @@
   <br class="visible-xs" />
   <form #verservicioForm="ngForm">
     <section class="content">
-      <div class="row">
-        <div class="col-md-12">
-          <div class="box">
-            <div class="box-header with-border">
-              <h3 class="box-title negritas">Nuevo ticket</h3>
-              <div class="box-tools pull-right">
-                <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                  <i class="fa fa-minus"></i>
-                </button>
-              </div>
-            </div>
-            <!-- /.box-header -->
-            <div class="box-body">
-              <div class="input-group">
-                <input type="text" name="message" placeholder="Buscar por: Orden de servicio, teléfono, dirección, nombre" class="form-control">
-                <span class="input-group-btn">
-                  <button type="button" class="pull-center btn btn-default btn-default-rojo">Buscar</button>
-                </span>
-                <span class="input-group-btn">
-                </span>
-              </div>
-            </div>
-          </div>
-          <!-- /.box -->
-        </div>
-        <!-- /.col -->
-      </div>
-
+      
       <div class="row">
         <div class="col-md-12">
           <div class="box">
@@ -45,140 +18,170 @@
             <!-- /.box-header -->
             <div class="box-body">
               <div class="form-group col-xs-12">
-                <mat-radio-group>
-                  <mat-radio-button value="1">Persona fisica</mat-radio-button>
-                  <mat-radio-button value="2">Persona moral</mat-radio-button>
+                <mat-radio-group id="tipo_persona" name="tipo_persona" #tipo_persona="ngModel" [(ngModel)]="cliente.tipo_persona">
+                  <mat-radio-button value="Persona fisica">Persona fisica</mat-radio-button>
+                  <mat-radio-button value="Persona moral">Persona moral</mat-radio-button>
                 </mat-radio-group>
               </div>
               <div class="form-group col-md-4">
-                <label>Nombre(s)</label>
-                <input type="text" class="form-control" id="noalmacen" name="noalmacen" [(ngModel)]="almacen" #noalmacen="ngModel" required (ngModelChange)="validacion_form($event)">
-                <div *ngIf="noalmacen.invalid && (noalmacen.dirty || noalmacen.touched)"
+                <mat-form-field class="full-width">
+                  <input type="text" matInput id="nombre" name="nombre" [(ngModel)]="cliente.nombre" #nombre="ngModel" placeholder="Nombre(s)" required>
+                </mat-form-field>
+                <div *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)"
                      class="alert alert-danger">
-                  <div *ngIf="noalmacen.errors.required">
-                    Número de almacen requerido.
+                  <div *ngIf="nombre.errors.required">
+                    Nombre requerido requerido.
                   </div>
                 </div>
               </div>
               <div class="form-group col-md-4">
-                <label>Apellido paterno</label>
-                <input type="text" class="form-control" id="noalmacen" name="noalmacen" [(ngModel)]="almacen" #noalmacen="ngModel" required (ngModelChange)="validacion_form($event)">
-                <div *ngIf="noalmacen.invalid && (noalmacen.dirty || noalmacen.touched)"
+                <mat-form-field class="full-width">
+                  <input type="text" matInput id="paterno" name="paterno" [(ngModel)]="cliente.paterno" #paterno="ngModel" placeholder="Apellido paterno" required>
+                </mat-form-field>
+                <div *ngIf="paterno.invalid && (paterno.dirty || paterno.touched)"
                      class="alert alert-danger">
-                  <div *ngIf="noalmacen.errors.required">
-                    Número de almacen requerido.
+                  <div *ngIf="paterno.errors.required">
+                    Apellido paterno requerido.
                   </div>
                 </div>
               </div>
               <div class="form-group col-md-4">
-                <label>Apellido materno</label>
-                <input type="text" class="form-control" id="noalmacen" name="noalmacen" [(ngModel)]="almacen" #noalmacen="ngModel" required (ngModelChange)="validacion_form($event)">
-                <div *ngIf="noalmacen.invalid && (noalmacen.dirty || noalmacen.touched)"
+                <mat-form-field class="full-width">
+                  <input type="text" matInput id="materno" name="materno" [(ngModel)]="cliente.materno" #materno="ngModel" placeholder="Apellido materno">
+                </mat-form-field>
+              </div>
+
+              <div class="form-group col-md-4">
+                <mat-form-field class="full-width">
+                  <input type="email" matInput id="email" name="email" [(ngModel)]="cliente.email" #email="ngModel" placeholder="Email" required pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,6})+$">
+                </mat-form-field>
+                <div *ngIf="email.invalid && (email.dirty || email.touched)"
                      class="alert alert-danger">
-                  <div *ngIf="noalmacen.errors.required">
-                    Número de almacen requerido.
+                  <div *ngIf="email.errors.required">
+                    Email requerido.
                   </div>
+                  <div *ngIf="email.errors && email.errors.pattern">
+                    El Email no es valido (ej. ejemplo@do.com)
+                  </div>
+                </div>
+              </div>
+              <div class="form-group col-md-4">
+                <mat-form-field class="full-width">
+                  <input type="text" [textMask]="{mask: mask_cp, guide: false}" matInput id="cp" name="cp" [(ngModel)]="direccion.cp" #cp="ngModel" (ngModelChange)="sepomex();" placeholder="CP" required>
+                </mat-form-field>
+                <div *ngIf="cp.invalid && (cp.dirty || cp.touched)"
+                     class="alert alert-danger">
+                  <div *ngIf="cp.errors.required">
+                    C.P requerido.
+                  </div>
+                </div>
+              </div>
+              <div class="form-group col-md-4">
+                <mat-form-field class="full-width">
+                  <mat-select placeholder="Estado" id="estado" name="estado" #estado="ngModel" [(ngModel)]="direccion.id_estado" (change)="getmunicipios()" required>
+                    <mat-option *ngFor="let value of estados; trackBy: index;" [value]="value.id">
+                      {{value.desc_estado}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <div *ngIf="estado.invalid && (estado.dirty || estado.touched)"
+                     class="alert alert-danger">
+                  <div *ngIf="estado.errors.required">
+                    Estado requerido.
+                  </div>
+                </div>
+              </div>
+              <div class="form-group col-md-4">
+                <mat-form-field class="full-width">
+                  <mat-select placeholder="Delegación / Municipio" id="municipio" name="municipio" #municipio="ngModel" [(ngModel)]="direccion.id_municipio">
+                    <mat-option *ngFor="let value of municipios; trackBy: index;" [value]="value.id">
+                      {{value.municipio}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <div *ngIf="municipio.invalid && (municipio.dirty || municipio.touched)"
+                     class="alert alert-danger">
+                  <div *ngIf="municipio.errors.required">
+                    Delegación / Municipio requerido.
+                  </div>
+                </div>
+              </div>
+              <div class="form-group col-md-4">
+                <mat-form-field class="full-width">
+                  <mat-select placeholder="Colonia" id="colonia" name="colonia" #colonia="ngModel" [(ngModel)]="direccion.colonia" required>
+                    <mat-option *ngFor="let value of localidades; trackBy: index;" [value]="value.id_localidad">
+                      {{value.localidad}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <div *ngIf="colonia.invalid && (colonia.dirty || colonia.touched)"
+                     class="alert alert-danger">
+                  <div *ngIf="colonia.errors.required">
+                    Colonia requerido.
+                  </div>
+                </div>
+              </div>
+              <div class="form-group col-md-4">
+                <div class="col-md-4" style="padding:0;">
+                  <mat-form-field class="full-width">
+                    <input type="text" matInput id="calle_numero" name="calle_numero" [(ngModel)]="direccion.calle_numero" #calle_numero="ngModel" placeholder="Calle" required>
+                  </mat-form-field>
+                  <div *ngIf="calle_numero.invalid && (calle_numero.dirty || calle_numero.touched)"
+                       class="alert alert-danger">
+                    <div *ngIf="calle_numero.errors.required">
+                      Calle y número requerido.
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4" style="padding:0;">
+                  <mat-form-field class="full-width">
+                    <input type="text" matInput id="NumExt" name="NumExt" [(ngModel)]="direccion.NumExt" #NumExt="ngModel" placeholder="No. exterior" required>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-4" style="padding:0;">
+                  <mat-form-field class="full-width">
+                    <input type="text" matInput id="NumInt" name="NumInt" [(ngModel)]="direccion.NumInt" #NumInt="ngModel" placeholder="No. interior">
+                  </mat-form-field>
                 </div>
               </div>
 
               <div class="form-group col-md-4">
-                <label>Email</label>
-                <input type="text" class="form-control" id="noalmacen" name="noalmacen" [(ngModel)]="almacen" #noalmacen="ngModel" required (ngModelChange)="validacion_form($event)">
-                <div *ngIf="noalmacen.invalid && (noalmacen.dirty || noalmacen.touched)"
+                <mat-form-field class="full-width">
+                  <input type="text" matInput id="telefono" name="telefono" [(ngModel)]="direccion.telefono" #telefono="ngModel" placeholder="Teléfono fijo" required>
+                </mat-form-field>
+                <div *ngIf="telefono.invalid && (telefono.dirty || telefono.touched)"
                      class="alert alert-danger">
-                  <div *ngIf="noalmacen.errors.required">
-                    Número de almacen requerido.
+                  <div *ngIf="telefono.errors.required">
+                    Teléfono requerido.
                   </div>
                 </div>
               </div>
               <div class="form-group col-md-4">
-                <label>Calle y número</label>
-                <input type="text" class="form-control" id="noalmacen" name="noalmacen" [(ngModel)]="almacen" #noalmacen="ngModel" required (ngModelChange)="validacion_form($event)">
-                <div *ngIf="noalmacen.invalid && (noalmacen.dirty || noalmacen.touched)"
+                <mat-form-field class="full-width">
+                  <input type="text" matInput id="telefono_movil" name="telefono_movil" [(ngModel)]="direccion.telefono_movil" #telefono_movil="ngModel" placeholder="Teléfono celular" required>
+                </mat-form-field>
+                <div *ngIf="telefono_movil.invalid && (telefono_movil.dirty || telefono_movil.touched)"
                      class="alert alert-danger">
-                  <div *ngIf="noalmacen.errors.required">
-                    Número de almacen requerido.
-                  </div>
-                </div>
-              </div>
-              <div class="form-group col-md-4">
-                <label>CP</label>
-                <input type="text" class="form-control" id="noalmacen" name="noalmacen" [(ngModel)]="almacen" #noalmacen="ngModel" required (ngModelChange)="validacion_form($event)">
-                <div *ngIf="noalmacen.invalid && (noalmacen.dirty || noalmacen.touched)"
-                     class="alert alert-danger">
-                  <div *ngIf="noalmacen.errors.required">
-                    Número de almacen requerido.
-                  </div>
-                </div>
-              </div>
-
-              <div class="form-group col-md-4">
-                <label>Estado</label>
-                <select type="text" class="form-control" id="tecnico" name="tecnico" #tecnico="ngModel" [(ngModel)]="tipotecnico" (ngModelChange)="validacion_form($event)" required>
-                  <option value="1">Tipo 1</option>
-                  <option value="2">Tipo 2</option>
-                </select>
-                <div *ngIf="noalmacen.invalid && (noalmacen.dirty || noalmacen.touched)"
-                     class="alert alert-danger">
-                  <div *ngIf="noalmacen.errors.required">
-                    Número de almacen requerido.
-                  </div>
-                </div>
-              </div>
-              <div class="form-group col-md-4">
-                <label>Delegación / Municipio</label>
-                <select type="text" class="form-control" id="tecnico" name="tecnico" #tecnico="ngModel" [(ngModel)]="tipotecnico" (ngModelChange)="validacion_form($event)" required>
-                  <option value="1">Tipo 1</option>
-                  <option value="2">Tipo 2</option>
-                </select>
-                <div *ngIf="noalmacen.invalid && (noalmacen.dirty || noalmacen.touched)"
-                     class="alert alert-danger">
-                  <div *ngIf="noalmacen.errors.required">
-                    Número de almacen requerido.
-                  </div>
-                </div>
-              </div>
-              <div class="form-group col-md-4">
-                <label>Colonia</label>
-                <input type="text" class="form-control" id="noalmacen" name="noalmacen" [(ngModel)]="almacen" #noalmacen="ngModel" required (ngModelChange)="validacion_form($event)">
-                <div *ngIf="noalmacen.invalid && (noalmacen.dirty || noalmacen.touched)"
-                     class="alert alert-danger">
-                  <div *ngIf="noalmacen.errors.required">
-                    Número de almacen requerido.
-                  </div>
-                </div>
-              </div>
-
-              <div class="form-group col-md-4">
-                <label>Teléfono fijo</label>
-                <input type="text" class="form-control" id="noalmacen" name="noalmacen" [(ngModel)]="almacen" #noalmacen="ngModel" required (ngModelChange)="validacion_form($event)">
-                <div *ngIf="noalmacen.invalid && (noalmacen.dirty || noalmacen.touched)"
-                     class="alert alert-danger">
-                  <div *ngIf="noalmacen.errors.required">
-                    Número de almacen requerido.
-                  </div>
-                </div>
-              </div>
-              <div class="form-group col-md-4">
-                <label>Teléfono celular</label>
-                <input type="text" class="form-control" id="noalmacen" name="noalmacen" [(ngModel)]="almacen" #noalmacen="ngModel" required (ngModelChange)="validacion_form($event)">
-                <div *ngIf="noalmacen.invalid && (noalmacen.dirty || noalmacen.touched)"
-                     class="alert alert-danger">
-                  <div *ngIf="noalmacen.errors.required">
-                    Número de almacen requerido.
+                  <div *ngIf="telefono_movil.errors.required">
+                    Teléfono celular requerido.
                   </div>
                 </div>
               </div>
 
               <div class="form-group col-md-12">
-                <label>Referencias</label>
-                <textarea rows="5" cols="5" class="form-control" id="noalmacen" name="noalmacen" [(ngModel)]="almacen" #noalmacen="ngModel" required (ngModelChange)="validacion_form($event)"></textarea>
-                <div *ngIf="noalmacen.invalid && (noalmacen.dirty || noalmacen.touched)"
+                <mat-form-field class="full-width">
+                  <textarea matInput placeholder="Referencias" id="referencias" name="referencias" [(ngModel)]="cliente.referencias" #referencias="ngModel" required></textarea>
+                </mat-form-field>
+                <div *ngIf="referencias.invalid && (referencias.dirty || referencias.touched)"
                      class="alert alert-danger">
-                  <div *ngIf="noalmacen.errors.required">
-                    Número de almacen requerido.
+                  <div *ngIf="referencias.errors.required">
+                    Referencias requerido.
                   </div>
                 </div>
+              </div>
+
+              <div class="form-group col-md-12 text-right">
+                <button type="submit" class="pull-center btn btn-default" (click)="guardar_cliente()">test cliente</button>
               </div>
             </div>
           </div>

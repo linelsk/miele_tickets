@@ -96,7 +96,7 @@ export class EditarServicioComponent implements OnInit {
     });
 
     this.heroService.service_general_get("servicios/" + this.id, {}).subscribe((value) => {
-      console.log(value[0].visitas);
+      //console.log(value[0].);
       this.servicio_detalle = value[0];
       this.dataSource.data = value[0].productos;
       this.dataSource_visita.data = value[0].productos;
@@ -166,18 +166,28 @@ export class EditarServicioComponent implements OnInit {
     this.sub = this.route.params.subscribe(params => {
       this.id = +params['id'];
     });
-
-    this.heroService.service_general("servicios/Actualizar_estatus", {
-      "id": this.id,
-      "numero": this.dllestatusservicio
-    }).subscribe((value) => {
-      this.snackBar.open("Estatus de servico editado correctamente", "", {
+    console.log(this.text_editaribs);
+    if (this.text_editaribs != "") {
+      this.heroService.service_general("servicios/Actualizar_estatus", {
+        "id": this.id,
+        "numero": this.dllestatusservicio
+      }).subscribe((value) => {
+        this.snackBar.open("Estatus de servico editado correctamente", "", {
+          duration: 5000,
+          verticalPosition: 'bottom',
+          horizontalPosition: 'right',
+          extraClasses: ['blue-snackbar']
+        });
+      });
+    }
+    else {
+      this.snackBar.open("Para guardar el servicio es necesario ingresar un IBS", "", {
         duration: 5000,
         verticalPosition: 'bottom',
         horizontalPosition: 'right',
         extraClasses: ['blue-snackbar']
       });
-    });
+    }
   }
 
   openEstatus(obj): void {
@@ -188,7 +198,7 @@ export class EditarServicioComponent implements OnInit {
     }
 
     let dialogRef = this.dialog.open(DialogEditarEstatus, {
-      width: '500px',
+      width: '350px',
       disableClose: true,
       data: { id: this.id }
     });
@@ -196,20 +206,30 @@ export class EditarServicioComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log(result);
       if (result != undefined) {
-        this.heroService.service_general("servicios/Actualizar_estatus_servicio_visita", {
-          "id": result.id
-        }).subscribe((value) => {
-          this.snackBar.open("Estatus de servico editado correctamente", "", {
+        if (this.text_editaribs != "") {
+          this.heroService.service_general("servicios/Actualizar_estatus_servicio_visita", {
+            "id": result.id
+          }).subscribe((value) => {
+            this.snackBar.open("Estatus de servico editado correctamente", "", {
+              duration: 5000,
+              verticalPosition: 'bottom',
+              horizontalPosition: 'right',
+              extraClasses: ['blue-snackbar']
+            });
+            this.heroService.service_general_get("servicios/" + this.id, {}).subscribe((value) => {
+              this.servicio_detalle = value[0];
+              this.detalle_visita = value[0].visitas;
+            });
+          });
+        }
+        else {
+          this.snackBar.open("Para guardar el servicio es necesario ingresar un IBS", "", {
             duration: 5000,
             verticalPosition: 'bottom',
             horizontalPosition: 'right',
             extraClasses: ['blue-snackbar']
           });
-          this.heroService.service_general_get("servicios/" + this.id, {}).subscribe((value) => {
-            this.servicio_detalle = value[0];
-            this.detalle_visita = value[0].visitas;
-          });
-        });
+        }
       }
     });
   }
@@ -222,7 +242,7 @@ export class EditarServicioComponent implements OnInit {
     }
 
     let dialogRef = this.dialog.open(DialogFinal, {
-      width: '500px',
+      width: '350px',
       disableClose: true,
       data: { id: this.id }
     });
@@ -247,7 +267,7 @@ export class EditarServicioComponent implements OnInit {
       }
     });
   }
-
+  rdconfirmado: any = 0;
   openCancelar(obj): void {
     if (obj == 1) {
       this.sub = this.route.params.subscribe(params => {
@@ -256,16 +276,17 @@ export class EditarServicioComponent implements OnInit {
     }
 
     let dialogRef = this.dialog.open(DialogCancelarEstatus, {
-      width: '500px',
+      width: '350px',
       disableClose: true,
-      data: { id: this.id }
+      data: { id: this.id, status: this.rdconfirmado }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       //console.log(result);
       if (result != undefined) {
         this.heroService.service_general("servicios/Actualizar_estatus_cancelado", {
-          "id": result.id
+          "id": result.id,
+          "numero": result.status
         }).subscribe((value) => {
           this.snackBar.open("Servico cancelado correctamente", "", {
             duration: 5000,
