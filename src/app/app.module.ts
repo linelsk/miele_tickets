@@ -1,3 +1,6 @@
+import { registerLocaleData } from '@angular/common';
+import localeFr from '@angular/common/locales/fr';
+import localeEs from '@angular/common/locales/es';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'; // <-- NgModel lives here
@@ -6,6 +9,7 @@ import { HttpModule, Http } from '@angular/http';
 import { TextMaskModule } from 'angular2-text-mask';
 import { NgProgressModule } from '@ngx-progressbar/core';
 import { NgProgressHttpModule } from '@ngx-progressbar/http';
+import { CalendarWeekHoursViewModule } from './modules/calendar-week-hours-view/calendar-week-hours-view.module';
 import { CalendarModule } from 'angular-calendar';
 import { DemoUtilsModule } from './demo-utils/module';
 import { MatTableModule } from '@angular/material/table';
@@ -64,6 +68,9 @@ import { FocusDirective } from './focus.directive';
 //light box
 import { LightboxModule } from 'angular2-lightbox';
 
+registerLocaleData(localeFr);
+registerLocaleData(localeEs);
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -98,6 +105,7 @@ import { LightboxModule } from 'angular2-lightbox';
     AppRoutingModule,
     FormsModule,
     CalendarModule.forRoot(),
+    CalendarWeekHoursViewModule,
     DemoUtilsModule,
     ReactiveFormsModule,
     HttpClientModule,

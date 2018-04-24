@@ -31,6 +31,7 @@
         "../node_modules/bootstrap3-wysihtml5-bower/dist/bootstrap3-wysihtml5.css",
         "../node_modules/bootstrap-select/dist/css/bootstrap-select.css",
         "../node_modules/angular-calendar/css/angular-calendar.css",
+        "./app/modules/calendar-week-hours-view/calendar-week-hours-view.component.scss",
         "../node_modules/angular2-lightbox/lightbox.css"  
       ],
       "scripts": [

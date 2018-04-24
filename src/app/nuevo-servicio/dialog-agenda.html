@@ -1,32 +1,9 @@
-<style>
-
-  .btn-default {
-    background-color: #EEEDEB;
-    color: #847d70;
-    border-color: #ddd;
-    padding-left: 50px;
-    padding-right: 50px;
-    font-weight: bold;
-  }
-
-  .btn-default-rojo {
-    background-color: #E60000;
-    color: #fff;
-    border-color: #E60000;
-  }
-
-    .btn-default-rojo:hover {
-      background-color: #E60000;
-      color: #fff;
-      border-color: #E60000;
-    }
-</style>
-<div mat-dialog-content>
+<div style="padding-bottom: 5em; width:100%; height:50%">
   <div class="row">
     <div class="form-group col-xs-12">
       <div class="col-xs-12 col-md-6" style="text-align:left; padding:0;">
         <span style="display: inline-block; font-size: 18px; margin: 0; line-height: 1; font-weight: bold;">
-          Agendar cita
+          Agendar visita.
         </span>
       </div>
       <div class="col-xs-12 col-md-6" style="text-align:right; padding:0;">
@@ -36,44 +13,92 @@
     <div class="col-xs-12" style="padding-left:0; padding-right:0; padding-bottom:10px">
       <mat-divider></mat-divider>
     </div>
-    <div class="col-xs-12 col-md-4" style="padding-bottom:15px;">
-      <label>Tecnico</label>
-      <select type="text" class="form-control" id="tecnico_servicio" name="tecnico_servicio" #tecnico_servicio="ngModel" [(ngModel)]="data._idtecnico" required>
-        <option *ngFor='let value of tecnicos; trackBy: index;' value="{{value.id}}">{{value.tecnico}}</option>
-      </select>
-    </div>
-    <div class="form-group col-xs-12">
-      <mwl-demo-utils-calendar-header [(view)]="view"
-                                      [(viewDate)]="viewDate">
-      </mwl-demo-utils-calendar-header>
 
-      <!--<div class="alert alert-info">
-        <div [ngSwitch]="view">
-          <span *ngSwitchCase="'month'">Click on a month label to change the view to that month.</span>
-          <span *ngSwitchCase="'week'">Click on a day header to change the view to that day.</span>
-          <span *ngSwitchCase="'day'">There is no other view to navigate to.</span>
+    <div class="form-group col-xs-12">      
+      <div class="col-md-2 col-xs-12" style="padding-left:0; padding-right:0;">
+        <div class="col-xs-12" style="padding-bottom:15px"></div>
+        <div class="col-xs-12 btn-group" style="padding-left:0; padding-right:0;">
+
+          <div class="btn btn-primary"
+               (click)="view = 'month'"
+               [class.active]="view === 'month'">
+            Month
+          </div>
+          <div class="btn btn-primary"
+               (click)="view = 'week'"
+               [class.active]="view === 'week'">
+            Week
+          </div>
+          <div class="btn btn-primary"
+               (click)="view = 'day'"
+               [class.active]="view === 'day'">
+            Day
+          </div>
         </div>
-      </div>-->
+        <div class="col-xs-12" style="padding-bottom:19px"></div>
+        <div class="col-xs-12" style="border: 1px solid #e1e1e1; text-align:left; padding: 10px 6px 10px 6px; padding:0; height:300px">
+          <div class="col-xs-12">
+            <label>Técnicos</label>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-10 col-xs-12" style="padding:0;">
+        <div class="col-xs-12 text-center">
+          <div class="btn-group" style="float: none;">
+            <div class="btn btn-primary" style="float: none;"
+                 mwlCalendarPreviousView
+                 [view]="view"
+                 [(viewDate)]="viewDate">
+              <i class="fa fa-angle-left" aria-hidden="true"></i>
+            </div>
+            <div class="btn btn-outline-secondary" style="float: none;"
+                 mwlCalendarToday
+                 [(viewDate)]="viewDate">
+              <span style="font-size:x-large">{{ viewDate | calendarDate:'monthViewTitle':locale }}</span>
 
-      <div [ngSwitch]="view">
-        <mwl-calendar-month-view *ngSwitchCase="'month'"
-                                 [viewDate]="viewDate"
-                                 [events]="events"
-                                 (dayClicked)="viewDate = $event.day.date; view = 'day'">
-        </mwl-calendar-month-view>
-        <mwl-calendar-week-view *ngSwitchCase="'week'"
-                                [viewDate]="viewDate"
-                                [events]="events"
-                                (dayHeaderClicked)="viewDate = $event.day.date; view = 'day'">
-        </mwl-calendar-week-view>
-        <mwl-calendar-day-view *ngSwitchCase="'day'"
-                               [viewDate]="viewDate"
-                               [events]="events">
-        </mwl-calendar-day-view>
+            </div>
+            <div class="btn btn-primary" style="float: none;"
+                 mwlCalendarNextView
+                 [view]="view"
+                 [(viewDate)]="viewDate">
+              <i class="fa fa-angle-right" aria-hidden="true"></i>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-12" style="padding-bottom:20px"></div>
+        <div class="col-xs-12" style="padding:0;">
+          <div [ngSwitch]="view">
+            <mwl-calendar-month-view *ngSwitchCase="'month'"
+                                     [viewDate]="viewDate"
+                                     [events]="events"
+                                     [locale]="locale"
+                                     [weekStartsOn]="weekStartsOn"
+                                     [weekendDays]="weekendDays"
+                                     [refresh]="refresh">
+            </mwl-calendar-month-view>
+            <iq-calendar-week-hours-view *ngSwitchCase="'week'"
+                                         [viewDate]="viewDate"
+                                         [events]="events"
+                                         [locale]="locale"
+                                         [weekStartsOn]="weekStartsOn"
+                                         [weekendDays]="weekendDays"
+                                         [hourSegments]="2"
+                                         [dayStartHour]="9"
+                                         [dayEndHour]="18"
+                                         (eventClicked)="eventClicked($event)"
+                                         (hourSegmentClicked)="hourSegmentClicked($event)"
+                                         (eventTimesChanged)="eventTimesChanged($event)"
+                                         [refresh]="refresh">
+            </iq-calendar-week-hours-view>
+            <mwl-calendar-day-view *ngSwitchCase="'day'"
+                                   [viewDate]="viewDate"
+                                   [events]="events"
+                                   [locale]="locale"
+                                   [refresh]="refresh">
+            </mwl-calendar-day-view>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
-<div class="col-xs-12" style="text-align:center;">
-  <button mat-button [mat-dialog-close]="data" cdkFocusInitial class="btn-default btn-default-rojo">Guardar</button>
 </div>

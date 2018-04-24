@@ -7,7 +7,9 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSnackBar } from '@angular/
 import { FormControl } from '@angular/forms';
 import { startWith } from 'rxjs/operators/startWith';
 import { map } from 'rxjs/operators/map';
-import { CalendarEvent } from 'angular-calendar';
+import { addDays, addHours, endOfDay, endOfMonth, isSameDay, isSameMonth, startOfDay, subDays } from 'date-fns';
+import { Subject } from 'rxjs/Subject';
+import { CalendarEvent, CalendarEventTimesChangedEvent, DAYS_OF_WEEK } from 'angular-calendar';
 import { MatTableDataSource } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Router } from '@angular/router';
@@ -136,7 +138,7 @@ export class NuevoServicioComponent implements OnInit {
         if (this.value_productos[i].id_producto == row.id) {
           this.value_productos.splice(i, 1);
         }
-      }      
+      }
     }
 
   };
@@ -247,7 +249,7 @@ export class NuevoServicioComponent implements OnInit {
     //this.validacion_actividades_realizar();
     this.validacion_terminos_condiciones();
     console.log(this.value_productos);
-    
+
     if (this.validacion_tipo() && this.validacion_solicitado_por() && this.validacion_ddl_autorizacion() && this.validacion_contacto() && this.validacion_descripcion_actividades()
       && this.validacion_categoria_servicio() && this.Validacion_fecha_visita() && this.validacion_tecnico_visita() && this.validacion_hora_visita() &&
       this.validacion_terminos_condiciones()) {
@@ -401,7 +403,7 @@ export class NuevoServicioComponent implements OnInit {
     this.getdistribuidor();
     this.getestados();
     this.getfacturaestados();
-    
+
     this.filteredOptions = this.myControl.valueChanges
       .pipe(
       startWith(''),
@@ -736,7 +738,8 @@ export class NuevoServicioComponent implements OnInit {
 
   openAgenda(obj): void {
     let dialogRef = this.dialog.open(DialogAgenda, {
-      width: '700px',
+      width: '100%',
+      height: '95%',
       disableClose: true,
       data: { _idtecnico: "", _tecnico: "" }
     });
@@ -802,6 +805,22 @@ export class DialogIbsDialog {
   }
 }
 
+
+const colors: any = {
+  red: {
+    primary: '#ad2121',
+    secondary: '#FAE3E3'
+  },
+  blue: {
+    primary: '#1e90ff',
+    secondary: '#D1E8FF'
+  },
+  yellow: {
+    primary: '#e3bc08',
+    secondary: '#FDF1BA'
+  }
+};
+
 @Component({
   selector: 'dialog-agenda',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -809,9 +828,64 @@ export class DialogIbsDialog {
 })
 export class DialogAgenda {
 
-  view: string = 'month';
+  view = 'week';
   viewDate: Date = new Date();
-  events: CalendarEvent[] = [];
+  refresh: Subject<any> = new Subject();
+  events: CalendarEvent[] = [
+    {
+      start: addHours(startOfDay(new Date()), 9),
+      end: addHours(startOfDay(new Date()), 10),
+      title: 'Patient A',
+      color: colors.yellow,
+      draggable: true,
+      resizable: {
+        beforeStart: true,
+        afterEnd: true
+      }
+    },
+    {
+      start: addHours(startOfDay(new Date()), 10),
+      end: addHours(startOfDay(new Date()), 11),
+      title: 'Patient B',
+      color: colors.yellow,
+    },
+    {
+      start: addHours(startOfDay(new Date()), 9.5),
+      end: addHours(startOfDay(new Date()), 10.5),
+      title: 'Simoultaneous',
+      color: colors.red,
+    },
+    {
+      start: addDays(addHours(startOfDay(new Date()), 15), 1),
+      end: addDays(addHours(startOfDay(new Date()), 17), 1),
+      title: 'Another example',
+      color: colors.blue
+    }
+  ];
+
+  locale: string = 'es';
+
+  weekStartsOn: number = DAYS_OF_WEEK.MONDAY;
+
+  weekendDays: number[] = [DAYS_OF_WEEK.MONDAY];
+
+  eventClicked(event) {
+    console.log(event);
+  }
+
+  hourSegmentClicked(event) {
+    console.log(event);
+  }
+
+  eventTimesChanged({
+    event,
+    newStart,
+    newEnd
+                      }: CalendarEventTimesChangedEvent): void {
+    event.start = newStart;
+    event.end = newEnd;
+    this.refresh.next();
+  }
   tecnicos: string[] = [];
 
   constructor(

@@ -33,7 +33,7 @@ export class EditarServicioComponent implements OnInit {
   dllestatusservicio: number = 0;
   panelOpenState: boolean = false;
   mostrar_distribuidor: boolean = false;
-  text_editaribs: string = ""; 
+  text_editaribs: string = "";
   private _albums: any[] = [];
 
   foods = [
@@ -110,6 +110,7 @@ export class EditarServicioComponent implements OnInit {
         this.detalle_direccion = result[0].direcciones[0];
       });
     });
+
   }
 
   open(index: number, obj: any): void {
@@ -268,7 +269,17 @@ export class EditarServicioComponent implements OnInit {
     });
   }
   rdconfirmado: any = 0;
+  confirmacion_cancel(): void {
+    
+  };
+
   openCancelar(obj): void {
+
+    setTimeout(() => {    //<<<---    using ()=> syntax
+      this.servicio_detalle = JSON.parse(localStorage.getItem("servicio_detalle"))
+      this.detalle_visita = JSON.parse(localStorage.getItem("detalle_visita"))
+    }, 5000);
+
     if (obj == 1) {
       this.sub = this.route.params.subscribe(params => {
         this.id = +params['id'];
@@ -283,23 +294,8 @@ export class EditarServicioComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       //console.log(result);
-      if (result != undefined) {
-        this.heroService.service_general("servicios/Actualizar_estatus_cancelado", {
-          "id": result.id,
-          "numero": result.status
-        }).subscribe((value) => {
-          this.snackBar.open("Servico cancelado correctamente", "", {
-            duration: 5000,
-            verticalPosition: 'bottom',
-            horizontalPosition: 'right',
-            extraClasses: ['blue-snackbar']
-          });
-          this.heroService.service_general_get("servicios/" + this.id, {}).subscribe((value) => {
-            this.servicio_detalle = value[0];
-            this.detalle_visita = value[0].visitas;
-          });
-        });
-      }
+      //console.log(this.rdconfirmado);
+      
     });
   }
 }
@@ -325,7 +321,9 @@ export class DialogFinal {
   }
 
   editar_estatus() {
-    console.log(this.data.id);
+    console.log(this.data);
+
+    
   }
 }
 
@@ -374,8 +372,28 @@ export class DialogCancelarEstatus {
     this.dialogRef.close();
   }
 
+  rdconfirmado: any = 0;
   editar_estatus() {
-    console.log(this.data.id);
+    console.log(this.rdconfirmado);
+
+    if (this.data != undefined) {
+      this.heroService.service_general("servicios/Actualizar_estatus_cancelado", {
+        "id": this.data.id,
+        "numero": this.rdconfirmado
+      }).subscribe((value) => {
+        this.snackBar.open("Servico cancelado correctamente", "", {
+          duration: 5000,
+          verticalPosition: 'bottom',
+          horizontalPosition: 'right',
+          extraClasses: ['blue-snackbar']
+        });
+
+        this.heroService.service_general_get("servicios/" + this.data.id, {}).subscribe((value) => {
+          localStorage.setItem("servicio_detalle", JSON.stringify((value[0])));
+          localStorage.setItem("detalle_visita", JSON.stringify((value[0].visitas)));
+        });
+      });
+    }
   }
 }
 
