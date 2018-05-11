@@ -10,6 +10,7 @@ import { TextMaskModule } from 'angular2-text-mask';
 import { NgProgressModule } from '@ngx-progressbar/core';
 import { NgProgressHttpModule } from '@ngx-progressbar/http';
 import { CalendarWeekHoursViewModule } from './modules/calendar-week-hours-view/calendar-week-hours-view.module';
+//import { CalendarMonthModule } from './modules/month/calendar-month.module';
 import { CalendarModule } from 'angular-calendar';
 import { DemoUtilsModule } from './demo-utils/module';
 import { MatTableModule } from '@angular/material/table';
@@ -57,9 +58,9 @@ import { RecuperarPasswordComponent } from './recuperar-password/recuperar-passw
 import { PerfilComponent } from './perfil/perfil.component';
 import { ConfiguracionComponent } from './configuracion/configuracion.component';
 import { VerServicioComponent } from './ver-servicio/ver-servicio.component';
-import { NuevoClienteComponent } from './nuevo-cliente/nuevo-cliente.component';
+import { NuevoClienteComponent, DialogAgendaCliente, DialogVisitaHoraCliente } from './nuevo-cliente/nuevo-cliente.component';
 import { ServicioDetalleComponent } from './servicio-detalle/servicio-detalle.component';
-import { NuevoServicioComponent, DialogFactura, DialogIbsDialog, DialogAgenda } from './nuevo-servicio/nuevo-servicio.component';
+import { NuevoServicioComponent, DialogIbsDialog, DialogAgenda, DialogVisitaHora } from './nuevo-servicio/nuevo-servicio.component';
 import { BuscarServicioComponent } from './buscar-servicio/buscar-servicio.component';
 import { Daterangepicker } from 'ng2-daterangepicker';
 import { EditarServicioComponent, DialogEditarEstatus, DialogCancelarEstatus, DialogFinal } from './editar-servicio/editar-servicio.component';
@@ -89,23 +90,26 @@ registerLocaleData(localeEs);
     NuevoClienteComponent,
     ServicioDetalleComponent,
     NuevoServicioComponent,
-    DialogFactura,
     DialogIbsDialog,
     DialogAgenda,
+    DialogAgendaCliente,
     DialogEditarEstatus,
     DialogCancelarEstatus,
     DialogFinal,
+    DialogVisitaHora,
+    DialogVisitaHoraCliente,
     BuscarServicioComponent,
     EditarServicioComponent,
     FocusDirective
   ],
-  entryComponents: [DialogFactura, DialogIbsDialog, DialogAgenda, DialogEditarEstatus, DialogCancelarEstatus, DialogFinal],
+  entryComponents: [DialogIbsDialog, DialogAgenda, DialogAgendaCliente, DialogEditarEstatus, DialogCancelarEstatus, DialogFinal, DialogVisitaHora, DialogAgendaCliente, DialogVisitaHoraCliente],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     CalendarModule.forRoot(),
     CalendarWeekHoursViewModule,
+    //CalendarMonthModule,
     DemoUtilsModule,
     ReactiveFormsModule,
     HttpClientModule,

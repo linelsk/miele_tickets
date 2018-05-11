@@ -24,7 +24,7 @@ export class ServicioDetalleComponent implements OnInit {
   constructor(private heroService: DatosService, private route: ActivatedRoute) {
   }
 
-  displayedColumns = ['#Servicio', 'Modelo', 'SKU', 'Tipo', 'Garantia', 'Poliza', 'Estatus'];
+  displayedColumns = ['#Servicio', 'Modelo', 'SKU', 'Garantia', 'Poliza', 'Estatus', 'Imagen'];
   dataSource = new MatTableDataSource();
 
   ngOnInit() {
@@ -59,12 +59,12 @@ export class ServicioDetalleComponent implements OnInit {
 
     });
 
-    this.heroService.service_general("Clientes/ProductosBycliente/", {
+    this.heroService.service_general("Servicios/Productos_Servicio_Solicitado", {
       "id": this.id
     }).subscribe((value) => {
       //console.log(value);
       if (value != "") {
-        this.dataSource.data = value[0].productos;
+        this.dataSource.data = value;
       }
       else {
         this.dataSource.data = [];

@@ -14,6 +14,7 @@ import { MatTableDataSource } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Router } from '@angular/router';
 import { Productos_Servicio } from '../models/login';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-nuevo-servicio',
@@ -27,6 +28,7 @@ export class NuevoServicioComponent implements OnInit {
   public detalle: string[] = [];
   public detalle_direccion: any[] = [];
   value_productos: Productos_Servicio[] = [];
+  public ddltipo_servicio = new Tipo_Servicio();
 
   factura: any = {};
   razonsocial: string;
@@ -41,7 +43,7 @@ export class NuevoServicioComponent implements OnInit {
   valid_autorizao: boolean = true;
   valid_contacto: boolean = true;
   valid_descripcion_actividades: boolean = true;
-  valid_categoria_servicio: boolean = true;
+  //valid_categoria_servicio: boolean = true;
   valid_fecha_visita: boolean = true;
   valid_tecnico_visita: boolean = true;
   valid_hora_visita: boolean = true;
@@ -49,7 +51,7 @@ export class NuevoServicioComponent implements OnInit {
   valid_acepto_terminos: boolean = true;
   //Valdaciones
 
-  ddltipo_servicio: number = 0;
+  //ddltipo_servicio: number = 0;
   rdsolicitado: number = 1;
   rdsolicitudvia: number = 1;
   ddldistribuidor_autorizado: number = 0;
@@ -57,6 +59,9 @@ export class NuevoServicioComponent implements OnInit {
   activarcredito: number = 0;
   txtdescripcion_actividades: string = "";
   categoriaservicio: string[] = [];
+  categoria_servicio: number = 0;
+  categoria_servicio_texto: string = "";
+  categoria_servicio_cantidad: number = 0;
   txtfecha_cita: string = "";
   tiposervicio: string[] = [];
   ddlcategoria_servicio: number = 0;
@@ -65,7 +70,7 @@ export class NuevoServicioComponent implements OnInit {
   validform: boolean = true;
   productos: boolean = true;
   id_direccion: number = 0;
-  id_tecnico: number = 0;
+  id_tecnico: tecnico;
   //txtactividades_realizar: string = "";
   //Direccion
   txtcalle_numero: string = "";
@@ -148,7 +153,7 @@ export class NuevoServicioComponent implements OnInit {
   };
 
   validacion_tipo() {
-    if (this.ddltipo_servicio != 5) {
+    if (this.ddltipo_servicio.id != 5) {
       this.valid_tipo = this.heroService.validar_input(this.ddltipo_servicio);
       this.valid_tipo_taller = false;
     }
@@ -190,19 +195,19 @@ export class NuevoServicioComponent implements OnInit {
     return this.valid_descripcion_actividades = this.heroService.validar_input(this.txtdescripcion_actividades);
   }
 
-  validacion_categoria_servicio() {
-    if (this.ddltipo_servicio == 3 || this.ddltipo_servicio == 4 || this.ddltipo_servicio == 5) {
-      this.valid_categoria_servicio = true;
-    }
-    else {
-      this.valid_categoria_servicio = this.heroService.validar_input(this.ddlcategoria_servicio);
-    }
+  //validacion_categoria_servicio() {
+  //  if (this.ddltipo_servicio.id == 3 || this.ddltipo_servicio.id == 4 || this.ddltipo_servicio.id == 5) {
+  //    this.valid_categoria_servicio = true;
+  //  }
+  //  else {
+  //    this.valid_categoria_servicio = this.heroService.validar_input(this.ddlcategoria_servicio);
+  //  }
 
-    return this.valid_categoria_servicio;
-  }
+  //  return this.valid_categoria_servicio;
+  //}
 
   Validacion_fecha_visita() {
-    if (this.ddltipo_servicio == 5) {
+    if (this.ddltipo_servicio.id == 5) {
       this.valid_fecha_visita = true;
     }
     else {
@@ -217,7 +222,7 @@ export class NuevoServicioComponent implements OnInit {
   }
 
   validacion_hora_visita() {
-    if (this.ddltipo_servicio == 5) {
+    if (this.ddltipo_servicio.id == 5) {
       this.valid_hora_visita = true;
     }
     else {
@@ -242,7 +247,7 @@ export class NuevoServicioComponent implements OnInit {
     this.validacion_ddl_autorizacion();
     this.validacion_contacto();
     this.validacion_descripcion_actividades();
-    this.validacion_categoria_servicio();
+    //this.validacion_categoria_servicio();
     this.Validacion_fecha_visita();
     this.validacion_tecnico_visita();
     this.validacion_hora_visita();
@@ -251,57 +256,60 @@ export class NuevoServicioComponent implements OnInit {
     console.log(this.value_productos);
 
     if (this.validacion_tipo() && this.validacion_solicitado_por() && this.validacion_ddl_autorizacion() && this.validacion_contacto() && this.validacion_descripcion_actividades()
-      && this.validacion_categoria_servicio() && this.Validacion_fecha_visita() && this.validacion_tecnico_visita() && this.validacion_hora_visita() &&
+      && this.Validacion_fecha_visita() && this.validacion_tecnico_visita() && this.validacion_hora_visita() &&
       this.validacion_terminos_condiciones()) {
 
       //console.log(this.value_productos);
-      this.heroService.service_general("servicios", {
-        "id_cliente": this.id,
-        "id_tipo_servicio": this.ddltipo_servicio,
-        "actualizado": "01/01/1900",
-        "actualizadopor": 0,
-        "creado": this.heroService.fecha_hoy(),
-        "creadopor": JSON.parse(localStorage.getItem("user")).id,
-        "id_solicitado_por": this.rdsolicitado,
-        "id_distribuidor_autorizado": this.ddldistribuidor_autorizado,
-        "contacto": this.txtcontacto,
-        "activar_credito": this.activarcredito,
-        "id_solicitud_via": this.rdsolicitudvia,
-        "descripcion_actividades": this.txtdescripcion_actividades,
-        "id_categoria_servicio": this.ddlcategoria_servicio,
-        "no_servicio": "",
-        "fecha_servicio": this.heroService.fecha_formato(this.txtfecha_cita),
-        "id_estatus_servicio": 3,
-        "IBS": "",
-        "id_motivo_cierre": 0,
-        "fecha_inicio_servicio": "01/01/1900",
-        "visita": [{
-          "id_direccion": this.id_direccion,
-          "fecha_visita": this.heroService.fecha_formato(this.txtfecha_cita),
-          "id_tecnico": this.id_tecnico,
-          "hora": this.txthora_servicio,
-          "actividades_realizar": "",
-          "concepto": this.concepto,
-          "cantidad": "6000",
-          "pagado": true,
-          "pago_pendiente": false,
-          "garantia": false,
-          "fecha_deposito": "01/01/1900",
-          "no_operacion": "1",
-          "comprobante": "",
-          "terminos_condiciones": this.terminos_condiciones,
-          "factura": this.requiere_factura,
-          "servicio_producto": this.value_productos
-        }]
-      }).subscribe((value) => {
-        //console.log(value.value.response);
-        this.openIBS(value.value);
-        this.heroService.service_general("servicios/Actualizar_Folio", {
-          "id": value.value.response
+      if (this.ddltipo_servicio != undefined) {
+        this.heroService.service_general("servicios", {
+          "id_cliente": this.id,
+          "id_tipo_servicio": this.ddltipo_servicio.id,
+          "actualizado": "01/01/1900",
+          "actualizadopor": 0,
+          "creado": this.heroService.fecha_hoy(),
+          "creadopor": JSON.parse(localStorage.getItem("user")).id,
+          "id_solicitado_por": this.rdsolicitado,
+          "id_distribuidor_autorizado": this.ddldistribuidor_autorizado,
+          "contacto": this.txtcontacto,
+          "activar_credito": this.activarcredito,
+          "id_solicitud_via": this.rdsolicitudvia,
+          "descripcion_actividades": this.txtdescripcion_actividades,
+          "id_categoria_servicio": this.ddlcategoria_servicio,
+          "no_servicio": "",
+          "fecha_servicio": this.txtfecha_cita,
+          "id_estatus_servicio": 3,
+          "IBS": "",
+          "id_motivo_cierre": 0,
+          "fecha_inicio_servicio": "01/01/1900",
+          "visita": [{
+            "id_direccion": this.id_direccion,
+            "fecha_visita": this.txtfecha_cita,
+            "id_tecnico": this.id_tecnico.id,
+            "hora": this.txthora_servicio,
+            "actividades_realizar": "",
+            "concepto": this.concepto,
+            "cantidad": "6000",
+            "pagado": true,
+            "pago_pendiente": false,
+            "garantia": false,
+            "fecha_deposito": "01/01/1900",
+            "no_operacion": "1",
+            "comprobante": "",
+            "terminos_condiciones": this.terminos_condiciones,
+            "factura": this.requiere_factura,
+            "servicio_producto": this.value_productos,
+            "hora_fin": parseInt(localStorage.getItem("fecha_fin"))
+          }]
         }).subscribe((value) => {
-          //console.log(value);
+          //console.log(value.value.response);
+          this.openIBS(value.value);
+          this.heroService.service_general("servicios/Actualizar_Folio", {
+            "id": value.value.response
+          }).subscribe((value) => {
+            //console.log(value);
+          });
         });
-      });
+      }      
     }
     else {
       console.log("no");
@@ -313,11 +321,11 @@ export class NuevoServicioComponent implements OnInit {
 
   guardar_borrador() {
     if (this.validacion_tipo() && this.validacion_solicitado_por() && this.validacion_ddl_autorizacion() && this.validacion_contacto() && this.validacion_descripcion_actividades()
-      && this.validacion_categoria_servicio() && this.Validacion_fecha_visita() && this.validacion_tecnico_visita() && this.validacion_hora_visita() &&
+      && this.Validacion_fecha_visita() && this.validacion_tecnico_visita() && this.validacion_hora_visita() &&
       this.validacion_terminos_condiciones()) {
       this.heroService.service_general("servicios", {
         "id_cliente": this.id,
-        "id_tipo_servicio": this.ddltipo_servicio,
+        "id_tipo_servicio": this.ddltipo_servicio.id,
         "actualizado": "01/01/1900",
         "actualizadopor": 0,
         "creado": this.heroService.fecha_hoy(),
@@ -457,17 +465,23 @@ export class NuevoServicioComponent implements OnInit {
   getproductos(): void {
     this.productos_cliente = [];
     this.value_productos = [];
-    if (this.ddltipo_servicio != 0) {
+    this.categoria_servicio = 0;
+
+    if (this.ddltipo_servicio.id != 0) {
       this.productos = false;
     }
 
-    // console.log(this.ddltipo_servicio);
+    this.sub = this.route.params.subscribe(params => {
+      this.id = +params['id'];
+    });
+
+    //console.log(this.ddltipo_servicio);
     this.heroService.service_general("servicios/Productos_Servicio_Solicitado", {
-      "id": this.ddltipo_servicio
+      "id": this.id
     }).subscribe((value) => {
       //console.log(value);
       for (var i = 0; i < value.length; i++) {
-        if (this.ddltipo_servicio == 1) {
+        if (this.ddltipo_servicio.id == 1) {
           if (value[i].estatus == "Entregado") {
             this.productos_cliente.push({
               "id": value[i].id,
@@ -479,6 +493,7 @@ export class NuevoServicioComponent implements OnInit {
               "estatus": value[i].estatus,
               "checked": true
             });
+            this.categoria_servicio = this.categoria_servicio + parseInt(value[i].hora_tecnico);
           }
           else {
             this.productos_cliente.push({
@@ -494,7 +509,7 @@ export class NuevoServicioComponent implements OnInit {
           }
         }
 
-        if (this.ddltipo_servicio == 2 || this.ddltipo_servicio == 3) {
+        if (this.ddltipo_servicio.id == 2 || this.ddltipo_servicio.id == 3) {
           if (value[i].estatus == "Instalado") {
             this.productos_cliente.push({
               "id": value[i].id,
@@ -506,6 +521,7 @@ export class NuevoServicioComponent implements OnInit {
               "estatus": value[i].estatus,
               "checked": true
             });
+            this.categoria_servicio = this.categoria_servicio + parseInt(value[i].hora_tecnico);
           }
           else {
             this.productos_cliente.push({
@@ -521,7 +537,7 @@ export class NuevoServicioComponent implements OnInit {
           }
         }
 
-        if (this.ddltipo_servicio == 4) {
+        if (this.ddltipo_servicio.id == 4) {
           if (value[i].estatus == "Liberado") {
             this.productos_cliente.push({
               "id": value[i].id,
@@ -548,7 +564,7 @@ export class NuevoServicioComponent implements OnInit {
           }
         }
 
-        if (this.ddltipo_servicio == 5) {
+        if (this.ddltipo_servicio.id == 5) {
           if (value[i].estatus == "En diagnostico") {
             this.productos_cliente.push({
               "id": value[i].id,
@@ -584,31 +600,39 @@ export class NuevoServicioComponent implements OnInit {
           });
         }
       }
+      //console.log(this.categoria_servicio);
+      if (this.categoria_servicio > 2) {
+        this.categoria_servicio_texto = "mayor";
+      }
+      else {
+        this.categoria_servicio_texto = "menor";
+      }
 
+      this.categoria_servicio_cantidad = (this.categoria_servicio * 1490) + 890;
       //console.log(this.productos_cliente);
       this.dataSource.data = this.productos_cliente;
       //console.log(this.dataSource.data[0].checked);
 
     });
 
-    if (this.ddltipo_servicio == 1) {
+    if (this.ddltipo_servicio.id == 1) {
       console.log("Instalación");
 
       this.concepto = "Instalación";
     }
-    if (this.ddltipo_servicio == 2) {
+    if (this.ddltipo_servicio.id == 2) {
       console.log("Matenimiento");
       this.concepto = "Matenimiento";
     }
-    if (this.ddltipo_servicio == 3) {
+    if (this.ddltipo_servicio.id == 3) {
       console.log("Reparación");
       this.concepto = "Reparación";
     }
-    if (this.ddltipo_servicio == 4) {
+    if (this.ddltipo_servicio.id == 4) {
       console.log("Entrega");
       this.concepto = "Entrega";
     }
-    if (this.ddltipo_servicio == 5) {
+    if (this.ddltipo_servicio.id == 5) {
       console.log("Diagnostico en taller");
       this.concepto = "Diagnostico en taller";
     }
@@ -618,7 +642,7 @@ export class NuevoServicioComponent implements OnInit {
   gettiposervicio(): void {
     this.heroService.service_catalogos("Catalogos/TipoServicio")
       .subscribe((value) => {
-        //console.log(value);
+        console.log(value);
         this.tiposervicio = value;
       });
   }
@@ -632,11 +656,12 @@ export class NuevoServicioComponent implements OnInit {
   }
 
   getcategoriaservicio(): void {
-    //console.log(this.ddltipo_servicio);
+    console.log(this.ddltipo_servicio);
     this.heroService.service_general("Catalogos/CategoriaServicio", {
-      "id": this.ddltipo_servicio
+      "id": this.ddltipo_servicio.id
     })
       .subscribe((value) => {
+
         //console.log(value);
         this.categoriaservicio = value;
       });
@@ -699,27 +724,6 @@ export class NuevoServicioComponent implements OnInit {
     }
   }
 
-  openDatosFiscales(): void {
-
-    let dialogRef = this.dialog.open(DialogFactura, {
-      width: '700px',
-      disableClose: true,
-      data: {
-        razonsocial: this.razonsocial,
-        rfc: this.rfc,
-        email: this.email
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      //console.log(result);
-      if (result != undefined) {
-        this.factura = result;
-        this.openIBS(result);
-      }
-    });
-  }
-
   openIBS(obj): void {
     let dialogRef = this.dialog.open(DialogIbsDialog, {
       width: '800px',
@@ -733,44 +737,43 @@ export class NuevoServicioComponent implements OnInit {
     });
   }
 
-  _idtecnico: string;
-  _tecnico: string;
-
+  tecnicos: any[] = [];
   openAgenda(obj): void {
-    let dialogRef = this.dialog.open(DialogAgenda, {
-      width: '100%',
-      height: '95%',
-      disableClose: true,
-      data: { _idtecnico: "", _tecnico: "" }
-    });
+    this.tecnicos = [];
+    this.heroService.service_general("servicios/TecnicoAgenda", { id: this.ddltipo_servicio.id }).subscribe((value) => {
+      for (var i = 0; i < value.length; i++) {
+        this.tecnicos.push({
+          id: value[i].id,
+          tecnico: value[i].nombre + " " + value[i].paterno + " " + value[i].materno
+        });
+      }
 
-    dialogRef.afterClosed().subscribe(result => {
-      //console.log(result._idtecnico);
-      //this.id_tecnico = result._idtecnico;
-      this.heroService.service_general("Catalogos/TecnicosId", {
-        "id": result._idtecnico
-      }).subscribe((value) => {
-        //console.log(value[0].id);
-        this.id_tecnico = value[0].id;
-        this.txttecnico_servicio = value[0].tecnico;
+      let dialogRef = this.dialog.open(DialogAgenda, {
+        width: '100%',
+        height: '95%',
+        disableClose: true,
+        data: { tecnicos: this.tecnicos, tipo_servicio: this.ddltipo_servicio, horas_tecnico: this.categoria_servicio }
       });
-    });
-  }
 
-}
+      dialogRef.afterClosed().subscribe(result => {
+        //console.log(result);
+        if (result == undefined) {
+          this.txttecnico_servicio = "";
+          this.txtfecha_cita = "";
+          this.txthora_servicio = "";
+          localStorage.setItem("agenda", "");
+        }
+        else {
+          if (localStorage.getItem("agenda") != "") {
+            this.id_tecnico = JSON.parse(localStorage.getItem("agenda")).tecnico;
+            this.txttecnico_servicio = JSON.parse(localStorage.getItem("agenda")).tecnico.tecnico;
+            this.txtfecha_cita = JSON.parse(localStorage.getItem("agenda")).fecha;
+            this.txthora_servicio = JSON.parse(localStorage.getItem("agenda")).hora_inicio;
+          }
+        }
 
-@Component({
-  selector: 'dialog-factura',
-  templateUrl: './dialog-factura.html',
-})
-export class DialogFactura {
-
-  constructor(
-    public dialogRef: MatDialogRef<DialogFactura>,
-    @Inject(MAT_DIALOG_DATA) public data: any) { }
-
-  onNoClick(): void {
-    this.dialogRef.close();
+      });
+    })
   }
 
 }
@@ -822,46 +825,53 @@ const colors: any = {
 };
 
 @Component({
+  selector: 'dialog-vista-hora',
+  templateUrl: './dialog-visita-hora.html',
+})
+export class DialogVisitaHora {
+
+  ddlhora_inicio: any = "09";
+  ddlhora_fin: any = "11";
+
+  constructor(
+    public dialogRef: MatDialogRef<DialogVisitaHora>,
+    @Inject(MAT_DIALOG_DATA) public data: any) { }
+
+  ngOnInit() {
+    console.log(this.data.event);
+    console.log(this.data.horas_tecnico);
+    this.ddlhora_inicio = this.data.event;
+    this.ddlhora_fin = ((this.data.event * 1) + ((this.data.horas_tecnico * 1))).toString();
+    localStorage.setItem("fecha_fin", this.ddlhora_fin);
+  }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
+  set_hora_fin(obj) {
+    localStorage.setItem("fecha_fin", obj);
+  }
+
+}
+
+@Component({
   selector: 'dialog-agenda',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './dialog-agenda.html',
 })
 export class DialogAgenda {
 
+  constructor(
+    public dialogRef: MatDialogRef<DialogAgenda>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private heroService: DatosService, public dialog: MatDialog, public snackBar: MatSnackBar) { }
+
   view = 'week';
   viewDate: Date = new Date();
   refresh: Subject<any> = new Subject();
-  events: CalendarEvent[] = [
-    {
-      start: addHours(startOfDay(new Date()), 9),
-      end: addHours(startOfDay(new Date()), 10),
-      title: 'Patient A',
-      color: colors.yellow,
-      draggable: true,
-      resizable: {
-        beforeStart: true,
-        afterEnd: true
-      }
-    },
-    {
-      start: addHours(startOfDay(new Date()), 10),
-      end: addHours(startOfDay(new Date()), 11),
-      title: 'Patient B',
-      color: colors.yellow,
-    },
-    {
-      start: addHours(startOfDay(new Date()), 9.5),
-      end: addHours(startOfDay(new Date()), 10.5),
-      title: 'Simoultaneous',
-      color: colors.red,
-    },
-    {
-      start: addDays(addHours(startOfDay(new Date()), 15), 1),
-      end: addDays(addHours(startOfDay(new Date()), 17), 1),
-      title: 'Another example',
-      color: colors.blue
-    }
-  ];
+  events: CalendarEvent[] = [];
+  tecnicos: any[] = [];
 
   locale: string = 'es';
 
@@ -870,11 +880,115 @@ export class DialogAgenda {
   weekendDays: number[] = [DAYS_OF_WEEK.MONDAY];
 
   eventClicked(event) {
+    console.log("ok");
     console.log(event);
   }
 
+  rdtecnico: any = 0;
+  tecnico: any = 0;
+  ddlhora_fin: any = 0;
+  hexadecimal = new Array("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F")
+  color_aleatorio = "#";
+  numPosibilidades: any;
+  aleat: any;
+  color_tecnico: any[] = [];
+  tecnico_actual: any = 0;
+
+  set_tecnico(obj) {
+
+    this.tecnico_actual = obj;
+  }
+
   hourSegmentClicked(event) {
-    console.log(event);
+    var fecha1 = moment(event.date);
+    var fecha2 = moment();
+
+    if (moment(event.date).format("MM/DD/YYYY") < moment().format("MM/DD/YYYY")) {
+      this.snackBar.open("La visita no puede en una fecha anterior al día de hoy", "", {
+        duration: 5000,
+        verticalPosition: 'bottom',
+        horizontalPosition: 'right',
+        extraClasses: ['blue-snackbar']
+      });
+    }
+    else {
+      if (this.tecnico_actual == 0) {
+        this.snackBar.open("Es necesario elegir un técnico", "", {
+          duration: 5000,
+          verticalPosition: 'bottom',
+          horizontalPosition: 'right',
+          extraClasses: ['blue-snackbar']
+        });
+      }
+      else {
+        if (moment(event.date).format("HH") != "09" && moment(event.date).format("HH") != "11" && moment(event.date).format("HH") != "14" && moment(event.date).format("HH") != "16" && moment(event.date).format("HH") != "13") {
+          this.snackBar.open("La visita no puede se programada en este horario:" + moment(event.date).format("HH:mm"), "", {
+            duration: 5000,
+            verticalPosition: 'bottom',
+            horizontalPosition: 'right',
+            extraClasses: ['blue-snackbar']
+          });
+        }
+        else {
+          if (moment(event.date).format("HH") == "13") {
+            this.snackBar.open("Es hora de la comida:" + moment(event.date).format("HH:mm"), "", {
+              duration: 5000,
+              verticalPosition: 'bottom',
+              horizontalPosition: 'right',
+              extraClasses: ['blue-snackbar']
+            });
+          }
+          else {
+            if (moment(event.date).diff(moment(), 'days') >= 2) {
+              console.log(moment(event.date).diff(moment(), 'days'), ' dias de diferencia');
+              let dialogRef = this.dialog.open(DialogVisitaHora, {
+                width: '450px',
+                disableClose: true,
+                data: {
+                  tecnico: this.tecnico_actual, tipo_servicio: this.data.tipo_servicio, event: moment(event.date).format("HH"), fecha: moment(event.date).format("MM/DD/YYYY"), hora_inicio: moment(event.date).format('LT'), horas_tecnico: this.data.horas_tecnico, propuesto: false
+                }
+              });
+
+              dialogRef.afterClosed().subscribe(result => {
+                console.log(result);
+                if (result != undefined) {
+                  localStorage.setItem("agenda", JSON.stringify((result)));
+                  this.events.push(
+                    {
+                      start: addHours(startOfDay(new Date(result.fecha)), result.event),
+                      end: addHours(startOfDay(new Date(result.fecha)), parseInt(localStorage.getItem("fecha_fin"))),
+                      title: result.tipo_servicio.desc_tipo_servicio + "-" + result.tecnico.tecnico,
+                      color: {
+                        primary: '#FFC300',
+                        secondary: '#FFC300  '
+                      },
+                      //draggable: true,
+                      //resizable: {
+                      //  beforeStart: true,
+                      //  afterEnd: true
+                      //}
+                    }
+                  );
+                  this.refresh.next();
+                }
+                else {
+                  localStorage.setItem("agenda", "");
+                }
+              });
+
+            }
+            else {
+              this.snackBar.open("La visita solo puede ser programada con 48 hrs. de anticipación", "", {
+                duration: 5000,
+                verticalPosition: 'bottom',
+                horizontalPosition: 'right',
+                extraClasses: ['blue-snackbar']
+              });
+            }
+          }
+        }
+      }
+    }
   }
 
   eventTimesChanged({
@@ -886,28 +1000,157 @@ export class DialogAgenda {
     event.end = newEnd;
     this.refresh.next();
   }
-  tecnicos: string[] = [];
 
-  constructor(
-    public dialogRef: MatDialogRef<DialogAgenda>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    private heroService: DatosService) { }
+  aleatorio(inferior, superior) {
+    this.numPosibilidades = superior - inferior
+    this.aleat = Math.random() * this.numPosibilidades
+    this.aleat = Math.floor(this.aleat)
+    return parseInt(inferior) + this.aleat
+  }
+
+  filtro_tecnico(event, options) {
+
+    if (event.source.checked) {
+      this.heroService.service_general("servicios/Tecnico_id", { "id": options.id }).subscribe((value) => {
+        this.events = [];
+        for (var i = 0; i < value.length; i++) {
+          this.events.push(
+            {
+              start: addHours(startOfDay(new Date(value[i].fecha_visita)), value[i].hora_inicio),
+              end: addHours(startOfDay(new Date(value[i].fecha_visita)), value[i].hora_fin),
+              title: value[i].desc_tipo_servicio + "-" + value[i].tecnico,
+              color: {
+                primary: value[i].tecnico_color,
+                secondary: value[i].tecnico_color
+              },
+              actions: []
+            });
+        }
+
+        this.events.push(
+          {
+            start: addHours(startOfDay(new Date(value[0].fecha_propuesta)), value[0].hora_propuesta),
+            end: addHours(startOfDay(new Date(value[0].fecha_propuesta)), (value[0].hora_propuesta * 1) + (this.data.horas_tecnico * 1)),
+            title: value[0].desc_tipo_servicio + "-" + value[0].tecnico,
+            color: {
+              primary: '#FFC300',
+              secondary: '#FFC300'
+            },
+            actions: []
+          });
+
+        let dialogRef = this.dialog.open(DialogVisitaHora, {
+          width: '450px',
+          disableClose: true,
+          data: {
+            tecnico: this.tecnico_actual, tipo_servicio: this.data.tipo_servicio, event: value[0].hora_propuesta, fecha: moment(value[0].fecha_propuesta).format("MM/DD/YYYY"), hora_inicio: moment("01-01-1900 " + value[0].hora_propuesta + ":00:00").format('LT'), horas_tecnico: this.data.horas_tecnico, propuesto: true
+          }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+          console.log(result);
+          if (result == undefined) {
+            this.events = [];
+            for (var i = 0; i < value.length; i++) {
+              this.events.push(
+                {
+                  start: addHours(startOfDay(new Date(value[i].fecha_visita)), value[i].hora_inicio),
+                  end: addHours(startOfDay(new Date(value[i].fecha_visita)), value[i].hora_fin),
+                  title: value[i].desc_tipo_servicio + "-" + value[i].tecnico,
+                  color: {
+                    primary: value[i].tecnico_color,
+                    secondary: value[i].tecnico_color
+                  },
+                  actions: []
+                });
+            }
+            this.refresh.next();
+          }
+          else {
+            localStorage.setItem("agenda", JSON.stringify((result)));
+          }
+
+        });
+
+        this.refresh.next();
+      });
+    }
+    else {
+
+    }
+
+  }
+
+  ver_todos() {
+    this.events = [];
+    this.heroService.service_general("servicios/TecnicoCalendario", {}).subscribe((value) => {
+      this.color_tecnico = value[0].tecnico_group;
+      for (var i = 0; i < value.length; i++) {
+        this.events.push(
+          {
+            start: addHours(startOfDay(new Date(value[i].fecha_visita)), value[i].hora_inicio),
+            end: addHours(startOfDay(new Date(value[i].fecha_visita)), value[i].hora_fin),
+            title: value[i].desc_tipo_servicio + "-" + value[i].tecnico,
+            color: {
+              primary: value[i].tecnico_color,
+              secondary: value[i].tecnico_color
+            },
+            actions: [],
+            draggable: true,
+            resizable: {
+              beforeStart: true,
+              afterEnd: true
+            }
+          });
+      }
+
+      //console.log(this.events);
+      this.refresh.next();
+    });
+  }
+
+  color() {
+    for (var i = 0; i < 6; i++) {
+      let aleatorio;
+      let posarray = this.aleatorio(0, this.hexadecimal.length)
+      this.color_aleatorio += this.hexadecimal[posarray]
+    };
+    return this.color_aleatorio
+  }
 
   ngOnInit() {
-    this.gettecnicos();
+
+    this.heroService.service_general("servicios/TecnicoCalendario", {}).subscribe((value) => {
+      console.log(value[0].tecnico_group);
+      this.color_tecnico = value[0].tecnico_group;
+      for (var i = 0; i < value.length; i++) {
+        this.events.push(
+          {
+            start: addHours(startOfDay(new Date(value[i].fecha_visita)), value[i].hora_inicio),
+            end: addHours(startOfDay(new Date(value[i].fecha_visita)), value[i].hora_fin),
+            title: value[i].desc_tipo_servicio + "-" + value[i].tecnico,
+            color: {
+              primary: value[i].tecnico_color,
+              secondary: value[i].tecnico_color
+            },
+            actions: [],
+            draggable: true,
+            resizable: {
+              beforeStart: true,
+              afterEnd: true
+            }
+          });
+      }
+
+      //console.log(this.events);
+      this.refresh.next();
+    });
   }
 
   onNoClick(): void {
     this.dialogRef.close();
   }
 
-  //llenar_tecnicos
-  gettecnicos(): void {
-    this.heroService.service_general("Catalogos/Tecnicos", {}).subscribe((value) => {
-      //console.log(value);
-      this.tecnicos = value;
-    });
-  }
 }
 
 @Component({
@@ -933,4 +1176,16 @@ export class Distribuidor {
   servicio: string
 }
 
+export class Tipo_Servicio {
 
+  desc_tipo_servicio: string;
+  estatus: boolean;
+  id: number;
+  servicio: any;
+}
+
+export class tecnico {
+
+  id: any;
+  tecnico: any;
+}

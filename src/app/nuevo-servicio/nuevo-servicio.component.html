@@ -74,7 +74,7 @@
               <div class="form-group col-md-4">
                 <mat-form-field class="full-width">
                   <mat-select placeholder="Tipo de servicio solicitado" name="tipo_servicio" #tipo_servicio="ngModel" [(ngModel)]="ddltipo_servicio" (change)="getproductos(); validacion_tipo(); getcategoriaservicio();" [appFocus]="!valid_tipo" required>
-                    <mat-option *ngFor="let value of tiposervicio; trackBy: index;" [value]="value.id">
+                    <mat-option *ngFor="let value of tiposervicio; trackBy: index;" [value]="value">
                       {{value.desc_tipo_servicio}}
                     </mat-option>
                   </mat-select>
@@ -270,7 +270,7 @@
               </div>
             </div>
             <div [hidden]="valid_tipo_taller">
-              <div class="col-xs-12 col-md-4" style="padding-bottom:15px;" *ngIf="ddltipo_servicio != 4 && ddltipo_servicio != 5">
+              <!--<div class="col-xs-12 col-md-4" style="padding-bottom:15px;" *ngIf="ddltipo_servicio.id != 4 && ddltipo_servicio.id != 5">
                 <mat-form-field class="full-width">
                   <mat-select placeholder="Categoría del servicio" id="categoria_servicio" name="categoria_servicio" #categoria_servicio="ngModel" [(ngModel)]="ddlcategoria_servicio" (ngModelChange)="validacion_categoria_servicio()" [appFocus]="!valid_categoria_servicio" required>
                     <mat-option *ngFor="let value of categoriaservicio; trackBy: index;" [value]="value.id">
@@ -282,9 +282,10 @@
                   <div>
                     Categoría del servicio requerido.
                   </div>
-                </div>
-              </div>
-              <div class="col-xs-12" style="padding-bottom:15px">
+                </div>                
+              </div>-->             
+              
+              <div class="col-xs-12" style="padding-bottom:15px;">
                 <label>Direcciones de instalción</label>
 
                 <div class="example-container mat-elevation-z4">
@@ -424,7 +425,7 @@
               </div>
               <div class="form-group col-md-4">
                 <mat-form-field class="full-width">
-                  <input [textMask]="{mask: mask, guide: false}" type="text" matInput name="fecha_cita" #fecha_cita="ngModel" [(ngModel)]="txtfecha_cita" [appFocus]="!valid_fecha_visita" (ngModelChange)="Validacion_fecha_visita()" placeholder="Fecha">
+                  <input [textMask]="{mask: mask, guide: false}" type="text" matInput name="fecha_cita" #fecha_cita="ngModel" disabled [(ngModel)]="txtfecha_cita" [appFocus]="!valid_fecha_visita" (ngModelChange)="Validacion_fecha_visita()" placeholder="Fecha">
                   <mat-icon matSuffix><i class="fa fa-calendar" aria-hidden="true"></i></mat-icon>
                 </mat-form-field>
                 <div *ngIf="fecha_cita.invalid && (fecha_cita.dirty || fecha_cita.touched) || !valid_fecha_visita" class="alert alert-danger">
@@ -435,7 +436,7 @@
               </div>
               <div class="form-group col-md-4">
                 <mat-form-field class="full-width">
-                  <input id="tecnico" type="text" matInput name="tecnico" #tecnico="ngModel" [(ngModel)]="txttecnico_servicio" [appFocus]="!valid_tecnico_visita" (ngModelChange)="validacion_tecnico_visita()" placeholder="Técnico">
+                  <input id="tecnico" type="text" matInput name="tecnico" #tecnico="ngModel" [(ngModel)]="txttecnico_servicio" disabled [appFocus]="!valid_tecnico_visita" (ngModelChange)="validacion_tecnico_visita()" placeholder="Técnico">
                 </mat-form-field>
                 <!--<div *ngIf="tecnico.invalid && (tecnico.dirty || tecnico.touched) || !valid_tecnico_visita" class="alert alert-danger">
                   <div>
@@ -445,7 +446,7 @@
               </div>
               <div class="form-group col-md-4">
                 <mat-form-field class="full-width">
-                  <input matInput id="hora_servicio" type="text" name="hora_servicio" #hora_servicio="ngModel" [(ngModel)]="txthora_servicio" [appFocus]="!valid_hora_visita" (ngModelChange)="validacion_hora_visita()" placeholder="Hora">
+                  <input matInput id="hora_servicio" type="text" name="hora_servicio" #hora_servicio="ngModel" [(ngModel)]="txthora_servicio" disabled [appFocus]="!valid_hora_visita" (ngModelChange)="validacion_hora_visita()" placeholder="Hora">
                 </mat-form-field>
                 <div *ngIf="hora_servicio.invalid && (hora_servicio.dirty || hora_servicio.touched) || !valid_hora_visita" class="alert alert-danger">
                   <div>
@@ -480,11 +481,11 @@
                         <div class="form-group col-xs-12 col-md-12">
                           <div class="col-md-6" style="padding:0;">
                             <label>Concepto</label><br />
-                            <span>{{concepto}}</span><br /><br />
+                            <span>{{concepto}} {{categoria_servicio_texto}}</span><br /><br />
                           </div>
                           <div class="col-md-6" style="padding:0;">
                             <label>Cantidad</label><br />
-                            <span style="color:#4B91E2">5,000</span><br /><br />
+                            <span style="color:#4B91E2">${{categoria_servicio_cantidad}}</span><br /><br />
                           </div>
                           <br />
                           <br />

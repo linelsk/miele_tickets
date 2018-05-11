@@ -13,7 +13,7 @@ import {CalendarEvent, WeekDay} from 'calendar-utils';
             <div class="cal-day-headers">
                 <div class="cal-header" style="border: 1px solid #e1e1e1;">
                 </div>
-                <div style="border: 1px solid #e1e1e1; text-align:left; padding: 10px 5px 10px 5px;"
+                <div style="border: 1px solid #e1e1e1; text-align:left; padding: 10px 6px 10px 6px;"
                     class="cal-header"
                     *ngFor="let day of days"
                     [class.cal-past]="day.isPast"

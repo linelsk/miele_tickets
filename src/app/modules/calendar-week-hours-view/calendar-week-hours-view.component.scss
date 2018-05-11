@@ -10,7 +10,7 @@
   }
 
   .cal-header:first-child {
-    flex: 0.7;
+    flex: 0.8;
     text-align: left;
   }
 
@@ -44,4 +44,24 @@
     overflow-y: hidden;
   }
 
+  .cal-day-view .cal-ends-within-day .cal-event {
+    border-bottom-left-radius: 1px;
+    border-bottom-right-radius: 1px;
+  }
+
+  .cal-day-view .cal-starts-within-day .cal-event {
+    border-top-left-radius: 1px;
+    border-top-right-radius: 1px;
+  }
+
+  .cal-day-view .cal-event {
+    border: solid 1px;
+    padding: 5px;
+    font-size: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: inherit;
+    height: 100%;
+    box-sizing: border-box;
+  }
 }
