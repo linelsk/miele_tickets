@@ -842,6 +842,22 @@ export class DialogVisitaHora {
     console.log(this.data.horas_tecnico);
     this.ddlhora_inicio = this.data.event;
     this.ddlhora_fin = ((this.data.event * 1) + ((this.data.horas_tecnico * 1))).toString();
+
+    if (this.ddlhora_fin == "10") {
+      this.ddlhora_fin = "11";
+    }
+
+    if (this.ddlhora_fin == "12") {
+      this.ddlhora_fin = "13";
+    }
+
+    if (this.ddlhora_fin == "15") {
+      this.ddlhora_fin = "16";
+    }
+
+    if (this.ddlhora_fin == "17") {
+      this.ddlhora_fin = "18";
+    }
     localStorage.setItem("fecha_fin", this.ddlhora_fin);
   }
 
@@ -891,7 +907,6 @@ export class DialogAgenda {
   color_aleatorio = "#";
   numPosibilidades: any;
   aleat: any;
-  color_tecnico: any[] = [];
   tecnico_actual: any = 0;
 
   set_tecnico(obj) {
@@ -1008,71 +1023,111 @@ export class DialogAgenda {
     return parseInt(inferior) + this.aleat
   }
 
+
   filtro_tecnico(event, options) {
 
     if (event.source.checked) {
       this.heroService.service_general("servicios/Tecnico_id", { "id": options.id }).subscribe((value) => {
-        this.events = [];
-        for (var i = 0; i < value.length; i++) {
+        console.log(value.value.item);
+        if (value.value.item != "") {
+          this.events = [];
+          for (var i = 0; i < value.value.item.length; i++) {
+            this.events.push(
+              {
+                start: addHours(startOfDay(new Date(value.value.item[i].fecha_visita)), value.value.item[i].hora_inicio),
+                end: addHours(startOfDay(new Date(value.value.item[i].fecha_visita)), value.value.item[i].hora_fin),
+                title: value.value.item[i].desc_tipo_servicio + "-" + value.value.item[i].tecnico,
+                color: {
+                  primary: value.value.item[i].tecnico_color,
+                  secondary: value.value.item[i].tecnico_color
+                },
+                actions: []
+              });
+          }
+
           this.events.push(
             {
-              start: addHours(startOfDay(new Date(value[i].fecha_visita)), value[i].hora_inicio),
-              end: addHours(startOfDay(new Date(value[i].fecha_visita)), value[i].hora_fin),
-              title: value[i].desc_tipo_servicio + "-" + value[i].tecnico,
+              start: addHours(startOfDay(new Date(value.value.item[0].fecha_propuesta)), value.value.item[0].hora_propuesta),
+              end: addHours(startOfDay(new Date(value.value.item[0].fecha_propuesta)), (value.value.item[0].hora_propuesta * 1) + (this.data.horas_tecnico * 1)),
+              title: value.value.item[0].desc_tipo_servicio + "-" + value.value.item[0].tecnico,
               color: {
-                primary: value[i].tecnico_color,
-                secondary: value[i].tecnico_color
+                primary: '#FFC300',
+                secondary: '#FFC300'
               },
               actions: []
             });
-        }
 
-        this.events.push(
-          {
-            start: addHours(startOfDay(new Date(value[0].fecha_propuesta)), value[0].hora_propuesta),
-            end: addHours(startOfDay(new Date(value[0].fecha_propuesta)), (value[0].hora_propuesta * 1) + (this.data.horas_tecnico * 1)),
-            title: value[0].desc_tipo_servicio + "-" + value[0].tecnico,
-            color: {
-              primary: '#FFC300',
-              secondary: '#FFC300'
-            },
-            actions: []
+          let dialogRef = this.dialog.open(DialogVisitaHora, {
+            width: '450px',
+            disableClose: true,
+            data: {
+              tecnico: this.tecnico_actual, tipo_servicio: this.data.tipo_servicio, event: value.value.item[0].hora_propuesta, fecha: moment(value.value.item[0].fecha_propuesta).format("MM/DD/YYYY"), hora_inicio: moment("01-01-1900 " + value.value.item[0].hora_propuesta + ":00:00").format('LT'), horas_tecnico: this.data.horas_tecnico, propuesto: true
+            }
           });
 
-        let dialogRef = this.dialog.open(DialogVisitaHora, {
-          width: '450px',
-          disableClose: true,
-          data: {
-            tecnico: this.tecnico_actual, tipo_servicio: this.data.tipo_servicio, event: value[0].hora_propuesta, fecha: moment(value[0].fecha_propuesta).format("MM/DD/YYYY"), hora_inicio: moment("01-01-1900 " + value[0].hora_propuesta + ":00:00").format('LT'), horas_tecnico: this.data.horas_tecnico, propuesto: true
-          }
-        });
-
-        dialogRef.afterClosed().subscribe(result => {
-          console.log(result);
-          if (result == undefined) {
-            this.events = [];
-            for (var i = 0; i < value.length; i++) {
-              this.events.push(
-                {
-                  start: addHours(startOfDay(new Date(value[i].fecha_visita)), value[i].hora_inicio),
-                  end: addHours(startOfDay(new Date(value[i].fecha_visita)), value[i].hora_fin),
-                  title: value[i].desc_tipo_servicio + "-" + value[i].tecnico,
-                  color: {
-                    primary: value[i].tecnico_color,
-                    secondary: value[i].tecnico_color
-                  },
-                  actions: []
-                });
+          dialogRef.afterClosed().subscribe(result => {
+            console.log(result);
+            if (result == undefined) {
+              this.events = [];
+              for (var i = 0; i < value.value.item.length; i++) {
+                this.events.push(
+                  {
+                    start: addHours(startOfDay(new Date(value.value.item[i].fecha_visita)), value.value.item[i].hora_inicio),
+                    end: addHours(startOfDay(new Date(value.value.item[i].fecha_visita)), value.value.item[i].hora_fin),
+                    title: value.value.item[i].desc_tipo_servicio + "-" + value.value.item[i].tecnico,
+                    color: {
+                      primary: value.value.item[i].tecnico_color,
+                      secondary: value.value.item[i].tecnico_color
+                    },
+                    actions: []
+                  });
+              }
+              this.refresh.next();
             }
-            this.refresh.next();
-          }
-          else {
-            localStorage.setItem("agenda", JSON.stringify((result)));
-          }
+            else {
+              localStorage.setItem("agenda", JSON.stringify((result)));
+            }
 
-        });
+          });
 
-        this.refresh.next();
+          this.refresh.next();
+        }
+        else {
+          let dialogRef = this.dialog.open(DialogVisitaHora, {
+            width: '450px',
+            disableClose: true,
+            data: {
+              tecnico: this.tecnico_actual, tipo_servicio: this.data.tipo_servicio, event: "09", fecha: moment().add(2).format("MM/DD/YYYY"), hora_inicio: moment("01-01-1900 " + "09" + ":00:00").format('LT'), horas_tecnico: this.data.horas_tecnico, propuesto: true
+            }
+          });
+
+          dialogRef.afterClosed().subscribe(result => {
+            console.log(this.data);
+            if (result == undefined) {
+              this.events = [];
+              for (var i = 0; i < value.value.item.length; i++) {
+                this.events.push(
+                  {
+                    start: addHours(startOfDay(moment().add(2).toDate()), parseInt("09")),
+                    end: addHours(startOfDay(moment().add(2).toDate()), parseInt("09") + (this.data.horas_tecnico * 1)),
+                    title: this.data.tipo_servicio.desc_tipo_servicio + "-" + this.tecnico_actual,
+                    color: {
+                      primary: value.value.item[i].tecnico_color,
+                      secondary: value.value.item[i].tecnico_color
+                    },
+                    actions: []
+                  });
+              }
+              this.refresh.next();
+            }
+            else {
+              localStorage.setItem("agenda", JSON.stringify((result)));
+            }
+
+          });
+
+          this.refresh.next();
+        }
       });
     }
     else {
@@ -1083,8 +1138,8 @@ export class DialogAgenda {
 
   ver_todos() {
     this.events = [];
-    this.heroService.service_general("servicios/TecnicoCalendario", {}).subscribe((value) => {
-      this.color_tecnico = value[0].tecnico_group;
+    this.heroService.service_general("servicios/TecnicoCalendario", { "id": this.data.tipo_servicio.id }).subscribe((value) => {
+      
       for (var i = 0; i < value.length; i++) {
         this.events.push(
           {
@@ -1120,9 +1175,8 @@ export class DialogAgenda {
 
   ngOnInit() {
 
-    this.heroService.service_general("servicios/TecnicoCalendario", {}).subscribe((value) => {
-      console.log(value[0].tecnico_group);
-      this.color_tecnico = value[0].tecnico_group;
+    this.heroService.service_general("servicios/TecnicoCalendario", { "id": this.data.tipo_servicio.id }).subscribe((value) => {
+     
       for (var i = 0; i < value.length; i++) {
         this.events.push(
           {

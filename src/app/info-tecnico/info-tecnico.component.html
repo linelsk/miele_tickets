@@ -1,0 +1,102 @@
+<div class="content-wrapper">
+  <br class="visible-xs" />
+  <br class="visible-xs" />
+  <form #registroForm="ngForm">
+    <section class="content">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="box">
+            <div class="box-header with-border">
+              <h3 class="box-title negritas">Información de técnico</h3>
+              <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                  <i class="fa fa-minus"></i>
+                </button>
+              </div>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <div class="col-xs-12" style="padding-bottom:15px">
+                <div class="form-group col-md-4">
+                  <label>Número de almacen</label><br />
+                  <span><i class="fa fa-archive" aria-hidden="true"></i> {{user.noalmacen}}</span>
+                </div>
+                <div class="form-group col-md-8">
+                  <label>Actividad</label><br />
+                  <span *ngFor='let value of user.actividad; trackBy: index;'><i class="fa fa-briefcase" aria-hidden="true"></i> {{value.actividad }}&nbsp;&nbsp;&nbsp;</span>
+                </div>
+              </div>
+
+              <div class="col-xs-12" style="padding-bottom:15px">
+                <div class="form-group col-md-4">
+                  <label>Nombre(s)</label><br />
+                  <span><i class="fa fa-address-card-o" aria-hidden="true"></i> {{user.name}}</span>
+                </div>
+                <div class="form-group col-md-4">
+                  <label>Apellido paterno</label><br />
+                  <span><i class="fa fa-address-card-o" aria-hidden="true"></i> {{user.paterno}}</span>
+                </div>
+                <div class="form-group col-md-4">
+                  <label>Apellido materno</label><br />
+                  <span><i class="fa fa-address-card-o" aria-hidden="true"></i> {{user.materno}}</span>
+                </div>
+              </div>
+
+              <div class="col-xs-12" style="padding-bottom:15px">
+                <div class="form-group col-md-4">
+                  <label>Email</label><br />
+                  <span><i class="fa fa-envelope-o" aria-hidden="true"></i> {{user.email}}</span>
+                </div>
+                <div class="form-group col-md-4">
+                  <label>Télefono fijo</label><br />
+                  <span><i class="fa fa-phone" aria-hidden="true"></i> {{user.telefono}}</span>
+                </div>
+                <div class="form-group col-md-4">
+                  <label>Télefono celular</label><br />
+                  <span><i class="fa fa-mobile" aria-hidden="true"></i> {{user.movil}}</span>
+                </div>
+              </div>
+
+              <div class="col-xs-12" style="padding-bottom:15px">
+                <div class="form-group col-md-4">
+                  <label>Tipo de técnico</label><br />
+                  <span><i class="fa fa-cogs" aria-hidden="true"></i> {{user.tipo_tecnico}}</span>
+                </div>
+                <div class="form-group col-md-4">
+                  <label>Área de cobertura</label><br />
+                  <span *ngFor='let value of user.area_cobertura; trackBy: index;'><i class="fa fa-map-marker" aria-hidden="true"></i> {{value.cobertura}}&nbsp;&nbsp;&nbsp;</span>
+                </div>
+                <div class="form-group col-md-4">
+                  <label>Productos</label><br />
+                  <span *ngFor='let value of user.productos; trackBy: index;'><i class="fa fa-product-hunt" aria-hidden="true"></i> {{value.producto}}&nbsp;&nbsp;&nbsp;</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <!-- /.box -->
+        </div>
+        <!-- /.col -->
+
+        <div class="col-md-12">
+          <div class="box">
+            <div class="box-header with-border">
+              <h3 class="box-title negritas">Inventario</h3>
+              <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                  <i class="fa fa-minus"></i>
+                </button>
+              </div>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+
+            </div>
+          </div>
+          <!-- /.box -->
+        </div>
+      </div>
+    </section>
+    <!-- /.content -->
+  </form>
+</div>

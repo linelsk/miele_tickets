@@ -1,0 +1,40 @@
+.btn-default {
+  background-color: #EEEDEB;
+  color: #847d70;
+  border-color: #ddd;
+  padding-left: 50px;
+  padding-right: 50px;
+  font-weight: bold;
+  border-radius: 0;
+}
+
+.btn-default-rojo {
+  background-color: #A5000D;
+  color: #fff;
+  border-color: #A5000D;
+}
+
+  .btn-default-rojo:hover {
+    background-color: #E60000;
+    color: #fff;
+    border-color: #E60000;
+  }
+
+.alert-danger-aviso {
+  background-color: #FFDB4B;
+  border-color: #FFDB4B;
+  color: #847d70;
+  padding: 10px 10px 10px 10px;
+  border-radius: 3px;
+}
+
+.example-container {
+  display: flex;
+  flex-direction: column;
+  min-width: 300px;
+}
+
+.mat-table {
+  overflow: auto;
+  max-height: 500px;
+}

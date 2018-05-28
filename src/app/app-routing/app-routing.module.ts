@@ -10,9 +10,12 @@ import { ServicioDetalleComponent } from './../servicio-detalle/servicio-detalle
 import { NuevoServicioComponent } from './../nuevo-servicio/nuevo-servicio.component';
 import { BuscarServicioComponent } from './../buscar-servicio/buscar-servicio.component';
 import { EditarServicioComponent } from './../editar-servicio/editar-servicio.component';
+import { BusquedaClienteComponent } from './../busqueda-cliente/busqueda-cliente.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
+import { BusquedaTecnicoComponent } from '../busqueda-tecnico/busqueda-tecnico.component';
+import { InfoTecnicoComponent } from '../info-tecnico/info-tecnico.component';
 
 const routes: Routes = [
   //{ path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -27,7 +30,10 @@ const routes: Routes = [
   { path: 'serviciodetalle/:id', component: ServicioDetalleComponent },
   { path: 'nuevoservicio/:id', component: NuevoServicioComponent },
   { path: 'buscacarservicio', component: BuscarServicioComponent },
-  { path: 'editarservicio/:id', component: EditarServicioComponent }
+  { path: 'editarservicio/:id', component: EditarServicioComponent },
+  { path: 'buscar_cliente', component: BusquedaClienteComponent },
+  { path: 'buscar_tecnico', component: BusquedaTecnicoComponent },
+  { path: 'info_tecnico/:id', component: InfoTecnicoComponent }
 ];
 
 @NgModule({

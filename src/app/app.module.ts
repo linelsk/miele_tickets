@@ -21,7 +21,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatExpansionModule } from '@angular/material/expansion';
 
 //Chips
-import { TagInputModule } from 'ngx-chips';
+//import { TagInputModule } from 'ngx-chips';
 //
 //Data table
 //
@@ -58,7 +58,7 @@ import { RecuperarPasswordComponent } from './recuperar-password/recuperar-passw
 import { PerfilComponent } from './perfil/perfil.component';
 import { ConfiguracionComponent } from './configuracion/configuracion.component';
 import { VerServicioComponent } from './ver-servicio/ver-servicio.component';
-import { NuevoClienteComponent, DialogAgendaCliente, DialogVisitaHoraCliente } from './nuevo-cliente/nuevo-cliente.component';
+import { NuevoClienteComponent, DialogAgendaCliente, DialogVisitaHoraCliente, DialogIbsCliente } from './nuevo-cliente/nuevo-cliente.component';
 import { ServicioDetalleComponent } from './servicio-detalle/servicio-detalle.component';
 import { NuevoServicioComponent, DialogIbsDialog, DialogAgenda, DialogVisitaHora } from './nuevo-servicio/nuevo-servicio.component';
 import { BuscarServicioComponent } from './buscar-servicio/buscar-servicio.component';
@@ -68,6 +68,9 @@ import { FocusDirective } from './focus.directive';
 
 //light box
 import { LightboxModule } from 'angular2-lightbox';
+import { BusquedaClienteComponent } from './busqueda-cliente/busqueda-cliente.component';
+import { BusquedaTecnicoComponent } from './busqueda-tecnico/busqueda-tecnico.component';
+import { InfoTecnicoComponent } from './info-tecnico/info-tecnico.component';
 
 registerLocaleData(localeFr);
 registerLocaleData(localeEs);
@@ -91,6 +94,7 @@ registerLocaleData(localeEs);
     ServicioDetalleComponent,
     NuevoServicioComponent,
     DialogIbsDialog,
+    DialogIbsCliente,
     DialogAgenda,
     DialogAgendaCliente,
     DialogEditarEstatus,
@@ -100,9 +104,12 @@ registerLocaleData(localeEs);
     DialogVisitaHoraCliente,
     BuscarServicioComponent,
     EditarServicioComponent,
-    FocusDirective
+    FocusDirective,
+    BusquedaClienteComponent,
+    BusquedaTecnicoComponent,
+    InfoTecnicoComponent
   ],
-  entryComponents: [DialogIbsDialog, DialogAgenda, DialogAgendaCliente, DialogEditarEstatus, DialogCancelarEstatus, DialogFinal, DialogVisitaHora, DialogAgendaCliente, DialogVisitaHoraCliente],
+  entryComponents: [DialogIbsDialog, DialogIbsCliente, DialogAgenda, DialogAgendaCliente, DialogEditarEstatus, DialogCancelarEstatus, DialogFinal, DialogVisitaHora, DialogAgendaCliente, DialogVisitaHoraCliente],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -114,7 +121,7 @@ registerLocaleData(localeEs);
     ReactiveFormsModule,
     HttpClientModule,
     HttpModule,
-    TagInputModule,
+    //TagInputModule,
     BrowserAnimationsModule,
     MatButtonModule,
     MatCheckboxModule,

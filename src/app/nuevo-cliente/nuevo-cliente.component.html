@@ -129,13 +129,40 @@
                   </div>
                 </div>
                 <div class="form-group col-md-4">
-                  <mat-form-field class="full-width">
-                    <input type="text" matInput id="calle_numero" name="calle_numero" [(ngModel)]="direccion.calle_numero" #calle_numero="ngModel" placeholder="Calle" required>
-                  </mat-form-field>
-                  <div *ngIf="calle_numero.invalid && (calle_numero.dirty || calle_numero.touched)"
-                       class="alert alert-danger">
-                    <div *ngIf="calle_numero.errors.required">
-                      Calle y número requerido.
+                  <div class="col-md-4" style="padding-left:0; padding-right:1px;">
+                    <mat-form-field class="full-width">
+                      <mat-select placeholder="Tipo de calle" id="tipo_calle" name="tipo_calle" #tipo_calle="ngModel" [(ngModel)]="direccion.tipo_calle" required>
+                        <mat-option value="Calle">
+                          Calle
+                        </mat-option>
+                        <mat-option value="Calle">
+                          Av.
+                        </mat-option>
+                        <mat-option value="Calle">
+                          Callejon
+                        </mat-option>
+                        <mat-option value="Calle">
+                          Blvr.
+                        </mat-option>
+                        <mat-option value="Calle">
+                          Cerrada
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-8" style="padding-right:0; padding-left:0;">
+                    <mat-form-field class="full-width">
+                      <input type="text" matInput id="calle_numero" name="calle_numero" [(ngModel)]="direccion.calle_numero" (ngModelChange)="validar_calle()" #calle_numero="ngModel" placeholder="Nombre calle" required>
+                    </mat-form-field>
+                    <div *ngIf="calle_numero.invalid && (calle_numero.dirty || calle_numero.touched)"
+                         class="alert alert-danger">
+                      <div *ngIf="calle_numero.errors.required">
+                        Calle y número requerido.
+                      </div>
+                    </div>
+                    <div *ngIf="_tipo_calle_direccion"
+                         class="alert alert-danger">
+                      El nombre de la calle no puede contener la palabra {{_nombre_calle}}.
                     </div>
                   </div>
                 </div>
@@ -308,15 +335,42 @@
                   </div>
                 </div>
                 <div class="form-group col-md-4">
-                  <mat-form-field class="full-width">
-                    <input type="text" matInput id="calle_numero" name="calle_numero" [(ngModel)]="datosfiscales.calle_numero" #calle_numero="ngModel" placeholder="Calle" required>
-                  </mat-form-field>
-                  <div *ngIf="calle_numero.invalid && (calle_numero.dirty || calle_numero.touched)"
-                       class="alert alert-danger">
-                    <div *ngIf="calle_numero.errors.required">
-                      Calle y número requerido.
-                    </div>
+                  <div class="col-md-4" style="padding-left:0; padding-right:1px;">
+                    <mat-form-field class="full-width">
+                      <mat-select placeholder="Tipo de calle" id="tipo_calle" name="tipo_calle" #tipo_calle="ngModel" [(ngModel)]="direccion.tipo_calle" required>
+                        <mat-option value="Calle">
+                          Calle
+                        </mat-option>
+                        <mat-option value="Calle">
+                          Av.
+                        </mat-option>
+                        <mat-option value="Calle">
+                          Callejon
+                        </mat-option>
+                        <mat-option value="Calle">
+                          Blvr.
+                        </mat-option>
+                        <mat-option value="Calle">
+                          Cerrada
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
                   </div>
+                  <div class="col-md-8" style="padding-right:0; padding-left:0;">
+                    <mat-form-field class="full-width">
+                      <input type="text" matInput id="calle_numero" name="calle_numero" [(ngModel)]="datosfiscales.calle_numero" #calle_numero="ngModel" (ngModelChange)="validar_calle_datos_ficales()" placeholder="Calle" required>
+                    </mat-form-field>
+                    <div *ngIf="calle_numero.invalid && (calle_numero.dirty || calle_numero.touched)"
+                         class="alert alert-danger">
+                      <div *ngIf="calle_numero.errors.required">
+                        Calle y número requerido.
+                      </div>
+                    </div>
+                    <div *ngIf="_tipo_calle_datos_fiscales"
+                         class="alert alert-danger">
+                      El nombre de la calle no puede contener la palabra {{_nombre_calle_datos_fiscales}}.
+                    </div>
+                  </div>                  
                 </div>
                 <div class="form-group col-md-4">
                   <mat-form-field class="full-width">
@@ -555,14 +609,14 @@
 
               <div [hidden]="valid_tipo_taller">
                 <div class="col-xs-12" style="padding-bottom:15px">
-                  <label>Direccion de instalción</label>
+                  <label>Dirección de instalación</label>
                   <mat-divider></mat-divider>
                   <br />
                   <form #registroForm="ngForm">
                     <div class="col-xs-12" style="padding:0;">
                       <div class="form-group col-md-4" style="padding-left:0;">
                         <mat-form-field class="full-width">
-                          <input type="text" [textMask]="{mask: mask_cp, guide: false}" matInput id="cp" name="cp" [(ngModel)]="direccion_servicio.cp" #cp="ngModel" (ngModelChange)="sepomex();" placeholder="CP" required>
+                          <input type="text" [textMask]="{mask: mask_cp, guide: false}" matInput id="cp" name="cp" [(ngModel)]="direccion_servicio.cp" #cp="ngModel" (ngModelChange)="sepomex_servicios();" placeholder="CP" required>
                         </mat-form-field>
                         <div *ngIf="cp.invalid && (cp.dirty || cp.touched)"
                              class="alert alert-danger">
@@ -573,8 +627,8 @@
                       </div>
                       <div class="form-group col-md-4">
                         <mat-form-field class="full-width">
-                          <mat-select placeholder="Estado" id="estado" name="estado" #estado="ngModel" [(ngModel)]="direccion_servicio.id_estado" (change)="getmunicipios()" required>
-                            <mat-option *ngFor="let value of estados; trackBy: index;" [value]="value.id">
+                          <mat-select placeholder="Estado" id="estado" name="estado" #estado="ngModel" [(ngModel)]="direccion_servicio.id_estado" (change)="getmunicipios_direccion_servicio()" required>
+                            <mat-option *ngFor="let value of estados_direccion_servicios; trackBy: index;" [value]="value.id">
                               {{value.desc_estado}}
                             </mat-option>
                           </mat-select>
@@ -589,7 +643,7 @@
                       <div class="form-group col-md-4" style="padding-right:0;">
                         <mat-form-field class="full-width">
                           <mat-select placeholder="Delegación / Municipio" id="municipio" name="municipio" #municipio="ngModel" [(ngModel)]="direccion_servicio.id_municipio">
-                            <mat-option *ngFor="let value of municipios; trackBy: index;" [value]="value.id">
+                            <mat-option *ngFor="let value of municipios_direccion_servicios; trackBy: index;" [value]="value.id">
                               {{value.municipio}}
                             </mat-option>
                           </mat-select>
@@ -602,12 +656,12 @@
                         </div>
                       </div>
                     </div>
-                
+
                     <div class="col-xs-12" style="padding:0;">
                       <div class="form-group col-md-4" style="padding-left:0;">
                         <mat-form-field class="full-width">
                           <mat-select placeholder="Colonia" id="colonia" name="colonia" #colonia="ngModel" [(ngModel)]="direccion_servicio.colonia" required>
-                            <mat-option *ngFor="let value of localidades; trackBy: index;" [value]="value.id_localidad">
+                            <mat-option *ngFor="let value of localidades_direccion_servicios; trackBy: index;" [value]="value.id_localidad">
                               {{value.localidad}}
                             </mat-option>
                           </mat-select>
@@ -620,13 +674,40 @@
                         </div>
                       </div>
                       <div class="form-group col-md-4">
-                        <mat-form-field class="full-width">
-                          <input type="text" matInput id="calle_numero" name="calle_numero" [(ngModel)]="direccion_servicio.calle_numero" #calle_numero="ngModel" placeholder="Calle" required>
-                        </mat-form-field>
-                        <div *ngIf="calle_numero.invalid && (calle_numero.dirty || calle_numero.touched)"
-                             class="alert alert-danger">
-                          <div *ngIf="calle_numero.errors.required">
-                            Calle y número requerido.
+                        <div class="col-md-4" style="padding-left:0; padding-right:1px;">
+                          <mat-form-field class="full-width">
+                            <mat-select placeholder="Tipo de calle" id="tipo_calle" name="tipo_calle" #tipo_calle="ngModel" [(ngModel)]="direccion.tipo_calle" required>
+                              <mat-option value="Calle">
+                                Calle
+                              </mat-option>
+                              <mat-option value="Calle">
+                                Av.
+                              </mat-option>
+                              <mat-option value="Calle">
+                                Callejon
+                              </mat-option>
+                              <mat-option value="Calle">
+                                Blvr.
+                              </mat-option>
+                              <mat-option value="Calle">
+                                Cerrada
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </div>
+                        <div class="col-md-8" style="padding-right:0; padding-left:0;">
+                          <mat-form-field class="full-width">
+                            <input type="text" matInput id="calle_numero" name="calle_numero" [(ngModel)]="direccion_servicio.calle_numero" #calle_numero="ngModel" (ngModelChange)="validar_calle_servicio()" placeholder="Calle" required>
+                          </mat-form-field>
+                          <div *ngIf="calle_numero.invalid && (calle_numero.dirty || calle_numero.touched)"
+                               class="alert alert-danger">
+                            <div *ngIf="calle_numero.errors.required">
+                              Calle y número requerido.
+                            </div>
+                          </div>
+                          <div *ngIf="_tipo_calle_direccion_servicios"
+                               class="alert alert-danger">
+                            El nombre de la calle no puede contener la palabra {{_nombre_calle_direccion_servicio}}.
                           </div>
                         </div>
                       </div>
@@ -636,7 +717,7 @@
                         </mat-form-field>
                       </div>
                     </div>
-                    
+
                     <div class="col-xs-12" style="padding:0;">
                       <div class="form-group col-md-4" style="padding-left:0;">
                         <mat-form-field class="full-width">
@@ -655,7 +736,7 @@
                         </div>
                       </div>
                     </div>
-                    
+
                     <div class="form-group col-md-12" style="text-align:right">
                       <button type="submit" (click)="copiar_direccion_servicio()" class="pull-center btn btn-default btn-default-rojo" [disabled]="validform">
                         Copiar dirección del cliente
