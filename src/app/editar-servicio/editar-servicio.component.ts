@@ -136,8 +136,9 @@ export class EditarServicioComponent implements OnInit {
     this.body.classList.remove('sidebar-mini');
   }
 
-  editar_ibs() {
+  editar_ibs(txt) {
     this.mostrar_distribuidor = true;
+    this.text_editaribs = txt;
   }
 
   guardar_ibs() {
@@ -205,32 +206,36 @@ export class EditarServicioComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(result);
-      if (result != undefined) {
-        if (this.text_editaribs != "") {
-          this.heroService.service_general("servicios/Actualizar_estatus_servicio_visita", {
-            "id": result.id
-          }).subscribe((value) => {
-            this.snackBar.open("Estatus de servico editado correctamente", "", {
+      //console.log(this.servicio_detalle[0].ibs);
+      if (result != undefined || result != "") {
+        this.heroService.service_general_get("servicios/" + this.id, {}).subscribe((value) => {
+          console.log(value[0].ibs);
+          if (value[0].ibs != "") {
+            this.heroService.service_general("servicios/Actualizar_estatus_servicio_visita", {
+              "id": result.id
+            }).subscribe((value) => {
+              this.snackBar.open("Estatus de servico editado correctamente", "", {
+                duration: 5000,
+                verticalPosition: 'bottom',
+                horizontalPosition: 'right',
+                extraClasses: ['blue-snackbar']
+              });
+              this.heroService.service_general_get("servicios/" + this.id, {}).subscribe((value) => {
+                this.servicio_detalle = value[0];
+                this.detalle_visita = value[0].visitas;
+              });
+            });
+          }
+          else {
+            this.snackBar.open("Para guardar el servicio es necesario ingresar un IBS", "", {
               duration: 5000,
               verticalPosition: 'bottom',
               horizontalPosition: 'right',
               extraClasses: ['blue-snackbar']
             });
-            this.heroService.service_general_get("servicios/" + this.id, {}).subscribe((value) => {
-              this.servicio_detalle = value[0];
-              this.detalle_visita = value[0].visitas;
-            });
-          });
-        }
-        else {
-          this.snackBar.open("Para guardar el servicio es necesario ingresar un IBS", "", {
-            duration: 5000,
-            verticalPosition: 'bottom',
-            horizontalPosition: 'right',
-            extraClasses: ['blue-snackbar']
-          });
-        }
+          }
+        });
+       
       }
     });
   }

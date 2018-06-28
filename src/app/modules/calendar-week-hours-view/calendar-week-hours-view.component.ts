@@ -29,9 +29,7 @@ import {CalendarDragHelper} from 'angular-calendar/modules/common/calendar-drag-
                     <div class="cal-day-view">
                         <div class="cal-hour-rows">
                             <div class="cal-events">
-                                <div class="cal-hour"
-                                     [class.cal-week-hour-even]="i % 2 === 0"
-                                     [class.cal-week-hour-odd]="i % 2 === 1"
+                                <div style="background-color: #FAFAFA; touch-action: none; user-select: none; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); height: 30px;"
                                      *ngFor="let hour of hours; let i = index">
                                     <iq-calendar-week-hours-day-view-hour-segment
                                         *ngFor="let segment of hour.segments"

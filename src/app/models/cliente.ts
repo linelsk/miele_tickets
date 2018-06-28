@@ -20,12 +20,15 @@ export class Clientes {
   //direccion: direccion;
 }
 
-export class direccion {  
+export class direccion {
+  id_direccion: number;
   id_cliente: number;
   calle_numero: string;
   cp: string;
   id_estado: number;
+  estado: string;
   id_municipio: number;
+  municipio: string;
   colonia: string;
   telefono: string;
   telefono_movil: string;
@@ -46,7 +49,9 @@ export class datosfiscales {
   cp: string;
   email: string;
   id_estado: number;
+  estado: string;
   id_municipio: number;
+  municipio: string;
   razon_social: string;
   rfc: string;
   Ext_fact: string;

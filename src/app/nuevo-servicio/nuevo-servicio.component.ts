@@ -14,6 +14,7 @@ import { MatTableDataSource } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Router } from '@angular/router';
 import { Productos_Servicio } from '../models/login';
+import { direccion } from '../models/cliente';
 import * as moment from 'moment';
 
 @Component({
@@ -22,6 +23,8 @@ import * as moment from 'moment';
   styleUrls: ['./nuevo-servicio.component.css']
 })
 export class NuevoServicioComponent implements OnInit {
+  public direccion_cliente = new direccion();
+
   preventAbuse = false;
   id: number;
   public sub: any;
@@ -34,6 +37,7 @@ export class NuevoServicioComponent implements OnInit {
   razonsocial: string;
   rfc: string;
   email: string;
+  view_editar_direccion: boolean = false;
 
   //Valdaciones
   valid_tipo: boolean = true;
@@ -93,7 +97,7 @@ export class NuevoServicioComponent implements OnInit {
   requiere_factura: boolean = false;
 
   public mask = [/[0-9]/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/];
-  public mask_telefono = ['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
+  public mask_telefono = ['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/];
   ELEMENT_DATA: Element[] = [];
 
   bodyClasses = 'skin-blue sidebar-mini';
@@ -102,8 +106,8 @@ export class NuevoServicioComponent implements OnInit {
   constructor(private heroService: DatosService, private route: ActivatedRoute, private router: Router, public dialog: MatDialog, public snackBar: MatSnackBar) { }
   myControl: FormControl = new FormControl();
 
-  displayedColumns = ['select', 'Modelo', 'SKU', 'Tipo', 'Garantia', 'Poliza', 'Estatus'];
-  displayedColumns_direccion = ['select', 'Calle', 'Colonia', 'Estado', 'Municipio', 'CP'];
+  displayedColumns = ['select', 'Modelo', 'SKU', 'Tipo', 'Garantia', 'Poliza', 'Estatus', 'visitas'];
+  displayedColumns_direccion = ['select', 'Calle', 'Colonia', 'Estado', 'Municipio', 'CP', 'boton'];
 
   dataSource = new MatTableDataSource();
   dataSource_direccion = new MatTableDataSource();
@@ -383,27 +387,36 @@ export class NuevoServicioComponent implements OnInit {
   }
 
   guardar_direccion(ev) {
+    //this.sub = this.route.params.subscribe(params => {
+    //  this.id = +params['id'];
+    //});
+    ////console.log(this.txtcalle_numero + "---" + this.txtcolonia + "---" + this.txtcp + "---" + this.id + "---" + this.ddlestado + "---" + this.ddlmunicipio + "---" + this.txttelefono + "---" + this.heroService.fecha_hoy() + "---" + JSON.parse(localStorage.getItem("user")).id);
+    //this.heroService.service_general("servicios/Agregar_Direccion", {
+    //  "calle_numero": this.txtcalle_numero,
+    //  "colonia": this.txtcolonia,
+    //  "cp": this.txtcp,
+    //  "estatus": true,
+    //  "id_cliente": this.id,
+    //  "id_estado": this.ddlestado,
+    //  "id_municipio": this.ddlmunicipio,
+    //  "telefono": this.txttelefono,
+    //  "actualizado": "01/01/1900",
+    //  "actualizadopor": 0,
+    //  "creado": this.heroService.fecha_hoy(),
+    //  "creadopor": JSON.parse(localStorage.getItem("user")).id
+    //}).subscribe((value) => {
+    //  //console.log(value);
+    //  this.getdireccioncliente(this.id);
+    //});
     this.sub = this.route.params.subscribe(params => {
       this.id = +params['id'];
     });
-    //console.log(this.txtcalle_numero + "---" + this.txtcolonia + "---" + this.txtcp + "---" + this.id + "---" + this.ddlestado + "---" + this.ddlmunicipio + "---" + this.txttelefono + "---" + this.heroService.fecha_hoy() + "---" + JSON.parse(localStorage.getItem("user")).id);
-    this.heroService.service_general("servicios/Agregar_Direccion", {
-      "calle_numero": this.txtcalle_numero,
-      "colonia": this.txtcolonia,
-      "cp": this.txtcp,
-      "estatus": true,
-      "id_cliente": this.id,
-      "id_estado": this.ddlestado,
-      "id_municipio": this.ddlmunicipio,
-      "telefono": this.txttelefono,
-      "actualizado": "01/01/1900",
-      "actualizadopor": 0,
-      "creado": this.heroService.fecha_hoy(),
-      "creadopor": JSON.parse(localStorage.getItem("user")).id
-    }).subscribe((value) => {
-      //console.log(value);
-      this.getdireccioncliente(this.id);
-    });
+    this.heroService.service_general("Servicios/Editar_Direccion", this.direccion_cliente)
+      .subscribe((value) => {
+        //console.log(this.direccion_cliente.id_cliente);
+        this.getdireccioncliente(this.id);
+        this.view_editar_direccion = false;
+      });
   }
 
   ngOnInit() {
@@ -432,6 +445,8 @@ export class NuevoServicioComponent implements OnInit {
       this.detalle = value[0];
       if (value[0].direcciones != "") {
         this.detalle_direccion = value[0].direcciones[0];
+        this.direccion_cliente = value[0].direcciones[0];
+        this.getmunicipios();
       }
       else {
         this.detalle_direccion = [{
@@ -491,7 +506,8 @@ export class NuevoServicioComponent implements OnInit {
               "garantia": value[i].garantia,
               "poliza": value[i].poliza,
               "estatus": value[i].estatus,
-              "checked": true
+              "checked": true,
+              "no_visitas": value[i].no_visitas
             });
             this.categoria_servicio = this.categoria_servicio + parseInt(value[i].hora_tecnico);
           }
@@ -504,7 +520,8 @@ export class NuevoServicioComponent implements OnInit {
               "garantia": value[i].garantia,
               "poliza": value[i].poliza,
               "estatus": value[i].estatus,
-              "checked": false
+              "checked": false,
+              "no_visitas": value[i].no_visitas
             });
           }
         }
@@ -519,7 +536,8 @@ export class NuevoServicioComponent implements OnInit {
               "garantia": value[i].garantia,
               "poliza": value[i].poliza,
               "estatus": value[i].estatus,
-              "checked": true
+              "checked": true,
+              "no_visitas": value[i].no_visitas
             });
             this.categoria_servicio = this.categoria_servicio + parseInt(value[i].hora_tecnico);
           }
@@ -532,7 +550,8 @@ export class NuevoServicioComponent implements OnInit {
               "garantia": value[i].garantia,
               "poliza": value[i].poliza,
               "estatus": value[i].estatus,
-              "checked": false
+              "checked": false,
+              "no_visitas": value[i].no_visitas
             });
           }
         }
@@ -547,7 +566,8 @@ export class NuevoServicioComponent implements OnInit {
               "garantia": value[i].garantia,
               "poliza": value[i].poliza,
               "estatus": value[i].estatus,
-              "checked": true
+              "checked": true,
+              "no_visitas": value[i].no_visitas
             });
           }
           else {
@@ -559,7 +579,8 @@ export class NuevoServicioComponent implements OnInit {
               "garantia": value[i].garantia,
               "poliza": value[i].poliza,
               "estatus": value[i].estatus,
-              "checked": false
+              "checked": false,
+              "no_visitas": value[i].no_visitas
             });
           }
         }
@@ -574,7 +595,8 @@ export class NuevoServicioComponent implements OnInit {
               "garantia": value[i].garantia,
               "poliza": value[i].poliza,
               "estatus": value[i].estatus,
-              "checked": true
+              "checked": true,
+              "no_visitas": value[i].no_visitas
             });
           }
           else {
@@ -586,7 +608,8 @@ export class NuevoServicioComponent implements OnInit {
               "garantia": value[i].garantia,
               "poliza": value[i].poliza,
               "estatus": value[i].estatus,
-              "checked": false
+              "checked": false,
+              "no_visitas": value[i].no_visitas
             });
           }
         }
@@ -609,7 +632,7 @@ export class NuevoServicioComponent implements OnInit {
       }
 
       this.categoria_servicio_cantidad = (this.categoria_servicio * 1490) + 890;
-      //console.log(this.productos_cliente);
+      console.log(this.productos_cliente);
       this.dataSource.data = this.productos_cliente;
       //console.log(this.dataSource.data[0].checked);
 
@@ -686,7 +709,7 @@ export class NuevoServicioComponent implements OnInit {
 
   getmunicipios(): void {
     this.heroService.service_general("Catalogos/Municipio", {
-      "id": this.ddlestado
+      "id": this.direccion_cliente.id_estado
     })
       .subscribe((value) => {
         this.municipios = value;
@@ -774,6 +797,11 @@ export class NuevoServicioComponent implements OnInit {
 
       });
     })
+  }
+
+  view_direccion(row) {
+    console.log(row);
+    this.view_editar_direccion = true;
   }
 
 }
@@ -1173,6 +1201,7 @@ export class DialogAgenda {
     return this.color_aleatorio
   }
 
+ 
   ngOnInit() {
 
     this.heroService.service_general("servicios/TecnicoCalendario", { "id": this.data.tipo_servicio.id }).subscribe((value) => {

@@ -16,7 +16,7 @@ export class BusquedaClienteComponent implements OnInit {
   preventAbuse = false;
   text_busqueda: any = "";
 
-  displayedColumns = ['nombre', 'tipo', 'email', 'telefono', 'celular', 'fecha'];
+  displayedColumns = ['nombre', 'tipo', 'email', 'telefono', 'celular', 'fecha', 'direccion'];
   dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;

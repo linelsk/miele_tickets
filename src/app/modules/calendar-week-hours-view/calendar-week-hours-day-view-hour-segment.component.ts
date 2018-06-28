@@ -18,6 +18,8 @@ import { DayViewHourSegment } from 'calendar-utils';
                 <div class="cal-time" *ngIf="hourVisible">
                     {{ segment.date | calendarDate:'dayViewHour':locale }}
                 </div>
+                <span style="color:#275D8C; font-size:x-small;padding:5px 5px 5px 10px " *ngIf="(segment.date | calendarDate:'dayViewHour':locale) == '1 PM'"><i class="fa fa-cutlery" aria-hidden="true"></i> Hora de comer</span>
+                <span style="color:#A5000D; font-size:x-small;padding:5px 5px 5px 10px " *ngIf="(segment.date | calendarDate:'dayViewHour':locale) != '1 PM'"><i class="fa fa-clone" aria-hidden="true"></i> Disponible</span> 
             </div>
         </ng-template>
         <ng-template

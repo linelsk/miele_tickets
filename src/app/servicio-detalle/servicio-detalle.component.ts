@@ -4,6 +4,7 @@ import persons from '../models/mock-login';
 import 'rxjs/Rx';
 import { ActivatedRoute } from '@angular/router';
 import { MatTableDataSource } from '@angular/material';
+import { Clientes, direccion, datosfiscales } from '../models/cliente';
 
 @Component({
   selector: 'app-servicio-detalle',
@@ -12,11 +13,18 @@ import { MatTableDataSource } from '@angular/material';
 })
 export class ServicioDetalleComponent implements OnInit {
 
+  public mask_telefono = ['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/];
+  public cliente = new Clientes();
+  public direccion = new direccion();
+  public datosfiscales = new datosfiscales();
+
   preventAbuse = false;
   id: number;
   public sub: any;
   public detalle: string[] = [];
   public detalle_direccion: any[] = [];
+  estados: string[] = [];
+  municipios: string[] = [];
 
   bodyClasses = 'skin-blue sidebar-mini';
   body: HTMLBodyElement = document.getElementsByTagName('body')[0];
@@ -33,7 +41,7 @@ export class ServicioDetalleComponent implements OnInit {
     // add the the body classes
     this.body.classList.add('skin-blue');
     this.body.classList.add('sidebar-mini');
-
+    this.getestados();
     this.sub = this.route.params.subscribe(params => {
       this.id = +params['id']; // (+) converts string 'id' to a number
       console.log(this.id);
@@ -41,10 +49,13 @@ export class ServicioDetalleComponent implements OnInit {
     });
 
     this.heroService.service_general_get("Clientes/" + this.id, {}).subscribe((value) => {
-      //console.log(value[0]);
-      this.detalle = value[0];
+      this.cliente = value[0];
+      console.log(value[0].datos_fiscales[0]);
+      this.datosfiscales = value[0].datos_fiscales[0]
       if (value[0].direcciones != "") {
-        this.detalle_direccion = value[0].direcciones[0];
+        this.direccion = value[0].direcciones[0];
+        console.log(this.direccion.id_estado);
+        this.getmunicipios();
       }
       else {
         this.detalle_direccion = [{
@@ -78,4 +89,27 @@ export class ServicioDetalleComponent implements OnInit {
     this.body.classList.remove('sidebar-mini');
   }
 
+  //Catalogos
+  getestados(): void {
+    this.heroService.service_general("Catalogos/Estados", {})
+      .subscribe((value) => {
+        this.estados = value;        
+      });
+  }
+
+  getmunicipios(): void {
+    this.heroService.service_general("Catalogos/Municipio", {
+      "id": this.direccion.id_estado
+    })
+      .subscribe((value) => {
+        this.municipios = value;
+      });
+  }
+
+  editar_direccion(obj) {
+    this.heroService.service_general("Servicios/Editar_Direccion", this.direccion)
+      .subscribe((value) => {
+        console.log(value);
+      });
+  }
 }

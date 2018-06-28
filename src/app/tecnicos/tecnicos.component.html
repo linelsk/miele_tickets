@@ -123,8 +123,8 @@
                       Télefono celular requerido.
                     </div>
                     <!--<div *ngIf="movil.errors && movil.errors.pattern">
-                      Télefono celular solo puede contener números.
-                    </div>--<!--pattern="[0-9]+"-->
+          Télefono celular solo puede contener números.
+        </div>--<!--pattern="[0-9]+"-->
 
                   </div>
                 </div>
@@ -135,7 +135,7 @@
                 <select type="text" class="form-control" id="tecnico" name="tecnico" #tecnico="ngModel" [(ngModel)]="tipotecnico" (ngModelChange)="validacion_form($event)" required>
                   <option *ngFor='let value of tipo; trackBy: index;' value="{{value.id}}">{{value.desc_tipo}}</option>
                   <!--<option value="1">Tipo 1</option>
-                  <option value="2">Tipo 2</option>-->
+      <option value="2">Tipo 2</option>-->
                 </select>
                 <div *ngIf="tecnico.invalid && (tecnico.dirty || tecnico.touched)"
                      class="alert alert-danger">
@@ -145,19 +145,44 @@
                 </div>
               </div>
               <!--<div class="form-group col-md-4">
-                <label>Área de cobertura</label>
-                <tag-input [(ngModel)]="tipocobertura" name="cobertura"
-                           [addOnBlur]="true"
-                           [clearOnBlur]="true"
-                           [onRemoving]="onRemoving"
-                           [onAdding]="onAdding">
-                  <tag-input-dropdown [autocompleteItems]="autocompleteItems"
-                                      [displayBy]="'name'"
-                                      [identifyBy]="'id'">
-                  </tag-input-dropdown>
-                </tag-input>
-              </div>-->
-              <div class="form-group col-md-4">
+    <label>Área de cobertura</label>
+    <tag-input [(ngModel)]="tipocobertura" name="cobertura"
+               [addOnBlur]="true"
+               [clearOnBlur]="true"
+               [onRemoving]="onRemoving"
+               [onAdding]="onAdding">
+      <tag-input-dropdown [autocompleteItems]="autocompleteItems"
+                          [displayBy]="'name'"
+                          [identifyBy]="'id'">
+      </tag-input-dropdown>
+    </tag-input>
+  </div>-->
+              <!--<mat-form-field class="demo-chip-list">
+    <mat-chip-list #chipList>
+      <mat-chip *ngFor="let fruit of fruits"
+                [selectable]="selectable"
+                [removable]="removable"
+                (removed)="remove(fruit)" style="background-color:aqua;">
+        {{fruit.name}}
+        <mat-icon matChipRemove *ngIf="removable">X</mat-icon>
+      </mat-chip>
+      <input placeholder="New fruit..."
+             #fruitInput
+             [formControl]="fruitCtrl"
+             [matAutocomplete]="auto"
+             [matChipInputFor]="chipList"
+             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+             [matChipInputAddOnBlur]="addOnBlur"
+             (matChipInputTokenEnd)="add($event)" />
+    </mat-chip-list>
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+      <mat-option *ngFor="let fruit of filteredFruits | async" [value]="fruit">
+        {{ fruit.name }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>-->
+
+              <div class="form-group col-md-8">
                 <label>Área de cobertura</label><br />
                 <mat-checkbox style="padding-right:10px"
                               [(ngModel)]="region1"
@@ -208,64 +233,23 @@
                   </div>
                 </div>
               </div>
-              <div class="form-group col-md-4 col-xs-12 text-left">
+              <div class="form-group col-md-12 col-xs-12 text-left">
                 <label>Productos</label><br />
-                <div *ngFor='let value of values; trackBy: index;'>
+                <div *ngFor='let value of values; trackBy: index;' class="col-md-4">
                   <mat-slide-toggle class="example-margin"
                                     name="{{ value.desc_producto }}"
                                     [color]="color"
                                     [checked]="false"
                                     [disabled]="disabled"
                                     (change)="slide($event, value.id, value.desc_producto)">
-                    {{ value.desc_producto }}
+                    {{ value.codigo }} - {{ value.descripcion }}
                   </mat-slide-toggle>
                 </div>
-                <div class="alert alert-danger" *ngIf="validar_slide">
-                  <div>
-                    {{message_slide}}
-                  </div>
+              </div>
+              <div class="col-xs-12 alert alert-danger" *ngIf="validar_slide">
+                <div class="col-xs-12">
+                  {{message_slide}}
                 </div>
-                <!--<label style="padding-top: 5px; padding-bottom: 20px; padding-right:30px; width:250px; color:#000; font-size:15px">Refrigeración</label>
-                <mat-slide-toggle id="refrigeracion"
-                                  name="refrigeracion"
-                                  [(ngModel)]="refri"
-                                  #refrigeracion="ngModel"
-                                  value="1"
-                                  [color]="primary"
-                                  [checked]="false"
-                                  (change)="slide($event)">
-                </mat-slide-toggle><br />
-                <label style="padding-top: 5px; padding-bottom: 20px; padding-right:30px; width:250px; color:#000; font-size:15px">Línea blanca</label>
-                <mat-slide-toggle id="blanca"
-                                  name="blanca"
-                                  [(ngModel)]="lineablanca"
-                                  #blanca="ngModel"
-                                  value="2"
-                                  [color]="primary"
-                                  [checked]="false"
-                                  (change)="slide($event)">
-                </mat-slide-toggle><br />
-                <label style="padding-top: 5px; padding-bottom: 20px; padding-right:30px; width:250px; color:#000; font-size:15px">Equipos de cocción</label>
-                <mat-slide-toggle id="coccion"
-                                  name="coccion"
-                                  [(ngModel)]="equipococcion"
-                                  #coccion="ngModel"
-                                  value="3"
-                                  [color]="primary"
-                                  [checked]="false"
-                                  (change)="slide($event)">
-                </mat-slide-toggle><br />
-                <label style="padding-top: 5px; padding-bottom: 20px; padding-right:30px; width:250px; color:#000; font-size:15px">Aspiradoras</label>
-                <mat-slide-toggle id="aspiradoras"
-                                  name="aspiradoras"
-                                  [(ngModel)]="Aspi"
-                                  #aspiradoras="ngModel"
-                                  value="4"
-                                  [color]="primary"
-                                  [checked]="false"
-                                  (change)="slide($event)">
-                </mat-slide-toggle><br />-->
-
               </div>
             </div>
           </div>

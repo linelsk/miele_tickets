@@ -113,7 +113,7 @@
                   <div class="col-xs-12" style="padding:0;">
                     <div class="form-group col-xs-12 col-md-4">
                       <label>Número IBS</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                      <button class="pull-center btn-xs btn-default-rojo" (click)="editar_ibs()" [hidden]="mostrar_distribuidor">Editar IBS</button><br />
+                      <button class="pull-center btn-xs btn-default-rojo" (click)="editar_ibs(servicio_detalle.ibs)" [hidden]="mostrar_distribuidor">Editar IBS</button><br />
                       <span [hidden]="mostrar_distribuidor">{{servicio_detalle.ibs}}</span>
 
                       <div [hidden]="!mostrar_distribuidor">
@@ -182,7 +182,7 @@
                       <!-- Weight Column -->
                       <ng-container matColumnDef="Tipo">
                         <mat-header-cell *matHeaderCellDef> Tipo de equipo </mat-header-cell>
-                        <mat-cell *matCellDef="let element"><span *ngIf="element.sublinea != 'null'">{{element.sublinea | slice:0:20 }}<span *ngIf="element.sublinea.length > 20">...</span> </span></mat-cell>
+                        <mat-cell *matCellDef="let element"><span *ngIf="element.categoria != 'null'">{{element.categoria | slice:0:20 }}<span *ngIf="element.categoria.length > 20">...</span> </span></mat-cell>
                       </ng-container>
 
                       <!-- Symbol Column -->
@@ -352,7 +352,7 @@
                             <!-- Weight Column -->
                             <ng-container matColumnDef="Tipo">
                               <mat-header-cell *matHeaderCellDef> Tipo de equipo </mat-header-cell>
-                              <mat-cell *matCellDef="let element"><span *ngIf="element.sublinea != 'null'"> {{element.sublinea | slice:0:20 }}<span *ngIf="element.sublinea.length > 20">...</span> </span></mat-cell>
+                              <mat-cell *matCellDef="let element"><span *ngIf="element.categoria != 'null'"> {{element.categoria | slice:0:20 }}<span *ngIf="element.categoria.length > 20">...</span> </span></mat-cell>
                             </ng-container>
 
                             <!-- Symbol Column -->

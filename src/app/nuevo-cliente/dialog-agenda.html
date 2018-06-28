@@ -85,7 +85,7 @@
                           color: inherit;" title="{{option.tecnico}}">{{option.tecnico | slice:0:15}}<span *ngIf="option.tecnico.length > 20">...</span></a>
               </mat-checkbox>
             </div>-->
-            <mat-checkbox class="example-margin" *ngFor="let option of data.tecnicos; let i = index" [value]="option" (change)="filtro_tecnico($event, option); set_tecnico(option);">
+            <mat-checkbox class="example-margin" *ngFor="let option of data.tecnicos; let i = index" [value]="option" (change)="filtro_tecnico($event, option);">
               <a style="display: inline-block;
                           max-width: 100%;
                           font-weight: 100;
@@ -93,7 +93,7 @@
             </mat-checkbox>
             <br />
             <br />
-            <label class="small" style="color:#A5000D;">Nota: para este servicio se necesitan 1 técnico</label>
+            <label class="small" style="color:#A5000D;">Nota: para este servicio se necesitan {{data.no_tecnico}} técnico</label>
           </div>
           <div class="col-xs-12" style="padding-left:0; padding-right:0; padding-bottom:10px">
             <mat-divider></mat-divider>
@@ -118,7 +118,7 @@
           </div>
         </div>
         <div class="col-xs-12" style="padding-bottom:15px"></div>
-        <button mat-button class="btn-default btn-primary btn-xs" (click)="ver_todos();">Ver todos</button>
+        <button mat-button class="btn-default btn-primary btn-xs" (click)="ver_todos();">Borrar filtros</button>
       </div>
       <div class="col-md-9 col-xs-12" style="padding:0;">
         <div class="col-xs-12 text-center">
@@ -132,7 +132,7 @@
             <div class="btn btn-outline-secondary" style="float: none;"
                  mwlCalendarToday
                  [(viewDate)]="viewDate">
-              <span style="font-size:x-large" >
+              <span style="font-size:x-large">
                 {{ viewDate | calendarDate:'weekViewColumnHeader':locale }}, {{ viewDate | calendarDate:'monthViewTitle':locale }}
               </span>
 
@@ -146,6 +146,42 @@
           </div>
         </div>
         <div class="col-xs-12" style="padding-bottom:20px"></div>
+        <ng-template #customCellTemplate let-day="day" let-locale="locale">
+          <div class="cal-cell-top">
+            <span class="cal-day-badge" *ngIf="day.badgeTotal > 0">{{ day.badgeTotal }}</span>
+            <span class="cal-day-number">{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span>
+          </div>
+          <div class="cal-events" *ngIf="day.events.length > 0">
+            <div class="cal-event"
+                 *ngFor="let event of day.events"
+                 [style.backgroundColor]="event.color.primary"
+                 [ngClass]="event?.cssClass"
+                 (mouseenter)="highlightDay.emit({event: event})"
+                 (mouseleave)="unhighlightDay.emit({event: event})"
+                 [mwlCalendarTooltip]="event.title | calendarEventTitle:'monthTooltip':event"
+                 [tooltipPlacement]="tooltipPlacement"
+                 [tooltipEvent]="event"
+                 [tooltipTemplate]="tooltipTemplate"
+                 [tooltipAppendToBody]="tooltipAppendToBody"
+                 mwlDraggable
+                 [dropData]="{event: event}"
+                 [dragAxis]="{x: event.draggable, y: event.draggable}"
+                 (mwlClick)="onEventClick($event, event)">
+            </div>
+          </div>
+          <small style="margin: 5px; color:#A5000D;" *ngIf="day.events.length == 0">No hay visitas agendadas para este día</small>
+        </ng-template>
+
+        <ng-template #hourSegmentTemplate let-segment="segment" let-locale="locale" style="height: 30px;">
+          <div class="cal-hour-segment"
+               [class.cal-hour-start]="segment.isStart"
+               [class.cal-after-hour-start]="!segment.isStart"
+               [ngClass]="segment.cssClass">
+            <span class="cal-time">
+              {{ segment.date | calendarDate:'dayViewHour':locale }}
+            </span>
+          </div>
+        </ng-template>
         <div class="col-xs-12" style="padding:0;">
           <div [ngSwitch]="view">
             <mwl-calendar-month-view *ngSwitchCase="'month'"
@@ -155,7 +191,9 @@
                                      [weekStartsOn]="weekStartsOn"
                                      [weekendDays]="weekendDays"
                                      [refresh]="refresh"
-                                     (dayClicked)="viewDate = $event.day.date; view = 'day'">
+                                     (dayClicked)="viewDate = $event.day.date; view = 'week'"
+                                     [cellTemplate]="customCellTemplate"
+                                     [excludeDays]="excludeDays">
             </mwl-calendar-month-view>
             <iq-calendar-week-hours-view *ngSwitchCase="'week'"
                                          [viewDate]="viewDate"
@@ -164,13 +202,15 @@
                                          [weekStartsOn]="weekStartsOn"
                                          [weekendDays]="weekendDays"
                                          [hourSegments]="1"
-                                         [dayStartHour]="9"
+                                         [dayStartHour]="8"
                                          [dayEndHour]="18"
                                          (eventClicked)="eventClicked($event)"
                                          (hourSegmentClicked)="hourSegmentClicked($event)"
                                          (eventTimesChanged)="eventTimesChanged($event)"
                                          [refresh]="refresh"
-                                         (dayHeaderClicked)="viewDate = $event.day.date; view = 'day'">
+                                         (dayHeaderClicked)="viewDate = $event.day.date; view = 'day'"
+                                         [hourSegmentTemplate]="hourSegmentTemplate"
+                                         [excludeDays]="excludeDays">
             </iq-calendar-week-hours-view>
             <mwl-calendar-day-view *ngSwitchCase="'day'"
                                    [viewDate]="viewDate"

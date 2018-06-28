@@ -75,7 +75,7 @@
                 <mat-form-field class="full-width">
                   <mat-select placeholder="Tipo de servicio solicitado" name="tipo_servicio" #tipo_servicio="ngModel" [(ngModel)]="ddltipo_servicio" (change)="getproductos(); validacion_tipo(); getcategoriaservicio();" [appFocus]="!valid_tipo" required>
                     <mat-option *ngFor="let value of tiposervicio; trackBy: index;" [value]="value">
-                      {{value.desc_tipo_servicio}}
+                      {{value.desc_tipo_servicio | uppercase}}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
@@ -130,7 +130,7 @@
                       <!--<input type="text" placeholder="Pick one" aria-label="Number" matInput [formControl]="myControl" [matAutocomplete]="auto">-->
                       <mat-autocomplete #auto="matAutocomplete">
                         <mat-option *ngFor="let option of filteredOptions | async" [value]="option.desc_distribuidor">
-                          {{ option.desc_distribuidor }}
+                          {{ option.desc_distribuidor | uppercase }}
                         </mat-option>
                       </mat-autocomplete>
                     </mat-form-field>
@@ -142,7 +142,7 @@
                   <mat-form-field class="full-width">
                     <mat-select placeholder="Distribuidor autorizado" id="distribuidor_autorizado" name="distribuidor_autorizado" #distribuidor_autorizado="ngModel" [(ngModel)]="ddldistribuidor_autorizado" (change)="validacion_ddl_autorizacion()" [appFocus]="!valid_autorizao" required>
                       <mat-option *ngFor="let value of distribuidorservicio; trackBy: index;" [value]="value.id">
-                        {{value.desc_distribuidor}}
+                        {{value.desc_distribuidor | uppercase}}
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
@@ -202,18 +202,18 @@
                   <ng-container matColumnDef="select">
                     <mat-header-cell *matHeaderCellDef>
                       <!--<mat-checkbox (change)="$event ? masterToggle() : null"
-                                    [checked]="selection.hasValue() && isAllSelected()"
-                                    [indeterminate]="selection.hasValue() && !isAllSelected()">
-                      </mat-checkbox>-->
+                    [checked]="selection.hasValue() && isAllSelected()"
+                    [indeterminate]="selection.hasValue() && !isAllSelected()">
+      </mat-checkbox>-->
                     </mat-header-cell>
                     <mat-cell *matCellDef="let row; let i = index">
                       <div class="col-xs-12" style="text-align:center; padding:0;">
                         <mat-checkbox (change)="set_productos($event, row, i)" [checked]="row.checked">
                         </mat-checkbox>
                         <!--<mat-checkbox (change)="$event ? masterToggle() : null"
-                                      [checked]="selection.hasValue() && isAllSelected()"
-                                      [indeterminate]="selection.hasValue() && !isAllSelected()">
-                        </mat-checkbox>-->
+                      [checked]="selection.hasValue() && isAllSelected()"
+                      [indeterminate]="selection.hasValue() && !isAllSelected()">
+        </mat-checkbox>-->
                       </div>
                     </mat-cell>
                   </ng-container>
@@ -250,6 +250,11 @@
                   <ng-container matColumnDef="Estatus">
                     <mat-header-cell *matHeaderCellDef> Estatus </mat-header-cell>
                     <mat-cell *matCellDef="let element"> {{element.estatus}} </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="visitas">
+                    <mat-header-cell *matHeaderCellDef> # Visitas </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.no_visitas}} </mat-cell>
                   </ng-container>
 
                   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
@@ -295,9 +300,9 @@
                     <ng-container matColumnDef="select">
                       <mat-header-cell *matHeaderCellDef>
                         <!--<mat-checkbox (change)="$event ? masterToggle() : null"
-                                      [checked]="selection.hasValue() && isAllSelected()"
-                                      [indeterminate]="selection.hasValue() && !isAllSelected()">
-                        </mat-checkbox>-->
+                    [checked]="selection.hasValue() && isAllSelected()"
+                    [indeterminate]="selection.hasValue() && !isAllSelected()">
+      </mat-checkbox>-->
                       </mat-header-cell>
                       <mat-cell *matCellDef="let row">
                         <div class="col-xs-12" style="text-align:center; padding:0;">
@@ -337,34 +342,39 @@
                       <mat-cell *matCellDef="let element"> {{element.cp}} </mat-cell>
                     </ng-container>
 
+                    <ng-container matColumnDef="boton">
+                      <mat-header-cell *matHeaderCellDef>  </mat-header-cell>
+                      <mat-cell *matCellDef="let row"><button type="submit" class="pull-center btn-xs btn-default-rojo" (click)="view_direccion(row);">Editar</button> </mat-cell>
+                    </ng-container>
+
                     <mat-header-row *matHeaderRowDef="displayedColumns_direccion"></mat-header-row>
                     <mat-row *matRowDef="let row; columns: displayedColumns_direccion;">
                     </mat-row>
                   </mat-table>
                 </div>
               </div>
-              <div class="col-xs-12" style="padding-bottom:15px">
-                <label>Agregar dirección</label>
+              <div class="col-xs-12" style="padding-bottom:15px"  *ngIf="view_editar_direccion">
+                <label>Editar dirección</label>
                 <mat-divider></mat-divider>
                 <br />
                 <form #registroForm="ngForm">
                   <div class="form-group col-xs-12 col-md-4" style="padding-left:0">
                     <mat-form-field class="full-width">
-                      <input matInput id="calle_numero" type="text" name="calle_numero" #calle_numero="ngModel" [(ngModel)]="txtcalle_numero" placeholder="Calle y número">
+                      <input matInput id="calle_numero" type="text" name="calle_numero" #calle_numero="ngModel" [(ngModel)]="direccion_cliente.calle_numero" placeholder="Calle y número">
                     </mat-form-field>
                   </div>
 
                   <div class="form-group col-xs-12 col-md-4">
                     <mat-form-field class="full-width">
-                      <input matInput id="cp" type="text" name="cp" #cp="ngModel" [(ngModel)]="txtcp" placeholder="C.P">
+                      <input matInput id="cp" type="text" name="cp" #cp="ngModel" [(ngModel)]="direccion_cliente.cp" placeholder="C.P">
                     </mat-form-field>
                   </div>
 
                   <div class="form-group col-xs-12 col-md-4" style="padding-right:0">
                     <mat-form-field class="full-width">
-                      <mat-select placeholder="Estado" id="estado" name="estado" #estado="ngModel" [(ngModel)]="ddlestado" (change)="getmunicipios()">
+                      <mat-select placeholder="Estado" id="estado" name="estado" #estado="ngModel" [(ngModel)]="direccion_cliente.id_estado" (change)="getmunicipios()">
                         <mat-option *ngFor="let value of estados; trackBy: index;" [value]="value.id">
-                          {{value.desc_estado}}
+                          {{value.desc_estado | uppercase}}
                         </mat-option>
                       </mat-select>
                     </mat-form-field>
@@ -372,9 +382,9 @@
 
                   <div class="form-group col-xs-12 col-md-4" style="padding-left:0">
                     <mat-form-field class="full-width">
-                      <mat-select placeholder="Delegación / Municipio" id="municipio" name="municipio" #municipio="ngModel" [(ngModel)]="ddlmunicipio">
+                      <mat-select placeholder="Delegación / Municipio" id="municipio" name="municipio" #municipio="ngModel" [(ngModel)]="direccion_cliente.id_municipio">
                         <mat-option *ngFor="let value of municipios; trackBy: index;" [value]="value.id">
-                          {{value.municipio}}
+                          {{value.municipio | uppercase}}
                         </mat-option>
                       </mat-select>
                     </mat-form-field>
@@ -382,18 +392,18 @@
 
                   <div class="form-group col-xs-12 col-md-4">
                     <mat-form-field class="full-width">
-                      <input matInput id="colonia" type="text" name="colonia" #colonia="ngModel" [(ngModel)]="txtcolonia" placeholder="Cólonia">
+                      <input matInput id="colonia" type="text" name="colonia" #colonia="ngModel" [(ngModel)]="direccion_cliente.colonia" placeholder="Cólonia">
                     </mat-form-field>
                   </div>
 
                   <div class="form-group col-xs-12 col-md-4" style="padding-right:0;">
                     <mat-form-field class="full-width">
-                      <input matInput [textMask]="{mask: mask_telefono, guide: false}" id="telefono" type="text" name="telefono" #telefono="ngModel" [(ngModel)]="txttelefono" placeholder="Télefono">
+                      <input matInput [textMask]="{mask: mask_telefono, guide: false}" id="telefono" type="text" name="telefono" #telefono="ngModel" [(ngModel)]="direccion_cliente.telefono" placeholder="Télefono">
                     </mat-form-field>
                   </div>
 
                   <div class="col-xs-12 text-right" style="padding:0;">
-                    <button type="submit" class="pull-center btn btn-default btn-default-rojo" (click)="guardar_direccion($event); registroForm.resetForm({})">Agregar</button>
+                    <button type="submit" class="pull-center btn btn-default btn-default-rojo" (click)="guardar_direccion($event);">Guardar</button>
                   </div>
                 </form>
 
@@ -481,7 +491,7 @@
                         <div class="form-group col-xs-12 col-md-12">
                           <div class="col-md-6" style="padding:0;">
                             <label>Concepto</label><br />
-                            <span>{{concepto}} {{categoria_servicio_texto}}</span><br /><br />
+                            <span>{{concepto}} </span><br /><br />
                           </div>
                           <div class="col-md-6" style="padding:0;">
                             <label>Cantidad</label><br />
@@ -498,11 +508,11 @@
                             <input matInput id="no_tarjeta" type="text" name="no_tarjeta" #no_tarjeta="ngModel" [(ngModel)]="txtno_tarjeta" placeholder="Número de tarjeta de credito">
                           </mat-form-field>
                           <!--<div *ngIf="tipoproducto.invalid && (tipoproducto.dirty || tipoproducto.touched)"
-                               class="alert alert-danger">
-                            <div *ngIf="tipoproducto.errors.required">
-                              Tipo de producto requerido.
-                            </div>
-                          </div>-->
+                   class="alert alert-danger">
+                <div *ngIf="tipoproducto.errors.required">
+                  Tipo de producto requerido.
+                </div>
+              </div>-->
                         </div>
 
                         <div class="form-group col-xs-12 col-md-6">
@@ -510,22 +520,22 @@
                             <input matInput id="nombre_tarjeta" type="text" name="nombre_tarjeta" #nombre_tarjeta="ngModel" [(ngModel)]="txtnombre_tarjeta" placeholder="Nombre del tarjetahabiente">
                           </mat-form-field>
                           <!--<div *ngIf="modelo.invalid && (modelo.dirty || modelo.touched)"
-                               class="alert alert-danger">
-                            <div *ngIf="modelo.errors.required">
-                              Modelo requerido.
-                            </div>
-                          </div>-->
+                   class="alert alert-danger">
+                <div *ngIf="modelo.errors.required">
+                  Modelo requerido.
+                </div>
+              </div>-->
                         </div>
                         <div class="form-group col-xs-12 col-md-6">
                           <mat-form-field class="full-width">
                             <input matInput id="mes_tarjeta" type="text" name="mes_tarjeta" #mes_tarjeta="ngModel" [(ngModel)]="txtmes_tarjeta" placeholder="Mes de expiración">
                           </mat-form-field>
                           <!--<div *ngIf="tipoproducto.invalid && (tipoproducto.dirty || tipoproducto.touched)"
-                               class="alert alert-danger">
-                            <div *ngIf="tipoproducto.errors.required">
-                              Tipo de producto requerido.
-                            </div>
-                          </div>-->
+                   class="alert alert-danger">
+                <div *ngIf="tipoproducto.errors.required">
+                  Tipo de producto requerido.
+                </div>
+              </div>-->
                         </div>
 
                         <div class="form-group col-xs-12 col-md-6">
@@ -544,22 +554,22 @@
                             </mat-select>
                           </mat-form-field>
                           <!--<div *ngIf="modelo.invalid && (modelo.dirty || modelo.touched)"
-                               class="alert alert-danger">
-                            <div *ngIf="modelo.errors.required">
-                              Modelo requerido.
-                            </div>
-                          </div>-->
+                   class="alert alert-danger">
+                <div *ngIf="modelo.errors.required">
+                  Modelo requerido.
+                </div>
+              </div>-->
                         </div>
                         <div class="form-group col-xs-12 col-md-6">
                           <mat-form-field class="full-width">
                             <input matInput id="cvc_tarjeta" type="text" name="cvc_tarjeta" #cvc_tarjeta="ngModel" [(ngModel)]="txtcvc_tarjeta" placeholder="CVC">
                           </mat-form-field>
                           <!--<div *ngIf="tipoproducto.invalid && (tipoproducto.dirty || tipoproducto.touched)"
-                               class="alert alert-danger">
-                            <div *ngIf="tipoproducto.errors.required">
-                              Tipo de producto requerido.
-                            </div>
-                          </div>-->
+                   class="alert alert-danger">
+                <div *ngIf="tipoproducto.errors.required">
+                  Tipo de producto requerido.
+                </div>
+              </div>-->
                         </div>
                       </div>
                     </form>
@@ -591,22 +601,22 @@
                           </mat-form-field>
 
                           <!--<div *ngIf="noalmacen.invalid && (noalmacen.dirty || noalmacen.touched)"
-                               class="alert alert-danger">
-                            <div *ngIf="noalmacen.errors.required">
-                              Número de almacen requerido.
-                            </div>
-                          </div>-->
+                   class="alert alert-danger">
+                <div *ngIf="noalmacen.errors.required">
+                  Número de almacen requerido.
+                </div>
+              </div>-->
                         </div>
                         <div class="form-group col-md-4">
                           <mat-form-field class="full-width">
                             <input matInput id="no_operacion" type="text" name="no_operacion" #no_operacion="ngModel" [(ngModel)]="txtno_operacion" placeholder="Número de operación">
                           </mat-form-field>
                           <!--<div *ngIf="noalmacen.invalid && (noalmacen.dirty || noalmacen.touched)"
-                               class="alert alert-danger">
-                            <div *ngIf="noalmacen.errors.required">
-                              Número de almacen requerido.
-                            </div>
-                          </div>-->
+                   class="alert alert-danger">
+                <div *ngIf="noalmacen.errors.required">
+                  Número de almacen requerido.
+                </div>
+              </div>-->
                         </div>
                         <div class="form-group col-md-4">
                           <mat-form-field class="full-width">
@@ -633,19 +643,19 @@
                   <mat-form-field *ngIf="chk_no_pago">
                     <mat-select placeholder="Selecciona" id="no_pago_cat" name="no_pago_cat" #no_pago_cat="ngModel" [(ngModel)]="ddl_no_pago_cat">
                       <mat-option value="Garantía">
-                        Garantía
+                        GARANTIA
                       </mat-option>
                       <mat-option value="Asegurado">
-                        Asegurado
+                        ASEGURADO
                       </mat-option>
                       <mat-option value="Pendiente de Pago">
-                        Pendiente de Pago
+                        PENDIENTE DE PAGO
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
                 </div>
 
-                <div class="form-group col-xs-12 col-md-12">
+                <div class="form-group col-xs-12 col-md-12" style="margin-bottom:10px;">
                   <mat-checkbox style="padding-right:10px"
                                 id="terminos_condiciones_tarjeta"
                                 name="terminos_condiciones_tarjeta"
@@ -662,19 +672,33 @@
                   </div>
                 </div>
 
-                <div class="form-group col-xs-12 col-md-12">
-                  <mat-checkbox style="padding-right:10px"
-                                id="factura"
-                                name="factura"
-                                [(ngModel)]="requiere_factura"
-                                #factura="ngModel"
-                                value="1">
-                    Requiere factura
-                  </mat-checkbox>
+                <div class="form-group col-md-12">                  
+                  <span style="line-height: 24px; white-space: nowrap; font-weight: bold; font-size:14px; letter-spacing: .5px; font-family: Roboto,'Helvetica Neue',sans-serif;">
+                    Requiere factura<br />
+                  </span>
+                  <mat-radio-group id="factura" name="factura" #factura="ngModel" [(ngModel)]="requiere_factura" required>
+                    <mat-radio-button value="1">Si</mat-radio-button>
+                    <mat-radio-button value="0">No</mat-radio-button>
+                  </mat-radio-group>
+                  <div *ngIf="factura.invalid && (factura.dirty || factura.touched)"
+                       class="alert alert-danger">
+                    <div *ngIf="factura.errors.required">
+                      Requiere factura
+                    </div>
+                  </div>
                 </div>
               </div>
-
-              <div class="col-xs-12" *ngIf="requiere_factura">
+              <!--<div class="form-group col-xs-12 col-md-12">
+                <mat-checkbox style="padding-right:10px"
+                              id="factura"
+                              name="factura"
+                              [(ngModel)]="requiere_factura"
+                              #factura="ngModel"
+                              value="1">
+                  Requiere factura
+                </mat-checkbox>
+              </div>-->
+              <div class="col-xs-12" *ngIf="requiere_factura == 1">
                 <div class="col-xs-12" style="padding:0;">
                   <div class="col-xs-12" style="padding-left:0; padding-right:0; padding-bottom:10px">
                     <mat-divider></mat-divider>
@@ -684,33 +708,33 @@
                       <input matInput id="razonsocialfactura" type="text" name="razonsocialfactura" #razonsocialfactura="ngModel" [(ngModel)]="txtrazonsocialfactura" placeholder="Razón social">
                     </mat-form-field>
                     <!--<div *ngIf="noalmacen.invalid && (noalmacen.dirty || noalmacen.touched)"
-                         class="alert alert-danger">
-                      <div *ngIf="noalmacen.errors.required">
-                        Número de almacen requerido.
-                      </div>
-                    </div>-->
+             class="alert alert-danger">
+          <div *ngIf="noalmacen.errors.required">
+            Número de almacen requerido.
+          </div>
+        </div>-->
                   </div>
                   <div class="form-group col-md-4">
                     <mat-form-field class="full-width">
                       <input matInput id="rfcfactura" type="text" name="rfcfactura" #rfcfactura="ngModel" [(ngModel)]="txtrfcfactura" placeholder="RFC">
                     </mat-form-field>
                     <!--<div *ngIf="noalmacen.invalid && (noalmacen.dirty || noalmacen.touched)"
-                         class="alert alert-danger">
-                      <div *ngIf="noalmacen.errors.required">
-                        Número de almacen requerido.
-                      </div>
-                    </div>-->
+             class="alert alert-danger">
+          <div *ngIf="noalmacen.errors.required">
+            Número de almacen requerido.
+          </div>
+        </div>-->
                   </div>
                   <div class="form-group col-md-4">
                     <mat-form-field class="full-width">
                       <input matInput id="emailfactura" type="text" name="emailfactura" #emailfactura="ngModel" [(ngModel)]="txtemailfactura" placeholder="Email">
                     </mat-form-field>
                     <!--<div *ngIf="noalmacen.invalid && (noalmacen.dirty || noalmacen.touched)"
-                         class="alert alert-danger">
-                      <div *ngIf="noalmacen.errors.required">
-                        Número de almacen requerido.
-                      </div>
-                    </div>-->
+             class="alert alert-danger">
+          <div *ngIf="noalmacen.errors.required">
+            Número de almacen requerido.
+          </div>
+        </div>-->
                   </div>
 
                   <div class="form-group col-md-4">
@@ -718,64 +742,64 @@
                       <input matInput id="callefactura" type="text" name="callefactura" #callefactura="ngModel" [(ngModel)]="txtcallefactura" placeholder="Calle y número">
                     </mat-form-field>
                     <!--<div *ngIf="noalmacen.invalid && (noalmacen.dirty || noalmacen.touched)"
-                         class="alert alert-danger">
-                      <div *ngIf="noalmacen.errors.required">
-                        Número de almacen requerido.
-                      </div>
-                    </div>-->
+             class="alert alert-danger">
+          <div *ngIf="noalmacen.errors.required">
+            Número de almacen requerido.
+          </div>
+        </div>-->
                   </div>
                   <div class="form-group col-md-4">
                     <mat-form-field class="full-width">
                       <input matInput id="cpfactura" type="text" name="cpfactura" #cpfactura="ngModel" [(ngModel)]="txtcpfactura" placeholder="C.P">
                     </mat-form-field>
                     <!--<div *ngIf="noalmacen.invalid && (noalmacen.dirty || noalmacen.touched)"
-                         class="alert alert-danger">
-                      <div *ngIf="noalmacen.errors.required">
-                        Número de almacen requerido.
-                      </div>
-                    </div>-->
+             class="alert alert-danger">
+          <div *ngIf="noalmacen.errors.required">
+            Número de almacen requerido.
+          </div>
+        </div>-->
                   </div>
                   <div class="form-group col-md-4">
                     <mat-form-field class="full-width">
                       <mat-select placeholder="Estado" id="factura_estado" name="factura_estado" #factura_estado="ngModel" [(ngModel)]="ddlfactura_estado" (change)="getfacturamunicipios()">
                         <mat-option *ngFor="let value of estadosFactura; trackBy: index;" [value]="value.id">
-                          {{value.desc_estado}}
+                          {{value.desc_estado | uppercase}}
                         </mat-option>
                       </mat-select>
                     </mat-form-field>
                     <!--<div *ngIf="noalmacen.invalid && (noalmacen.dirty || noalmacen.touched)"
-                         class="alert alert-danger">
-                      <div *ngIf="noalmacen.errors.required">
-                        Número de almacen requerido.
-                      </div>
-                    </div>-->
+             class="alert alert-danger">
+          <div *ngIf="noalmacen.errors.required">
+            Número de almacen requerido.
+          </div>
+        </div>-->
                   </div>
 
                   <div class="form-group col-md-4">
                     <mat-form-field class="full-width">
                       <mat-select placeholder="Delegación / Municipio" id="factura_municipio" name="factura_municipio" #factura_municipio="ngModel" [(ngModel)]="ddlfactura_municipio">
                         <mat-option *ngFor="let value of municipiosfactura; trackBy: index;" [value]="value.id">
-                          {{value.municipio}}
+                          {{value.municipio | uppercase}}
                         </mat-option>
                       </mat-select>
                     </mat-form-field>
                     <!--<div *ngIf="noalmacen.invalid && (noalmacen.dirty || noalmacen.touched)"
-                         class="alert alert-danger">
-                      <div *ngIf="noalmacen.errors.required">
-                        Número de almacen requerido.
-                      </div>
-                    </div>-->
+             class="alert alert-danger">
+          <div *ngIf="noalmacen.errors.required">
+            Número de almacen requerido.
+          </div>
+        </div>-->
                   </div>
                   <div class="form-group col-md-4">
                     <mat-form-field class="full-width">
                       <input matInput id="coloniafactura" type="text" name="coloniafactura" #coloniafactura="ngModel" [(ngModel)]="txtcoloniafactura" placeholder="Colonia">
                     </mat-form-field>
                     <!--<div *ngIf="noalmacen.invalid && (noalmacen.dirty || noalmacen.touched)"
-                         class="alert alert-danger">
-                      <div *ngIf="noalmacen.errors.required">
-                        Número de almacen requerido.
-                      </div>
-                    </div>-->
+             class="alert alert-danger">
+          <div *ngIf="noalmacen.errors.required">
+            Número de almacen requerido.
+          </div>
+        </div>-->
                   </div>
                 </div>
               </div>

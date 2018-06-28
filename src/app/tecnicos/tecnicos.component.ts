@@ -1,8 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
 import { DatosService } from '../datos.service';
-import { MatChipInputEvent } from '@angular/material';
+import { FormControl } from '@angular/forms';
+import { MatAutocompleteSelectedEvent, MatChipInputEvent } from '@angular/material';
 import { ENTER, COMMA } from '@angular/cdk/keycodes';
 import { Observable } from 'rxjs/Observable';
+import { map, startWith } from 'rxjs/operators';
 import { Productos, Cobertura, Actividad } from '../models/login';
 
 @Component({
@@ -53,8 +55,71 @@ export class TecnicosComponent implements OnInit, OnDestroy {
   completedClass = false;
   preventAbuse = false;
 
-  constructor(private heroService: DatosService) {
+  visible: boolean = true;
+  selectable: boolean = true;
+  removable: boolean = true;
+  addOnBlur: boolean = false;
 
+  separatorKeysCodes = [ENTER, COMMA];
+
+  fruitCtrl = new FormControl();
+
+  filteredFruits: Observable<any>;
+
+  fruits = [
+    { id: "1", name: "CDMX" }
+  ];
+
+  allFruits = [
+    { id: "1", name: "CDMX" }, { id: "2", name: "Estado de México" }, { id: "3", name: "Aguascalientes" }
+  ];
+
+  @ViewChild('fruitInput') fruitInput: ElementRef;
+
+  constructor(private heroService: DatosService) {
+    this.filteredFruits = this.fruitCtrl.valueChanges.pipe(
+      startWith(null),
+      map((fruit: string | null) => fruit ? this.filter(fruit) : this.allFruits.slice()));
+  }
+
+  add(event: MatChipInputEvent): void {
+    console.log(event);
+    const input = event.input;
+    const value = event.value;
+    
+    // Add our fruit
+    //if ((value || '').trim()) {
+    //  this.fruits.push(value.trim());
+    //}
+
+    //// Reset the input value
+    //if (input) {
+    //  input.value = '';
+    //}
+
+    //this.fruitCtrl.setValue(null);
+  }
+
+  remove(fruit: any): void {
+    const index = this.fruits.indexOf(fruit);
+
+    if (index >= 0) {
+      this.fruits.splice(index, 1);
+    }
+  }
+
+  filter(obj: any) {
+    var _obj: any = JSON.parse(obj);
+    console.log(_obj);
+    //return this.allFruits.filter(fruit =>
+    //  fruit.name.toLowerCase().indexOf(_obj.name.toLowerCase()) === 0);
+  }
+
+  selected(event: MatAutocompleteSelectedEvent): void {
+    console.log(event);
+    this.fruits.push(event.option.value);
+    this.fruitInput.nativeElement.value = '';
+    this.fruitCtrl.setValue(null);
   }
 
   autocompleteItems = [{ id: "1", name: "CDMX" }, { id: "2", name: "Estado de México" }, { id: "3", name: "Aguascalientes" }];
@@ -96,9 +161,9 @@ export class TecnicosComponent implements OnInit, OnDestroy {
   }
 
   getproducto(): void {
-    this.heroService.service_catalogos("Catalogos/Productos")
+    this.heroService.service_catalogos("Catalogos/CategoriaProducto")
       .subscribe((value) => {
-        //console.log(value.json());
+        //console.log(value);
         this.values = value;
       });
   }
@@ -275,7 +340,7 @@ export class TecnicosComponent implements OnInit, OnDestroy {
     }
     else {
       this.validform = true;
-      this.message_slide = "Campo requerida";
+      this.message_slide = "Campo requerido";
 
     }
     console.log(this.value_slide);

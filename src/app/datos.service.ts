@@ -20,8 +20,8 @@ const httpOptions = {
 @Injectable()
 export class DatosService {
   
-  private heroesUrl = 'http://104.130.1.18/miele/api/';  // URL to web api
-  //private heroesUrl = 'http://localhost:50570/api/';  // URL to web api
+  //private heroesUrl = 'http://104.130.1.18/miele/api/';  // URL to web api
+  private heroesUrl = 'http://localhost:50570/api/';  // URL to web api
   public imageUrl = 'http://104.130.1.18/';  // URL images
 
   constructor(private http: HttpClient, private https: Http) { }

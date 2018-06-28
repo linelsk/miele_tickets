@@ -14,22 +14,22 @@
               <div class="col-xs-12">
                 <div class="col-xs-12" style="margin-bottom:14px"></div>
                 <div class="form-group col-xs-12 col-md-6">
-                  <label *ngIf="detalle.nombre_comercial !=''">Nombre comercial</label>
-                  <label *ngIf="detalle.nombre !=''">Nombre</label><br />
-                  <span *ngIf="detalle.nombre_comercial !=''">{{detalle.nombre_comercial}}</span>
-                  <span *ngIf="detalle.nombre !=''">{{detalle.nombre}}</span><br /><br />
+                  <label *ngIf="cliente.nombre_comercial !=''">Nombre comercial</label>
+                  <label *ngIf="cliente.nombre !=''">Nombre</label><br />
+                  <span *ngIf="cliente.nombre_comercial !=''">{{cliente.nombre_comercial}}</span>
+                  <span *ngIf="cliente.nombre !=''">{{cliente.nombre}}</span><br /><br />
                   <label>Teléfono fijo</label><br />
-                  <span>{{detalle.telefono}}</span><br /><br />
+                  <span>{{cliente.telefono}}</span><br /><br />
                   <label>Email</label><br />
-                  <span>{{detalle.email}}</span>
+                  <span>{{cliente.email}}</span>
                 </div>
                 <div class="form-group col-xs-12 col-md-6">
-                  <label *ngIf="detalle.nombre_comercial !=''">Nombre de contacto</label>
-                  <label *ngIf="detalle.nombre !=''">Apellidos</label><br />
-                  <span *ngIf="detalle.nombre_comercial !=''">{{detalle.nombre_contacto}}</span>
-                  <span *ngIf="detalle.nombre !=''">{{detalle.paterno}} {{detalle.materno}}</span><br /><br />
+                  <label *ngIf="cliente.nombre_comercial !=''">Nombre de contacto</label>
+                  <label *ngIf="cliente.nombre !=''">Apellidos</label><br />
+                  <span *ngIf="cliente.nombre_comercial !=''">{{cliente.nombre_contacto}}</span>
+                  <span *ngIf="cliente.nombre !=''">{{cliente.paterno}} {{cliente.materno}}</span><br /><br />
                   <label>Teléfono celular</label><br />
-                  <span>{{detalle.telefono_movil}}</span><br /><br />
+                  <span>{{cliente.telefono_movil}}</span><br /><br />
                 </div>
                 <div class="col-xs-12" style="margin-bottom:12px"></div>
               </div>
@@ -45,22 +45,22 @@
             <div class="col-xs-12">
               <div class="col-xs-12" style="margin-bottom:10px"></div>
               <div class="form-group col-xs-12 col-md-6">
-                <button [routerLink]="['/nuevoservicio', detalle.id]" type="submit" class="btn btn-default btn-default-rojo col-md-12" style="padding: 40px 30px 40px 30px;">
+                <button [routerLink]="['/nuevoservicio', cliente.id]" type="submit" class="btn btn-default btn-default-rojo col-md-12" style="padding: 40px 30px 40px 30px;">
                   <span style="font-size:20px">Nuevo servicio</span>
                 </button>
               </div>
               <div class="form-group col-xs-12 col-md-6">
-                <button type="submit" class="btn btn-default btn-default-rojo col-md-12" style="padding: 40px 30px 40px 30px;" (click)="cerrarsesiones($event)">
+                <button type="submit" class="btn btn-default btn-default-rojo col-md-12" style="padding: 40px 30px 40px 30px;" >
                   <span style="font-size:20px">Venta</span>
                 </button>
               </div>
               <div class="form-group col-xs-12 col-md-6">
-                <button type="submit" class="btn btn-default btn-default-rojo col-md-12" style="padding: 40px 30px 40px 30px;" (click)="cerrarsesiones($event)">
+                <button type="submit" class="btn btn-default btn-default-rojo col-md-12" style="padding: 40px 30px 40px 30px;" >
                   <span style="font-size:20px">Quejas</span>
                 </button>
               </div>
               <div class="form-group col-xs-12 col-md-6">
-                <button type="submit" class="btn btn-default btn-default-rojo col-md-12" style="padding: 40px 30px 40px 30px;" (click)="cerrarsesiones($event)">
+                <button type="submit" class="btn btn-default btn-default-rojo col-md-12" style="padding: 40px 30px 40px 30px;" >
                   <span style="font-size:20px">Encuesta</span>
                 </button>
               </div>
@@ -81,19 +81,19 @@
               <div class="col-xs-12" style="margin-bottom:13px"></div>
               <div class="form-group col-xs-12 col-md-6">
                 <label>Calle y número</label><br />
-                <span>{{detalle_direccion.calle_numero}}</span><br /><br />
+                <span>{{direccion.calle_numero}}</span><br /><br />
                 <label>Estado</label><br />
-                <span>{{detalle_direccion.estado}}</span><br /><br />
+                <span>{{direccion.estado}}</span><br /><br />
                 <label>Colonia</label><br />
-                <span>{{detalle_direccion.colonia}}</span>
+                <span>{{direccion.colonia}}</span>
               </div>
               <div class="form-group col-xs-12 col-md-6">
                 <label>CP</label><br />
-                <span>{{detalle_direccion.cp}}</span><br /><br />
+                <span>{{direccion.cp}}</span><br /><br />
                 <label>Delegación / municipio</label><br />
-                <span>{{detalle_direccion.municipio}}</span><br /><br />
+                <span>{{direccion.municipio}}</span><br /><br />
                 <label>Referencias</label><br />
-                <span>{{detalle.refrerencias}}</span><br /><br />
+                <span>{{cliente.refrerencias}}</span><br /><br />
               </div>
             </div>
           </div>
@@ -112,27 +112,26 @@
               <div class="col-xs-12" style="margin-bottom:13px"></div>
               <div class="form-group col-xs-12 col-md-4">
                 <label>Razón social</label><br />
-                <span *ngIf="detalle.nombre_comercial !=''">{{detalle.nombre_comercial}}</span>
-                <span *ngIf="detalle.nombre !=''">{{detalle.nombre}}</span><br /><br />
+                <span>{{datosfiscales.razon_social}}</span><br /><br />
                 <label>Estado</label><br />
-                <span>{{detalle_direccion.estado}}</span><br /><br />
+                <span>{{datosfiscales.estado}}</span><br /><br />
                 <label>CP</label><br />
-                <span>{{detalle_direccion.cp}}</span><br /><br />
+                <span>{{datosfiscales.cp}}</span><br /><br />
               </div>
               <div class="form-group col-xs-12 col-md-4">
                 <label>RFC</label><br />
-                <span>LUOG120686</span><br /><br />
+                <span>{{datosfiscales.rfc}}</span><br /><br />
                 <label>Delegación / municipio</label><br />
-                <span>{{detalle_direccion.municipio}}</span><br />
+                <span>{{datosfiscales.municipio}}</span><br />
                 <label>Email</label><br />
-                <span>{{detalle.email}}</span><br /><br />
+                <span>{{datosfiscales.email}}</span><br /><br />
               </div>
 
               <div class="form-group col-xs-12 col-md-4">
                 <label>Calle y número</label><br />
-                <span>{{detalle_direccion.calle_numero}}</span><br /><br />
+                <span>{{datosfiscales.calle_numero}}</span><br /><br />
                 <label>Colonia</label><br />
-                <span>{{detalle_direccion.colonia}}</span><br /><br />
+                <span>{{datosfiscales.colonia}}</span><br /><br />
               </div>
             </div>
           </div>
@@ -334,102 +333,62 @@
 
       <div class="col-md-12">
         <div class="box">
-          <div class="box-header with-border">
-            <h3 class="box-title negritas">Direcciones de instalación</h3>
-            <div class="box-tools pull-right">
-              <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                <i class="fa fa-minus"></i>
-              </button>
-            </div>
-          </div>
           <!-- /.box-header -->
           <div class="box-body">
-            <div class="col-xs-12" style="padding:0">
-              <form #EquiposForm="ngForm">
-                <div class="col-xs-12">
-                  <div class="form-group col-xs-12 col-md-4">
-                    <label>Calle y número</label>
-                    <input type="text" class="form-control" id="numero" name="numero" [(ngModel)]="direccionnumero" #numero="ngModel" required>
-                    <div *ngIf="numero.invalid && (numero.dirty || numero.touched)"
-                         class="alert alert-danger">
-                      <div *ngIf="numero.errors.required">
-                        Calle y número requerido.
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="form-group col-xs-12 col-md-4">
-                    <label>CP</label>
-                    <input type="text" class="form-control" id="cp" name="cp" [(ngModel)]="direccioncp" #cp="ngModel" required>
-                    <div *ngIf="cp.invalid && (cp.dirty || cp.touched)"
-                         class="alert alert-danger">
-                      <div *ngIf="cp.errors.required">
-                        CP
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="form-group col-xs-12 col-md-4">
-                    <label>Estado</label>
-                    <select type="text" class="form-control" id="estado" name="estado" [(ngModel)]="direccionestado" #estado="ngModel" required>
-                      <!--<option value="1">Tipo 1</option>
-                      <option value="2">Tipo 2</option>-->
-                    </select>
-                    <div *ngIf="estado.invalid && (estado.dirty || estado.touched)"
-                         class="alert alert-danger">
-                      <div *ngIf="estado.errors.required">
-                        Estado requerido.
-                      </div>
-                    </div>
-                  </div>
+            <div class="col-xs-12" style="padding-bottom:15px">
+              <label>Editar dirección</label>
+              <mat-divider></mat-divider>
+              <br />
+              <form #registroForm="ngForm">
+                <div class="form-group col-xs-12 col-md-4" style="padding-left:0">
+                  <mat-form-field class="full-width">
+                    <input matInput id="calle_numero" type="text" name="calle_numero" #calle_numero="ngModel" [(ngModel)]="direccion.calle_numero" placeholder="Calle y número">
+                  </mat-form-field>
                 </div>
 
-                <div class="col-xs-12">
-                  <div class="form-group col-xs-12 col-md-4">
-                    <label>Delegación / Municipio</label>
-                    <input type="text" class="form-control" id="municipio" name="municipio" [(ngModel)]="direccionmunicipio" #municipio="ngModel" required>
-                    <div *ngIf="municipio.invalid && (municipio.dirty || municipio.touched)"
-                         class="alert alert-danger">
-                      <div *ngIf="municipio.errors.required">
-                        Delegación / Municipio requerido.
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="form-group col-xs-12 col-md-4">
-                    <label>Colonia</label>
-                    <input type="text" class="form-control" id="colonia" name="colonia" [(ngModel)]="direccioncolonia" #colonia="ngModel" required>
-                    <div *ngIf="colonia.invalid && (colonia.dirty || colonia.touched)"
-                         class="alert alert-danger">
-                      <div *ngIf="colonia.errors.required">
-                        CP
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="form-group col-xs-12 col-md-4">
-                    <label>Teléfono</label>
-                    <select type="text" class="form-control" id="telefono" name="telefono" [(ngModel)]="direcciontelefono" #telefono="ngModel" required>
-                      <!--<option value="1">Tipo 1</option>
-                      <option value="2">Tipo 2</option>-->
-                    </select>
-                    <div *ngIf="telefono.invalid && (telefono.dirty || telefono.touched)"
-                         class="alert alert-danger">
-                      <div *ngIf="telefono.errors.required">
-                        Teléfono requerido.
-                      </div>
-                    </div>
-                  </div>
+                <div class="form-group col-xs-12 col-md-4">
+                  <mat-form-field class="full-width">
+                    <input matInput id="cp" type="text" name="cp" #cp="ngModel" [(ngModel)]="direccion.cp" placeholder="C.P">
+                  </mat-form-field>
                 </div>
 
-                <div class="col-xs-12">
-                  <div class="col-xs-12" style="text-align:right">
-                    <button type="button" class="pull-center btn btn-default btn-default-rojo" [disabled]="preventAbuse">
-                      {{ preventAbuse ? 'Agregando...' : 'Agregar nueva dirección' }}
-                    </button>
-                  </div>
+                <div class="form-group col-xs-12 col-md-4" style="padding-right:0">
+                  <mat-form-field class="full-width">
+                    <mat-select placeholder="Estado" id="estado" name="estado" #estado="ngModel" [(ngModel)]="direccion.id_estado" (change)="getmunicipios()">
+                      <mat-option *ngFor="let value of estados; trackBy: index;" [value]="value.id">
+                        {{value.desc_estado}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+
+                <div class="form-group col-xs-12 col-md-4" style="padding-left:0">
+                  <mat-form-field class="full-width">
+                    <mat-select placeholder="Delegación / Municipio" id="municipio" name="municipio" #municipio="ngModel" [(ngModel)]="direccion.id_municipio">
+                      <mat-option *ngFor="let value of municipios; trackBy: index;" [value]="value.id">
+                        {{value.municipio}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+
+                <div class="form-group col-xs-12 col-md-4">
+                  <mat-form-field class="full-width">
+                    <input matInput id="colonia" type="text" name="colonia" #colonia="ngModel" [(ngModel)]="direccion.colonia" placeholder="Cólonia">
+                  </mat-form-field>
+                </div>
+
+                <div class="form-group col-xs-12 col-md-4" style="padding-right:0;">
+                  <mat-form-field class="full-width">
+                    <input matInput [textMask]="{mask: mask_telefono, guide: false}" id="telefono" type="text" name="telefono" #telefono="ngModel" [(ngModel)]="cliente.telefono" placeholder="Télefono">
+                  </mat-form-field>
+                </div>
+
+                <div class="col-xs-12 text-right" style="padding:0;">
+                  <button type="submit" class="pull-center btn btn-default btn-default-rojo" (click)="editar_direccion(direccion.id_direccion);">Guardar</button>
                 </div>
               </form>
+
             </div>
           </div>
 
