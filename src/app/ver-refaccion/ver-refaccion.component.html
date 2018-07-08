@@ -1,0 +1,115 @@
+<div class="content-wrapper">
+  <br class="visible-xs" />
+  <br class="visible-xs" />
+  <form #verservicioForm="ngForm">
+    <section class="content">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="box">
+            <div class="box-header with-border">
+              <div class="col-xs-12">
+                <h2 class="box-title negritas">Buscar refacciones</h2>
+                <div class="box-tools pull-right">
+                  <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                    <i class="fa fa-minus"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <!-- /.box-header -->
+            <form #buscarForm="ngForm">
+              <div class="box-body">
+                <div class="input-group col-xs-12">
+                  <div class="col-md-12">
+                    <mat-form-field class="full-width">
+                      <input matInput type="text" id="busqueda" name="busqueda" [(ngModel)]="text_busqueda" #busqueda="ngModel" placeholder="Buscar por: Número de refacion, nombre" 
+                             [errorStateMatcher]="matcher">
+                      <mat-error *ngIf="busqueda.hasError('required')">
+                        Es necesario ingresar alguna <strong>busqueda</strong>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <span class="input-group-btn">
+                    <button type="submit" class="pull-center btn btn-default btn-default-rojo" (click)="buscar()" [disabled]="preventAbuse" style="margin-right:5px;">
+                      {{ preventAbuse ? 'Buscando...' : 'Buscar' }}
+                    </button>
+
+                    <button type="submit" class="pull-center btn btn-default" routerLink="/nueva_refaccion" [disabled]="preventAbuse" style="margin-right:5px;">
+                      Nueva refacción
+                    </button>
+                  </span>
+                </div>
+                <br />
+
+                <div class="col-xs-12" style="padding:0;">
+                  <div class="col-xs-12" style="padding:0;">
+                    <div class="box-header with-border">
+                      <h3 class="box-title negritas">Refacciones</h3>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-12" style="text-align:center;">
+                  <div class="example-container mat-elevation-z2">
+                    <mat-table #table [dataSource]="dataSource">
+
+                      <!-- refacción Column -->
+                      <ng-container matColumnDef="no">
+                        <mat-header-cell *matHeaderCellDef> No. de refacción </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                          <a style="cursor:pointer; color:inherit">{{element.no_material}}</a>
+                        </mat-cell>
+                      </ng-container>
+
+                      <!-- Descripción Column -->
+                      <ng-container matColumnDef="nombre">
+                        <mat-header-cell *matHeaderCellDef> Descripción </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                          <a style="cursor:pointer; color:inherit">{{element.descripcion}}</a>
+                        </mat-cell>
+                      </ng-container>
+
+                      <!-- Cantidad Column -->
+                      <ng-container matColumnDef="cantidad">
+                        <mat-header-cell *matHeaderCellDef> Cantidad </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                          <a style="cursor:pointer; color:inherit">{{element.cantidad}}</a>
+                        </mat-cell>
+                      </ng-container>
+
+                      <!-- Editar Column -->
+                      <ng-container matColumnDef="editar">
+                        <mat-header-cell *matHeaderCellDef>  </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                          <button type="submit" class="pull-center btn btn-default btn-default-rojo btn-sm" [disabled]="preventAbuse" style="margin-right:5px;padding-left:10px;padding-right:10px" (click)="editar_refaccion(element);">
+                            Editar
+                          </button>
+                          <button type="submit" class="pull-center btn btn-default btn-default-rojo btn-sm" [disabled]="preventAbuse" style="margin-right:5px;padding-left:10px;padding-right:10px" (click)="asignar_refaccion(element);">
+                            Asignar
+                          </button>
+                          <button type="submit" class="pull-center btn btn-default btn-sm" [disabled]="preventAbuse" style="margin-right:5px; padding-left:10px;padding-right:10px" (click)="eliminar_refaccion(element);">
+                            Eliminar
+                          </button>
+                        </mat-cell>
+                      </ng-container>
+
+                      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                    </mat-table>
+
+                    <mat-paginator #paginator
+                                   [pageSize]="5"
+                                   [pageSizeOptions]="[5, 10]">
+                    </mat-paginator>
+                  </div>
+                </div>
+              </div>
+            </form>
+            <!-- /.box -->
+          </div>
+          <!-- /.col -->
+        </div>
+      </div>
+    </section>
+    <!-- /.content -->
+  </form>
+</div>

@@ -4,7 +4,7 @@ export class Hero {
 }
 
 export class Productos {
-  id_producto: number;
+  id_categoria_producto: number;
 }
 
 export class Cobertura {

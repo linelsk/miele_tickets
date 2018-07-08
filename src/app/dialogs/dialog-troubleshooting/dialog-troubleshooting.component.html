@@ -1,0 +1,113 @@
+<style>
+
+  .btn-default {
+    background-color: #EEEDEB;
+    color: #847d70;
+    border-color: #ddd;
+    padding-left: 50px;
+    padding-right: 50px;
+    font-weight: bold;
+  }
+
+  .btn-default-rojo {
+    background-color: #E60000;
+    color: #fff;
+    border-color: #E60000;
+  }
+
+    .btn-default-rojo:hover {
+      background-color: #E60000;
+      color: #fff;
+      border-color: #E60000;
+    }
+</style>
+<div mat-dialog-content>
+  <div class="row">
+    <div class="form-group col-xs-12">
+      <div class="col-xs-12 col-md-6" style="text-align:left; padding:0;">
+        <span style="display: inline-block; font-size: 18px; margin: 0; line-height: 1; font-weight: bold;">
+          Troubleshooting
+        </span>
+      </div>
+      <div class="col-xs-12 col-md-6" style="text-align:right; padding:0;">
+        <i class="fa fa-times" aria-hidden="true" (click)="onNoClick()" style="font-size:large"></i>
+      </div>
+    </div>
+    <div class="col-xs-12" style="padding-left:0; padding-right:0; padding-bottom:10px">
+      <mat-divider></mat-divider>
+    </div>
+    <div class="input-group">
+      <div class="col-md-12">
+        <mat-form-field class="full-width">
+          <input matInput type="text" id="busqueda" name="busqueda" [(ngModel)]="text_busqueda" #busqueda="ngModel" placeholder="Buscar palabra clave">
+        </mat-form-field>
+      </div>
+      <span class="input-group-btn">
+        <button type="submit" class="pull-center btn btn-default btn-default-rojo" (click)="buscar()" [disabled]="preventAbuse">
+          {{ preventAbuse ? 'Buscando...' : 'Buscar' }}
+        </button>
+      </span>
+    </div>
+    <div class="form-group col-md-12">
+      <mat-accordion>
+        <mat-expansion-panel *ngFor="let value of acordion; trackBy: index;">
+          <mat-expansion-panel-header style="background-color:#D8D8D8">
+            <mat-panel-title>
+              {{value.pregunta}}
+            </mat-panel-title>
+            <!--<mat-panel-description>
+      Type your name and age
+    </mat-panel-description>-->
+          </mat-expansion-panel-header>
+
+          <div class="col-xs-12" style="text-align:center;">
+            <div class="col-xs-6">
+              <label>
+                Falla posible
+              </label>
+
+            </div>
+            <div class="col-xs-6">
+              <label>
+                Solución
+              </label>
+            </div>
+            <div class="col-xs-12">
+              <mat-divider></mat-divider>
+            </div>
+            <div class="col-xs-6">
+              <label class="col-xs-12" *ngFor="let respuesta of value.respuestas; trackBy: index;">
+                {{respuesta.falla}}
+              </label>
+
+            </div>
+            <div class="col-xs-6">
+              <label class="col-xs-12" *ngFor="let respuesta of value.respuestas; trackBy: index;">
+                {{respuesta.solucion}}
+              </label>
+            </div>
+          </div>
+          <p style="color:transparent">.</p>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+    <div class="col-xs-6">
+      <mat-form-field class="full-width">
+        <mat-select placeholder="Elija una opción" id="estatus_troubleshooting" name="estatus_troubleshooting" #estatus_troubleshooting="ngModel" [(ngModel)]="estatustroubleshooting">
+          <mat-option *ngFor="let estatus of estatus_trouble_shooting; trackBy: index;" [value]="estatus.id">
+            {{estatus.codigo}} - {{estatus.desc_troubleshooting}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <mat-form-field class="full-width" style="padding-left:15px; padding-right:15px;">
+      <textarea matInput placeholder="Observaciones" id="observaciones" name="observaciones" #observaciones="ngModel" [(ngModel)]="observaciones_troubleshooting"></textarea>
+    </mat-form-field>
+  </div>
+</div>
+<div style="margin-bottom:15px;"></div>
+<div class="col-xs-12" style="text-align:center;">
+  <button mat-button [mat-dialog-close]="data" cdkFocusInitial class="btn-default btn-default-rojo">Cancelar</button>
+  <button mat-button [mat-dialog-close]="data" cdkFocusInitial class="btn-default btn-default-rojo" (click)="guardar_troubleshooting();">Guardar</button>
+  <button mat-button [mat-dialog-close]="data" cdkFocusInitial class="btn-default" [routerLink]="['/nuevoservicio', data.id_cliente]" >Nuevo servicio</button>
+</div>

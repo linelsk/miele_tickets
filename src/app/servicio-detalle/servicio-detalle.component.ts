@@ -5,6 +5,9 @@ import 'rxjs/Rx';
 import { ActivatedRoute } from '@angular/router';
 import { MatTableDataSource } from '@angular/material';
 import { Clientes, direccion, datosfiscales } from '../models/cliente';
+import { DialogTroubleshootingComponent } from '../dialogs/dialog-troubleshooting/dialog-troubleshooting.component';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSnackBar } from '@angular/material';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-servicio-detalle',
@@ -29,7 +32,7 @@ export class ServicioDetalleComponent implements OnInit {
   bodyClasses = 'skin-blue sidebar-mini';
   body: HTMLBodyElement = document.getElementsByTagName('body')[0];
 
-  constructor(private heroService: DatosService, private route: ActivatedRoute) {
+  constructor(private heroService: DatosService, private route: ActivatedRoute, public dialog: MatDialog, private router: Router) {
   }
 
   displayedColumns = ['#Servicio', 'Modelo', 'SKU', 'Garantia', 'Poliza', 'Estatus', 'Imagen'];
@@ -111,5 +114,21 @@ export class ServicioDetalleComponent implements OnInit {
       .subscribe((value) => {
         console.log(value);
       });
+  }
+
+  troubleshooting(obj) {
+    this.sub = this.route.params.subscribe(params => {
+      this.id = +params['id']; 
+    });
+    let dialogRef = this.dialog.open(DialogTroubleshootingComponent, {
+      width: '800px',
+      disableClose: true,
+      data: { obj, id_cliente: this.id }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
+      //this.router.navigate(['/buscacarservicio/']);
+    });
   }
 }

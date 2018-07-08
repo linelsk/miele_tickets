@@ -13,6 +13,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { elementAt } from 'rxjs/operators/elementAt';
+import { locale } from 'moment';
 
 @Component({
   selector: 'app-nuevo-cliente',
@@ -321,6 +322,7 @@ export class NuevoClienteComponent implements OnInit {
   }
 
   copiar_direccion() {
+    this.datosfiscales.cp = this.direccion.cp;
     this.datosfiscales.cp = this.direccion.cp;
     this.sepomex_datos_fiscales();
     this.datosfiscales.calle_numero = this.direccion.calle_numero;
@@ -955,10 +957,13 @@ export class DialogVisitaHoraCliente {
     @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit() {
-    console.log(this.data.horas_tecnico);
+    console.log(this.data);
     this.ddlhora_inicio = this.data.event;
-    this.ddlhora_fin = ((this.data.event * 1) + ((this.data.horas_tecnico * 1))).toString();
-
+    this.ddlhora_fin = (parseFloat(this.data.event) + parseFloat(this.data.horas_tecnico)).toString();
+    if (this.ddlhora_fin == "8" || this.ddlhora_fin == "8.5" || this.ddlhora_fin == "9" || this.ddlhora_fin == "9.5") {
+      this.ddlhora_fin = "0" + this.ddlhora_fin;
+    }
+    console.log(this.ddlhora_fin);
     localStorage.setItem("fecha_fin", this.ddlhora_fin);
   }
 

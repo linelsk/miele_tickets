@@ -71,7 +71,11 @@ import { FocusDirective } from './focus.directive';
 import { LightboxModule } from 'angular2-lightbox';
 import { BusquedaClienteComponent } from './busqueda-cliente/busqueda-cliente.component';
 import { BusquedaTecnicoComponent } from './busqueda-tecnico/busqueda-tecnico.component';
-import { InfoTecnicoComponent } from './info-tecnico/info-tecnico.component';
+import { InfoTecnicoComponent, DialogEditarRefaccionTecnico, DialogEliminarRefaccionTecnico } from './info-tecnico/info-tecnico.component';
+import { DialogTroubleshootingComponent } from './dialogs/dialog-troubleshooting/dialog-troubleshooting.component';
+import { VerRefaccionComponent, DialogEditarRefaccion, DialogAsignarRefaccion, DialogEliminarRefaccion, DialogCantidadRefaccion } from './ver-refaccion/ver-refaccion.component';
+import { NuevoRefaccionComponent } from './nuevo-refaccion/nuevo-refaccion.component';
+import { AsignacionRefaccionesComponent } from './asignacion-refacciones/asignacion-refacciones.component';
 
 registerLocaleData(localeFr);
 registerLocaleData(localeEs);
@@ -103,14 +107,25 @@ registerLocaleData(localeEs);
     DialogFinal,
     DialogVisitaHora,
     DialogVisitaHoraCliente,
+    DialogEditarRefaccion,
+    DialogAsignarRefaccion,
+    DialogEliminarRefaccion,
+    DialogEditarRefaccionTecnico,
+    DialogEditarRefaccionTecnico,
+    DialogEliminarRefaccionTecnico,
+    DialogCantidadRefaccion,
     BuscarServicioComponent,
     EditarServicioComponent,
     FocusDirective,
     BusquedaClienteComponent,
     BusquedaTecnicoComponent,
-    InfoTecnicoComponent
+    InfoTecnicoComponent,
+    DialogTroubleshootingComponent,
+    VerRefaccionComponent,
+    NuevoRefaccionComponent,
+    AsignacionRefaccionesComponent
   ],
-  entryComponents: [DialogIbsDialog, DialogIbsCliente, DialogAgenda, DialogAgendaCliente, DialogEditarEstatus, DialogCancelarEstatus, DialogFinal, DialogVisitaHora, DialogAgendaCliente, DialogVisitaHoraCliente],
+  entryComponents: [DialogIbsDialog, DialogIbsCliente, DialogAgenda, DialogAgendaCliente, DialogEditarEstatus, DialogCancelarEstatus, DialogFinal, DialogVisitaHora, DialogAgendaCliente, DialogVisitaHoraCliente, DialogEditarRefaccion, DialogAsignarRefaccion, DialogEliminarRefaccion, DialogEditarRefaccionTecnico, DialogEliminarRefaccionTecnico, DialogCantidadRefaccion, DialogTroubleshootingComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

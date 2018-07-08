@@ -1,0 +1,108 @@
+<style>
+
+  .btn-default {
+    background-color: #EEEDEB;
+    color: #847d70;
+    border-color: #ddd;
+    padding-left: 50px;
+    padding-right: 50px;
+    font-weight: bold;
+  }
+
+  .btn-default-rojo {
+    background-color: #E60000;
+    color: #fff;
+    border-color: #E60000;
+  }
+
+    .btn-default-rojo:hover {
+      background-color: #E60000;
+      color: #fff;
+      border-color: #E60000;
+    }
+</style>
+<div mat-dialog-content>
+  <div class="row">
+    <div class="form-group col-xs-12">
+      <div class="col-xs-12 col-md-6" style="text-align:left; padding:0;">
+        <span style="display: inline-block; font-size: 18px; margin: 0; line-height: 1; font-weight: bold;">
+          Asignar Técnico
+        </span>
+      </div>
+      <div class="col-xs-12 col-md-6" style="text-align:right; padding:0;">
+        <i class="fa fa-times" aria-hidden="true" (click)="onNoClick()" style="font-size:large"></i>
+      </div>
+    </div>
+    <div class="col-xs-12" style="padding-left:0; padding-right:0; padding-bottom:10px">
+      <mat-divider></mat-divider>
+    </div>
+    <div class="col-xs-12" style="margin-bottom:15px; padding:0;">
+      <div class="input-group" style="padding:0;">
+        <div class="col-md-12">
+          <mat-form-field class="full-width">
+            <input matInput type="text" id="busqueda" name="busqueda" [(ngModel)]="text_busqueda" #busqueda="ngModel" placeholder="Buscar técnico por: Nombre, Email, No. de almacen">
+          </mat-form-field>
+        </div>
+        <span class="input-group-btn">
+          <button mat-button class="btn-default btn-default-rojo" (click)="buscar();">Buscar</button>
+        </span>
+      </div>
+    </div>
+    <div class="col-xs-12" style="margin-bottom:15px; padding:0;">
+      <div class="col-md-8">
+        <div class="example-container mat-elevation-z4" [hidden]="ver_nuevo_producto" *ngIf="dataSource.data.length > 0">
+          <mat-table #table [dataSource]="dataSource">
+
+            <!-- Checkbox Column -->
+            <ng-container matColumnDef="select">
+              <mat-header-cell *matHeaderCellDef>
+              </mat-header-cell>
+              <mat-cell *matCellDef="let row; let i = index">
+                <div class="col-xs-12" style="text-align:center; padding:0;">
+                  <mat-checkbox (change)="set_productos($event, row, i)" [checked]="row.checked">
+                  </mat-checkbox>
+                </div>
+              </mat-cell>
+            </ng-container>
+
+            <!-- Position Column -->
+            <ng-container matColumnDef="nombre">
+              <mat-header-cell *matHeaderCellDef> Nombre </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.nombre}} </mat-cell>
+            </ng-container>
+
+            <!-- Name Column -->
+            <ng-container matColumnDef="almacen">
+              <mat-header-cell *matHeaderCellDef> No. de almacen </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.noalmacen}} </mat-cell>
+            </ng-container>
+
+            <!-- Weight Column -->
+            <ng-container matColumnDef="email">
+              <mat-header-cell *matHeaderCellDef> Email </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.email}} </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;">
+            </mat-row>
+          </mat-table>
+        </div>
+        <div *ngIf="ver">
+          No hay productos con la busqueda <span style="color:#A5000D"> {{text_busqueda}}</span>
+        </div>
+      </div>
+
+      <div class="col-md-4" *ngIf="value_productos.length > 0">
+        <label>Técnicos seleccionados</label><br />
+        <label *ngFor="let value of value_productos; trackBy: index;" class="col-xs-12">
+          <i class="fa fa-times-circle-o" aria-hidden="true" style="color:#A5000D" (click)="delete_tecnico(value.id);"></i>
+          {{value.nombre}} - cantidad: <strong>{{value.cantidad}}</strong>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="col-xs-12" style="text-align:center;">
+  <button mat-button cdkFocusInitial class="btn-default btn-default-rojo" (click)="asignar_tecnico(data);">Guardar</button>
+</div>

@@ -1,0 +1,97 @@
+.btn-default {
+  background-color: #EEEDEB;
+  color: #847d70;
+  border-color: #ddd;
+  padding-left: 50px;
+  padding-right: 50px;
+  font-weight: bold;
+}
+
+.btn-default-rojo {
+  background-color: #A5000D;
+  color: #fff;
+  border-color: #A5000D;
+}
+
+  .btn-default-rojo:hover {
+    background-color: #E60000;
+    color: #fff;
+    border-color: #E60000;
+  }
+
+.selected {
+  background-color: #CFD8DC !important;
+  color: #E60000;
+}
+
+.heroes {
+  margin: 0 0 2em 0;
+  list-style-type: none;
+  padding: 15px 15px 15px 15px;
+  /*width: 15em;*/
+}
+
+  .heroes li {
+    cursor: pointer;
+    position: relative;
+    left: 0;
+    background-color: #EEE;
+    margin: .5em;
+    padding: .3em 0;
+    height: 1.6em;
+    border-radius: 4px;
+  }
+
+    .heroes li.selected:hover {
+      background-color: #BBD8DC !important;
+      color: #E60000;
+    }
+
+    .heroes li:hover {
+      color: #607D8B;
+      background-color: #DDD;
+      left: .1em;
+    }
+
+  .heroes .text {
+    position: relative;
+    /*top: -3px;*/
+  }
+
+.badge {
+  display: inline-block;
+  font-size: small;
+  color: #847d70;
+  padding: 10px 5px 10px 5px;
+  background-color: #F4F4F4;
+  line-height: 1em;
+  position: relative;
+  /*left: -1px;
+  top: -4px;*/
+  padding-bottom: 15px;
+  border-radius: 4px 0 0 4px;
+}
+
+  .badge:hover {
+    color: #607D8B;
+    background-color: #DDD;
+    left: .1em;
+  }
+
+.negritas {
+  font-weight: bold;
+}
+
+.upload-btn-wrapper {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.upload-btn-wrapper input[type=file] {
+  font-size: 100px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+}

@@ -16,6 +16,9 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { BusquedaTecnicoComponent } from '../busqueda-tecnico/busqueda-tecnico.component';
 import { InfoTecnicoComponent } from '../info-tecnico/info-tecnico.component';
+import { VerRefaccionComponent } from '../ver-refaccion/ver-refaccion.component';
+import { NuevoRefaccionComponent } from '../nuevo-refaccion/nuevo-refaccion.component';
+import { AsignacionRefaccionesComponent } from '../asignacion-refacciones/asignacion-refacciones.component';
 
 const routes: Routes = [
   //{ path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -33,7 +36,10 @@ const routes: Routes = [
   { path: 'editarservicio/:id', component: EditarServicioComponent },
   { path: 'buscar_cliente', component: BusquedaClienteComponent },
   { path: 'buscar_tecnico', component: BusquedaTecnicoComponent },
-  { path: 'info_tecnico/:id', component: InfoTecnicoComponent }
+  { path: 'info_tecnico/:id', component: InfoTecnicoComponent },
+  { path: 'ver_refacciones', component: VerRefaccionComponent },
+  { path: 'nueva_refaccion', component: NuevoRefaccionComponent },
+  { path: 'asignacion_refaccion', component: AsignacionRefaccionesComponent },
 ];
 
 @NgModule({

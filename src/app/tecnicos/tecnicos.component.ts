@@ -46,6 +46,7 @@ export class TecnicosComponent implements OnInit, OnDestroy {
   aviso: string;
   public values: string[];
   public tipo: string[];
+  public tiposervicio: string[];
   public mask = ['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]
 
   bodyClasses = 'skin-blue sidebar-mini';
@@ -132,7 +133,7 @@ export class TecnicosComponent implements OnInit, OnDestroy {
 
     this.getproducto();
     this.gettipotecnico();
-
+    this.gettiposervicio();
   }
 
   ngOnDestroy() {
@@ -176,6 +177,15 @@ export class TecnicosComponent implements OnInit, OnDestroy {
       });
   }
 
+  gettiposervicio(): void {
+    this.heroService.service_catalogos("Catalogos/TipoServicio")
+      .subscribe((value) => {
+        console.log(value);
+        //console.log(value.json());
+        this.tiposervicio = value;
+      });
+  }
+
   registro(obj): void {
     var hoy: any = new Date();
     var dd: any = hoy.getDate();
@@ -211,9 +221,9 @@ export class TecnicosComponent implements OnInit, OnDestroy {
       this.celular,
       mm + '/' + dd + '/' + yyyy,
       this.almacen,
-      this.tipotecnico,
+      1,
       this.value_actividad,
-      this.value_cobertura,
+      [],
       this.value_slide
     )
       .subscribe((value) => {
@@ -237,7 +247,7 @@ export class TecnicosComponent implements OnInit, OnDestroy {
 
   validacion_form(obj) {
 
-    if (this.count_slide != 0 && this.almacen != "" && this.name != "" && this.paterno != "" && this.email != "" && this.celular != "" && this.tipotecnico != "") {
+    if (this.count_slide != 0 && this.almacen != "" && this.name != "" && this.paterno != "" && this.email != "" && this.celular != "") {
       this.validform = false;
     }
     else {
@@ -302,7 +312,7 @@ export class TecnicosComponent implements OnInit, OnDestroy {
       this.validar_cobertura = false;
     }
 
-    if (this.count_slide != 0 && this.count_check != 0 && this.count_check_cobertura != 0 && this.almacen != "" && this.name != "" && this.paterno != "" && this.email != "" && this.celular != "" && this.tipotecnico != "") {
+    if (this.count_slide != 0 && this.count_check != 0 && this.almacen != "" && this.name != "" && this.paterno != "" && this.email != "" && this.celular != "") {
       this.validform = false;
     }
     else {
@@ -312,16 +322,16 @@ export class TecnicosComponent implements OnInit, OnDestroy {
   }
 
   slide(obj, id, desc) {
-    //console.log(obj + ' ' + desc);
+    console.log(obj + ' ' + desc);
     if (obj.checked == true) {
       this.value_slide.push({
-        id_producto: id
+        id_categoria_producto: id
       });
       this.count_slide++;
     }
     else {
       for (var i = 0; i < this.value_slide.length; i++) {
-        if (this.value_slide[i].id_producto == id) {
+        if (this.value_slide[i].id_categoria_producto == id) {
           this.value_slide.splice(i, 1);
         }
       }
@@ -335,7 +345,7 @@ export class TecnicosComponent implements OnInit, OnDestroy {
       this.validar_slide = false;
     }
 
-    if (this.count_slide != 0 && this.count_check != 0 && this.count_check_cobertura != 0 && this.almacen != "" && this.name != "" && this.paterno != "" && this.email != "" && this.celular != "" && this.tipotecnico != "") {
+    if (this.count_slide != 0 && this.count_check != 0 && this.almacen != "" && this.name != "" && this.paterno != "" && this.email != "" && this.celular != "") {
       this.validform = false;
     }
     else {

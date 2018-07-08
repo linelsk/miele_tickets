@@ -194,8 +194,8 @@
                           </ng-container>
 
                           <ng-container matColumnDef="Imagen">
-                            <mat-header-cell *matHeaderCellDef>  </mat-header-cell>
-                            <mat-cell *matCellDef="let element"><a style="color:inherit; cursor:pointer"><i class="fa fa-file-text-o" aria-hidden="true"></i></a> </mat-cell>
+                            <mat-header-cell *matHeaderCellDef style=" text-align:center">Troubleshooting</mat-header-cell>
+                            <mat-cell *matCellDef="let element" style=" text-align:center"><a style="color:inherit; cursor:pointer" (click)="troubleshooting(element)"><i class="fa fa-file-text-o" aria-hidden="true"></i></a> </mat-cell>
                           </ng-container>
 
                           <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

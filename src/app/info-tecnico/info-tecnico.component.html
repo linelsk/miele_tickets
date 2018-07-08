@@ -16,59 +16,109 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-              <div class="col-xs-12" style="padding-bottom:15px">
+              <div class="col-xs-12" style="padding:0">
                 <div class="form-group col-md-4">
-                  <label>Número de almacen</label><br />
-                  <span><i class="fa fa-archive" aria-hidden="true"></i> {{user.noalmacen}}</span>
+                  <mat-form-field class="full-width">
+                    <input type="text" matInput id="noalmacen" name="noalmacen" [(ngModel)]="tecnico.noalmacen" #noalmacen="ngModel" placeholder="Número de almacen" required>
+                  </mat-form-field>
+                  <div *ngIf="noalmacen.invalid && (noalmacen.dirty || noalmacen.touched)"
+                       class="alert alert-danger">
+                    <div *ngIf="noalmacen.errors.required">
+                      Número de almacen requerido.
+                    </div>
+                  </div>
                 </div>
                 <div class="form-group col-md-8">
                   <label>Actividad</label><br />
-                  <span *ngFor='let value of user.actividad; trackBy: index;'><i class="fa fa-briefcase" aria-hidden="true"></i> {{value.actividad }}&nbsp;&nbsp;&nbsp;</span>
+                  <mat-checkbox *ngFor='let value of tiposervicio; trackBy: index;' style="padding-right:10px" [checked]="value.check"
+                                value="value.id"
+                                (change)="check_actividad($event, value)">
+                    {{value.desc_tipo_servicio}}
+                  </mat-checkbox>
+                  <div class="alert alert-danger" *ngIf="validar">
+                    <div>
+                      {{message}}
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <div class="col-xs-12" style="padding-bottom:15px">
+              <div class="form-group col-md-4">
+                <mat-form-field class="full-width">
+                  <input type="text" matInput id="nombre" name="nombre" [(ngModel)]="tecnico.name" #nombre="ngModel" placeholder="Nombres(s)" required (ngModelChange)="validacion_form($event)">
+                </mat-form-field>
+                <div *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)"
+                     class="alert alert-danger">
+                  <div *ngIf="nombre.errors.required">
+                    Nombres(s) requerido.
+                  </div>
+                </div>
+              </div>
+              <div class="form-group col-md-4">
+                <mat-form-field class="full-width">
+                  <input type="text" matInput id="aparteno" name="aparteno" #aparteno="ngModel" [(ngModel)]="tecnico.paterno" placeholder="Apellido paterno" required (ngModelChange)="validacion_form($event)">
+                </mat-form-field>
+                <div *ngIf="aparteno.invalid && (aparteno.dirty || aparteno.touched)"
+                     class="alert alert-danger">
+                  <div *ngIf="aparteno.errors.required">
+                    Apellido paterno requerido.
+                  </div>
+                </div>
+              </div>
+              <div class="form-group col-md-4">
+                <mat-form-field class="full-width">
+                  <input type="text" matInput id="amaterno" name="amaterno" #amaterno="ngModel" [(ngModel)]="tecnico.materno" placeholder="Apellido materno">
+                </mat-form-field>
+              </div>
+              <div class="col-xs-12" style="padding:0;">
                 <div class="form-group col-md-4">
-                  <label>Nombre(s)</label><br />
-                  <span><i class="fa fa-address-card-o" aria-hidden="true"></i> {{user.name}}</span>
+                  <mat-form-field class="full-width">
+                    <input type="text" matInput id="mail" name="mail" #mail="ngModel" [(ngModel)]="tecnico.email" disabled (ngModelChange)="validacion_form($event)" placeholder="Email" required pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,6})+$">
+                  </mat-form-field>
+                  <div *ngIf="mail.invalid && (mail.dirty || mail.touched)"
+                       class="alert alert-danger">
+                    <div *ngIf="mail.errors.required">
+                      Email requerido.
+                    </div>
+                    <div *ngIf="mail.errors && mail.errors.pattern">
+                      El Email no es valido (ej. ej@do.com)
+                    </div>
+                  </div>
                 </div>
                 <div class="form-group col-md-4">
-                  <label>Apellido paterno</label><br />
-                  <span><i class="fa fa-address-card-o" aria-hidden="true"></i> {{user.paterno}}</span>
+                  <mat-form-field class="full-width">
+                    <input [textMask]="{mask: mask, guide: false}" type="text" matInput name="telefono" [(ngModel)]="tecnico.telefono" placeholder="Télefono fijo">
+                  </mat-form-field>
                 </div>
                 <div class="form-group col-md-4">
-                  <label>Apellido materno</label><br />
-                  <span><i class="fa fa-address-card-o" aria-hidden="true"></i> {{user.materno}}</span>
+                  <mat-form-field class="full-width">
+                    <input [textMask]="{mask: mask, guide: false}" type="text" matInput id="movil" name="movil" #movil="ngModel" [(ngModel)]="tecnico.movil" (ngModelChange)="validacion_form($event)" placeholder="Télefono celular" required>
+                  </mat-form-field>
+                  <div *ngIf="movil.invalid && (movil.dirty || movil.touched)"
+                       class="alert alert-danger">
+                    <div *ngIf="movil.errors.required">
+                      Télefono celular requerido.
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <div class="col-xs-12" style="padding-bottom:15px">
-                <div class="form-group col-md-4">
-                  <label>Email</label><br />
-                  <span><i class="fa fa-envelope-o" aria-hidden="true"></i> {{user.email}}</span>
-                </div>
-                <div class="form-group col-md-4">
-                  <label>Télefono fijo</label><br />
-                  <span><i class="fa fa-phone" aria-hidden="true"></i> {{user.telefono}}</span>
-                </div>
-                <div class="form-group col-md-4">
-                  <label>Télefono celular</label><br />
-                  <span><i class="fa fa-mobile" aria-hidden="true"></i> {{user.movil}}</span>
+              <div class="form-group col-md-12 col-xs-12 text-left">
+                <label>Productos</label><br />
+                <div *ngFor='let value of values; trackBy: index;' class="col-md-4">
+                  <mat-slide-toggle class="example-margin"
+                                    name="{{ value.descripcion }}"
+                                    [color]="color"
+                                    [checked]="value.check"
+                                    [disabled]="disabled"
+                                    (change)="check_producto($event, value)">
+                    {{ value.codigo }} - {{ value.descripcion }}
+                  </mat-slide-toggle>
                 </div>
               </div>
-
-              <div class="col-xs-12" style="padding-bottom:15px">
-                <div class="form-group col-md-4">
-                  <label>Tipo de técnico</label><br />
-                  <span><i class="fa fa-cogs" aria-hidden="true"></i> {{user.tipo_tecnico}}</span>
-                </div>
-                <div class="form-group col-md-4">
-                  <label>Área de cobertura</label><br />
-                  <span *ngFor='let value of user.area_cobertura; trackBy: index;'><i class="fa fa-map-marker" aria-hidden="true"></i> {{value.cobertura}}&nbsp;&nbsp;&nbsp;</span>
-                </div>
-                <div class="form-group col-md-4">
-                  <label>Productos</label><br />
-                  <span *ngFor='let value of user.productos; trackBy: index;'><i class="fa fa-product-hunt" aria-hidden="true"></i> {{value.producto}}&nbsp;&nbsp;&nbsp;</span>
+              <div class="col-xs-12 alert alert-danger" *ngIf="validar_slide">
+                <div class="col-xs-12">
+                  {{message_slide}}
                 </div>
               </div>
             </div>
@@ -77,6 +127,11 @@
           <!-- /.box -->
         </div>
         <!-- /.col -->
+        <div class="col-xs-12 text-center" style="margin-bottom:15px">
+          <button type="submit" (click)="registro($event)" class="pull-center btn btn-default btn-default-rojo" [disabled]="validform">
+            Editar
+          </button>
+        </div>
 
         <div class="col-md-12">
           <div class="box">
@@ -90,7 +145,72 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body">
+              <div class="col-xs-12" style="padding:0;">
+                <div class="col-xs-8" style="padding:0;">
+                  <div class="box-header with-border" style="padding-left:0;">
+                    <h3 class="box-title">Refacciones asignadas a: <strong style="color:#A5000D">{{tecnico.name}} {{tecnico.paterno}} {{tecnico.materno}}</strong></h3>
+                  </div>
+                </div>
+                <div class="col-xs-4" style="text-align:right; padding-right:0;">
+                  <button type="submit" (click)="asignar_refacciones($event)" class="pull-center btn btn-default btn-default-rojo">
+                    Asignar refacciones
+                  </button>
+                </div>
+              </div>
+              <div class="col-xs-12" style="padding:0;">
+                <div class="example-container mat-elevation-z2">
+                  <mat-table #table [dataSource]="dataSource">
 
+                    <!-- refacción Column -->
+                    <ng-container matColumnDef="no">
+                      <mat-header-cell *matHeaderCellDef> No. de refacción </mat-header-cell>
+                      <mat-cell *matCellDef="let element">
+                        <a style="cursor:pointer; color:inherit">{{element.no_material}}</a>
+                      </mat-cell>
+                    </ng-container>
+
+                    <!-- Descripción Column -->
+                    <ng-container matColumnDef="nombre">
+                      <mat-header-cell *matHeaderCellDef> Descripción </mat-header-cell>
+                      <mat-cell *matCellDef="let element">
+                        <a style="cursor:pointer; color:inherit">{{element.descripcion}}</a>
+                      </mat-cell>
+                    </ng-container>
+
+                    <!-- Cantidad Column -->
+                    <ng-container matColumnDef="cantidad">
+                      <mat-header-cell *matHeaderCellDef> Cantidad </mat-header-cell>
+                      <mat-cell *matCellDef="let element">
+                        <a style="cursor:pointer; color:inherit">{{element.cantidad}}</a>
+                      </mat-cell>
+                    </ng-container>
+
+                    <!-- Editar Column -->
+                    <ng-container matColumnDef="editar">
+                      <mat-header-cell *matHeaderCellDef>  </mat-header-cell>
+                      <mat-cell *matCellDef="let element">
+                        <button type="submit" class="pull-center btn btn-default btn-default-rojo btn-sm" [disabled]="preventAbuse" style="margin-right:5px;padding-left:10px;padding-right:10px" (click)="editar_refaccion(element);">
+                          Editar
+                        </button>
+                        <!--<button type="submit" class="pull-center btn btn-default btn-default-rojo btn-sm" [disabled]="preventAbuse" style="margin-right:5px;padding-left:10px;padding-right:10px" (click)="asignar_refaccion(element);">
+                          Asignar
+                        </button>-->
+                        <button type="submit" class="pull-center btn btn-default btn-sm" [disabled]="preventAbuse" style="margin-right:5px; padding-left:10px;padding-right:10px" (click)="eliminar_refaccion(element);">
+                          Eliminar
+                        </button>
+                      </mat-cell>
+                    </ng-container>
+
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                  </mat-table>
+
+                  <mat-paginator #paginator
+                                 [pageSize]="5"
+                                 [pageSizeOptions]="[5, 10]">
+                  </mat-paginator>
+                </div>
+              </div>
             </div>
           </div>
           <!-- /.box -->

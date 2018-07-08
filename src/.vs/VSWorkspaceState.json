@@ -2,7 +2,9 @@
   "ExpandedNodes": [
     "",
     "\\app",
+    "\\app\\info-tecnico",
     "\\assets"
   ],
+  "SelectedNode": "\\app\\info-tecnico\\info-tecnico.component.html",
   "PreviewInSolutionExplorer": false
 }

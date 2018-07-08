@@ -19,8 +19,9 @@
             <div class="box-body">
               <div class="col-xs-12" style="padding:0">
                 <div class="form-group col-md-4">
-                  <label>Número de almacen</label>
-                  <input type="text" class="form-control" id="noalmacen" name="noalmacen" [(ngModel)]="almacen" #noalmacen="ngModel" required (ngModelChange)="validacion_form($event)">
+                  <mat-form-field class="full-width">
+                    <input type="text" matInput id="noalmacen" name="noalmacen" [(ngModel)]="almacen" #noalmacen="ngModel" placeholder="Número de almacen" required (ngModelChange)="validacion_form($event)">
+                  </mat-form-field>
                   <div *ngIf="noalmacen.invalid && (noalmacen.dirty || noalmacen.touched)"
                        class="alert alert-danger">
                     <div *ngIf="noalmacen.errors.required">
@@ -30,14 +31,17 @@
                 </div>
                 <div class="form-group col-md-8">
                   <label>Actividad</label><br />
-                  <mat-checkbox style="padding-right:10px"
-                                id="actividad"
-                                name="actividad"
+                  <mat-checkbox *ngFor='let value of tiposervicio; trackBy: index;' style="padding-right:10px"
+                                value="value.id"
+                                (change)="check($event, value.id)">
+                    {{value.desc_tipo_servicio}}
+                  </mat-checkbox>
+                  <!--<mat-checkbox style="padding-right:10px"
                                 [(ngModel)]="previsita"
                                 #actividad="ngModel"
                                 value="1"
                                 (change)="check($event, 1)">
-                    Previsita
+                    Instalación
                   </mat-checkbox>
                   <br class="visible-xs" />
                   <mat-checkbox style="padding-right:10px"
@@ -45,7 +49,7 @@
                                 name="cb"
                                 value="2"
                                 (change)="check($event, 2)">
-                    Instalación
+                    Mantenimiento
                   </mat-checkbox>
                   <br class="visible-xs" />
                   <mat-checkbox style="padding-right:10px"
@@ -53,16 +57,16 @@
                                 name="cb"
                                 value="3"
                                 (change)="check($event, 3)">
-                    Mant./Reparación
+                    Reparación
                   </mat-checkbox>
                   <br class="visible-xs" />
                   <mat-checkbox style="padding-right:10px"
                                 [(ngModel)]="profesional"
                                 name="cb"
                                 value="4"
-                                (change)="check($event, 4)">
-                    Miele profesional
-                  </mat-checkbox>
+                                (change)="check($event, 5)">
+                    Diagnóstico en taller
+                  </mat-checkbox>-->
                   <div class="alert alert-danger" *ngIf="validar">
                     <div>
                       {{message}}
@@ -73,8 +77,9 @@
               </div>
 
               <div class="form-group col-md-4">
-                <label>Nombre(s)</label>
-                <input type="text" class="form-control" id="nombre" name="nombre" [(ngModel)]="name" #nombre="ngModel" required (ngModelChange)="validacion_form($event)">
+                <mat-form-field class="full-width">
+                  <input type="text" matInput id="nombre" name="nombre" [(ngModel)]="name" #nombre="ngModel" placeholder="Nombres(s)" required (ngModelChange)="validacion_form($event)">
+                </mat-form-field>
                 <div *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)"
                      class="alert alert-danger">
                   <div *ngIf="nombre.errors.required">
@@ -83,8 +88,9 @@
                 </div>
               </div>
               <div class="form-group col-md-4">
-                <label>Apellido paterno</label>
-                <input type="text" class="form-control" id="aparteno" name="aparteno" #aparteno="ngModel" [(ngModel)]="paterno" required (ngModelChange)="validacion_form($event)">
+                <mat-form-field class="full-width">
+                  <input type="text" matInput id="aparteno" name="aparteno" #aparteno="ngModel" [(ngModel)]="paterno" placeholder="Apellido paterno" required (ngModelChange)="validacion_form($event)">
+                </mat-form-field>
                 <div *ngIf="aparteno.invalid && (aparteno.dirty || aparteno.touched)"
                      class="alert alert-danger">
                   <div *ngIf="aparteno.errors.required">
@@ -93,13 +99,15 @@
                 </div>
               </div>
               <div class="form-group col-md-4">
-                <label>Apellido materno</label>
-                <input type="text" class="form-control" id="amaterno" name="amaterno" #amaterno="ngModel" [(ngModel)]="materno">
+                <mat-form-field class="full-width">
+                  <input type="text" matInput id="amaterno" name="amaterno" #amaterno="ngModel" [(ngModel)]="materno" placeholder="Apellido materno">
+                </mat-form-field>
               </div>
               <div class="col-xs-12" style="padding:0;">
                 <div class="form-group col-md-4">
-                  <label>Email</label>
-                  <input type="text" class="form-control" id="mail" name="mail" #mail="ngModel" [(ngModel)]="email" (ngModelChange)="validacion_form($event)" required pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,6})+$">
+                  <mat-form-field class="full-width">
+                    <input type="text" matInput id="mail" name="mail" #mail="ngModel" [(ngModel)]="email" (ngModelChange)="validacion_form($event)" placeholder="Email" required pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,6})+$">
+                  </mat-form-field>
                   <div *ngIf="mail.invalid && (mail.dirty || mail.touched)"
                        class="alert alert-danger">
                     <div *ngIf="mail.errors.required">
@@ -111,31 +119,32 @@
                   </div>
                 </div>
                 <div class="form-group col-md-4">
-                  <label>Télefono fijo</label>
-                  <input [textMask]="{mask: mask, guide: false}" type="text" class="form-control" name="telefono" [(ngModel)]="telefono">
+                  <mat-form-field class="full-width">
+                    <input [textMask]="{mask: mask, guide: false}" type="text" matInput name="telefono" [(ngModel)]="telefono" placeholder="Télefono fijo">
+                  </mat-form-field>
                 </div>
                 <div class="form-group col-md-4">
-                  <label>Télefono celular</label>
-                  <input [textMask]="{mask: mask, guide: false}" type="text" class="form-control" id="movil" name="movil" #movil="ngModel" [(ngModel)]="celular" (ngModelChange)="validacion_form($event)" required>
+                  <mat-form-field class="full-width">
+                    <input [textMask]="{mask: mask, guide: false}" type="text" matInput id="movil" name="movil" #movil="ngModel" [(ngModel)]="celular" (ngModelChange)="validacion_form($event)" placeholder="Télefono celular" required>
+                  </mat-form-field>
                   <div *ngIf="movil.invalid && (movil.dirty || movil.touched)"
                        class="alert alert-danger">
                     <div *ngIf="movil.errors.required">
                       Télefono celular requerido.
                     </div>
                     <!--<div *ngIf="movil.errors && movil.errors.pattern">
-          Télefono celular solo puede contener números.
-        </div>--<!--pattern="[0-9]+"-->
+                      Télefono celular solo puede contener números.
+                    </div>--<!--pattern="[0-9]+"-->
 
                   </div>
                 </div>
               </div>
 
-              <div class="form-group col-md-4">
+              <!--<div class="form-group col-md-4">
                 <label>Tipo de técnico</label>
                 <select type="text" class="form-control" id="tecnico" name="tecnico" #tecnico="ngModel" [(ngModel)]="tipotecnico" (ngModelChange)="validacion_form($event)" required>
                   <option *ngFor='let value of tipo; trackBy: index;' value="{{value.id}}">{{value.desc_tipo}}</option>
-                  <!--<option value="1">Tipo 1</option>
-      <option value="2">Tipo 2</option>-->
+
                 </select>
                 <div *ngIf="tecnico.invalid && (tecnico.dirty || tecnico.touched)"
                      class="alert alert-danger">
@@ -143,46 +152,45 @@
                     Tipo de técnico requerido.
                   </div>
                 </div>
-              </div>
+              </div>-->
               <!--<div class="form-group col-md-4">
-    <label>Área de cobertura</label>
-    <tag-input [(ngModel)]="tipocobertura" name="cobertura"
-               [addOnBlur]="true"
-               [clearOnBlur]="true"
-               [onRemoving]="onRemoving"
-               [onAdding]="onAdding">
-      <tag-input-dropdown [autocompleteItems]="autocompleteItems"
-                          [displayBy]="'name'"
-                          [identifyBy]="'id'">
-      </tag-input-dropdown>
-    </tag-input>
-  </div>-->
+                <label>Área de cobertura</label>
+                <tag-input [(ngModel)]="tipocobertura" name="cobertura"
+                           [addOnBlur]="true"
+                           [clearOnBlur]="true"
+                           [onRemoving]="onRemoving"
+                           [onAdding]="onAdding">
+                  <tag-input-dropdown [autocompleteItems]="autocompleteItems"
+                                      [displayBy]="'name'"
+                                      [identifyBy]="'id'">
+                  </tag-input-dropdown>
+                </tag-input>
+              </div>-->
               <!--<mat-form-field class="demo-chip-list">
-    <mat-chip-list #chipList>
-      <mat-chip *ngFor="let fruit of fruits"
-                [selectable]="selectable"
-                [removable]="removable"
-                (removed)="remove(fruit)" style="background-color:aqua;">
-        {{fruit.name}}
-        <mat-icon matChipRemove *ngIf="removable">X</mat-icon>
-      </mat-chip>
-      <input placeholder="New fruit..."
-             #fruitInput
-             [formControl]="fruitCtrl"
-             [matAutocomplete]="auto"
-             [matChipInputFor]="chipList"
-             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-             [matChipInputAddOnBlur]="addOnBlur"
-             (matChipInputTokenEnd)="add($event)" />
-    </mat-chip-list>
-    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-      <mat-option *ngFor="let fruit of filteredFruits | async" [value]="fruit">
-        {{ fruit.name }}
-      </mat-option>
-    </mat-autocomplete>
-  </mat-form-field>-->
-
-              <div class="form-group col-md-8">
+                <mat-chip-list #chipList>
+                  <mat-chip *ngFor="let fruit of fruits"
+                            [selectable]="selectable"
+                            [removable]="removable"
+                            (removed)="remove(fruit)" style="background-color:aqua;">
+                    {{fruit.name}}
+                    <mat-icon matChipRemove *ngIf="removable">X</mat-icon>
+                  </mat-chip>
+                  <input placeholder="New fruit..."
+                         #fruitInput
+                         [formControl]="fruitCtrl"
+                         [matAutocomplete]="auto"
+                         [matChipInputFor]="chipList"
+                         [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                         [matChipInputAddOnBlur]="addOnBlur"
+                         (matChipInputTokenEnd)="add($event)" />
+                </mat-chip-list>
+                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+                  <mat-option *ngFor="let fruit of filteredFruits | async" [value]="fruit">
+                    {{ fruit.name }}
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>-->
+              <!--<div class="form-group col-md-8">
                 <label>Área de cobertura</label><br />
                 <mat-checkbox style="padding-right:10px"
                               [(ngModel)]="region1"
@@ -232,16 +240,16 @@
                     {{message}}
                   </div>
                 </div>
-              </div>
+              </div>-->
               <div class="form-group col-md-12 col-xs-12 text-left">
                 <label>Productos</label><br />
                 <div *ngFor='let value of values; trackBy: index;' class="col-md-4">
                   <mat-slide-toggle class="example-margin"
-                                    name="{{ value.desc_producto }}"
+                                    name="{{ value.descripcion }}"
                                     [color]="color"
                                     [checked]="false"
                                     [disabled]="disabled"
-                                    (change)="slide($event, value.id, value.desc_producto)">
+                                    (change)="slide($event, value.id, value.descripcion)">
                     {{ value.codigo }} - {{ value.descripcion }}
                   </mat-slide-toggle>
                 </div>

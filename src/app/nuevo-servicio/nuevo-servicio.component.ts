@@ -113,22 +113,6 @@ export class NuevoServicioComponent implements OnInit {
   dataSource_direccion = new MatTableDataSource();
   selection = new SelectionModel<Element>(true, []);
 
-  /** Whether the number of selected elements matches the total number of rows. */
-  //isAllSelected() {
-  //  //console.log(this.selection.selected);
-  //  const numSelected = this.selection.selected.length;
-  //  const numRows = this.dataSource.data.length;
-  //  return numSelected === numRows;
-  //}
-
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
-  //masterToggle() {
-  //  console.log(this.dataSource.data);
-  //  this.isAllSelected() ?
-  //    this.selection.clear() :
-  //    this.dataSource.data.forEach(row => this.selection.select());
-  //}
-
   options: any[] = [];
 
   filteredOptions: Observable<any[]>;
