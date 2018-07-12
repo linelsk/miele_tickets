@@ -59,9 +59,9 @@ import { RecuperarPasswordComponent } from './recuperar-password/recuperar-passw
 import { PerfilComponent } from './perfil/perfil.component';
 import { ConfiguracionComponent } from './configuracion/configuracion.component';
 import { VerServicioComponent } from './ver-servicio/ver-servicio.component';
-import { NuevoClienteComponent, DialogAgendaCliente, DialogVisitaHoraCliente, DialogIbsCliente } from './nuevo-cliente/nuevo-cliente.component';
+import { NuevoClienteComponent, DialogIbsCliente } from './nuevo-cliente/nuevo-cliente.component';
 import { ServicioDetalleComponent } from './servicio-detalle/servicio-detalle.component';
-import { NuevoServicioComponent, DialogIbsDialog, DialogAgenda, DialogVisitaHora } from './nuevo-servicio/nuevo-servicio.component';
+import { NuevoServicioComponent, DialogIbsDialog } from './nuevo-servicio/nuevo-servicio.component';
 import { BuscarServicioComponent } from './buscar-servicio/buscar-servicio.component';
 import { Daterangepicker } from 'ng2-daterangepicker';
 import { EditarServicioComponent, DialogEditarEstatus, DialogCancelarEstatus, DialogFinal } from './editar-servicio/editar-servicio.component';
@@ -76,6 +76,9 @@ import { DialogTroubleshootingComponent } from './dialogs/dialog-troubleshooting
 import { VerRefaccionComponent, DialogEditarRefaccion, DialogAsignarRefaccion, DialogEliminarRefaccion, DialogCantidadRefaccion } from './ver-refaccion/ver-refaccion.component';
 import { NuevoRefaccionComponent } from './nuevo-refaccion/nuevo-refaccion.component';
 import { AsignacionRefaccionesComponent } from './asignacion-refacciones/asignacion-refacciones.component';
+import { CalendarioComponent } from './calendario/calendario.component';
+import { DialogVisitaHoraClienteComponent } from './dialogs/dialog-visita-hora-cliente/dialog-visita-hora-cliente.component';
+import { CalendariHomeComponent } from './calendari-home/calendari-home.component';
 
 registerLocaleData(localeFr);
 registerLocaleData(localeEs);
@@ -100,13 +103,9 @@ registerLocaleData(localeEs);
     NuevoServicioComponent,
     DialogIbsDialog,
     DialogIbsCliente,
-    DialogAgenda,
-    DialogAgendaCliente,
     DialogEditarEstatus,
     DialogCancelarEstatus,
     DialogFinal,
-    DialogVisitaHora,
-    DialogVisitaHoraCliente,
     DialogEditarRefaccion,
     DialogAsignarRefaccion,
     DialogEliminarRefaccion,
@@ -123,9 +122,12 @@ registerLocaleData(localeEs);
     DialogTroubleshootingComponent,
     VerRefaccionComponent,
     NuevoRefaccionComponent,
-    AsignacionRefaccionesComponent
+    AsignacionRefaccionesComponent,
+    CalendarioComponent,
+    DialogVisitaHoraClienteComponent,
+    CalendariHomeComponent
   ],
-  entryComponents: [DialogIbsDialog, DialogIbsCliente, DialogAgenda, DialogAgendaCliente, DialogEditarEstatus, DialogCancelarEstatus, DialogFinal, DialogVisitaHora, DialogAgendaCliente, DialogVisitaHoraCliente, DialogEditarRefaccion, DialogAsignarRefaccion, DialogEliminarRefaccion, DialogEditarRefaccionTecnico, DialogEliminarRefaccionTecnico, DialogCantidadRefaccion, DialogTroubleshootingComponent],
+  entryComponents: [DialogIbsDialog, DialogIbsCliente, DialogEditarEstatus, DialogCancelarEstatus, DialogFinal, DialogEditarRefaccion, DialogAsignarRefaccion, DialogEliminarRefaccion, DialogEditarRefaccionTecnico, DialogEliminarRefaccionTecnico, DialogCantidadRefaccion, DialogTroubleshootingComponent, CalendarioComponent, DialogVisitaHoraClienteComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

@@ -272,7 +272,7 @@
               <!-- /.box-header -->
               <div class="box-body">
                 <div class="col-xs-12 text-right" style="padding:15px;">
-                  <button class="pull-center btn btn-default btn-default-rojo">Nueva visita</button>
+                  <button class="pull-center btn btn-default btn-default-rojo" (click)="openAgendaVisita();">Nueva visita</button>
                 </div>
                 <div class="col-xs-12">
                   <mat-accordion>
@@ -289,7 +289,7 @@
                       <div class="col-xs-12 " style="padding-left:0; padding-right:0">
                         <div class="form-group col-xs-12 col-md-12" style="text-align:right">
                           <br />
-                          <button class="pull-center btn btn-default btn-default-rojo">Reagendar visita</button>
+                          <button class="pull-center btn btn-default btn-default-rojo" (click)="openAgenda(i);">Reagendar visita</button>
                           <button class="pull-center btn btn-default btn-default-rojo">Cancelar visita</button>
                         </div>
                       </div>

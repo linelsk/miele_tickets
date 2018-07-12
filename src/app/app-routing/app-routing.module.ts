@@ -19,6 +19,7 @@ import { InfoTecnicoComponent } from '../info-tecnico/info-tecnico.component';
 import { VerRefaccionComponent } from '../ver-refaccion/ver-refaccion.component';
 import { NuevoRefaccionComponent } from '../nuevo-refaccion/nuevo-refaccion.component';
 import { AsignacionRefaccionesComponent } from '../asignacion-refacciones/asignacion-refacciones.component';
+import { CalendariHomeComponent } from '../calendari-home/calendari-home.component';
 
 const routes: Routes = [
   //{ path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -40,6 +41,7 @@ const routes: Routes = [
   { path: 'ver_refacciones', component: VerRefaccionComponent },
   { path: 'nueva_refaccion', component: NuevoRefaccionComponent },
   { path: 'asignacion_refaccion', component: AsignacionRefaccionesComponent },
+  { path: 'vercalendario', component: CalendariHomeComponent },
 ];
 
 @NgModule({

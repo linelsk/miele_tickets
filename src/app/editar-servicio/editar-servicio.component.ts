@@ -11,6 +11,7 @@ import { CalendarEvent } from 'angular-calendar';
 import { MatTableDataSource } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Lightbox } from 'angular2-lightbox';
+import { CalendarioComponent } from '../calendario/calendario.component';
 
 @Component({
   selector: 'app-editar-servicio',
@@ -35,6 +36,9 @@ export class EditarServicioComponent implements OnInit {
   mostrar_distribuidor: boolean = false;
   text_editaribs: string = "";
   private _albums: any[] = [];
+  value_productos: Productos_Servicio[] = [];
+  value_productos_servicio: any[] = [];
+  id_producto_enviar: string = "";
 
   foods = [
     { value: '1', viewValue: 'Cancelar' },
@@ -59,13 +63,6 @@ export class EditarServicioComponent implements OnInit {
     let fi = this.fileInput.nativeElement;
     if (fi.files && fi.files[0]) {
 
-      //this.fileToUpload.push({
-      //  file: fi.files[0],
-      //  id_visita: 1,
-      //  id_producto: 1,
-      //  creado: this.heroService.fecha_hoy(),
-      //  creadopor: 1
-      //})
       console.log(fi.files[0]);
       this.heroService.upload(fi.files[0]).subscribe((value) => {
         console.log(value);
@@ -99,11 +96,12 @@ export class EditarServicioComponent implements OnInit {
       //console.log(value[0].);
       this.servicio_detalle = value[0];
       this.dataSource.data = value[0].productos;
+      this.value_productos = value[0].productos;
       this.dataSource_visita.data = value[0].productos;
       this.detalle_visita = value[0].visitas;
       this.dllestatusservicio = value[0].id_estatus;
       this.servicio_reporte = value[0].visitas;
-      console.log(this.servicio_reporte);
+      //console.log(this.servicio_reporte);
       this.heroService.service_general_get("Clientes/" + value[0].id_cliente, {}).subscribe((result) => {
         //console.log(result[0]);
         this.detalle = result[0];
@@ -235,7 +233,7 @@ export class EditarServicioComponent implements OnInit {
             });
           }
         });
-       
+
       }
     });
   }
@@ -275,7 +273,7 @@ export class EditarServicioComponent implements OnInit {
   }
   rdconfirmado: any = 0;
   confirmacion_cancel(): void {
-    
+
   };
 
   openCancelar(obj): void {
@@ -300,7 +298,126 @@ export class EditarServicioComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       //console.log(result);
       //console.log(this.rdconfirmado);
-      
+
+    });
+  }
+
+  tecnicos: any[] = [];
+  tipo_servicio: any[] = [];
+  visita = new visita();
+  nueva_visita = new nueva_visita();
+  openAgenda(obj): void {
+
+    this.sub = this.route.params.subscribe(params => {
+      this.id = +params['id'];
+    });
+
+    this.tecnicos = [];
+    this.id_producto_enviar = "";
+
+    this.heroService.service_general_get("servicios/" + this.id, {}).subscribe((resp) => {
+      console.log(resp[0].visitas[obj].id);
+      for (var i = 0; i < resp[0].productos.length; i++) {
+        this.id_producto_enviar += resp[0].productos[i].id + ",";
+      }
+
+      this.tipo_servicio.push({
+        "desc_tipo_servicio": "",
+        "id": resp[0].id_tipo_servicio
+      })
+
+      //console.log(this.id_producto_enviar);
+      this.heroService.service_general("servicios/TecnicoAgenda", { id: resp[0].id_tipo_servicio, productos: this.id_producto_enviar }).subscribe((value) => {
+        console.log(value);
+        for (var i = 0; i < value.length; i++) {
+          this.tecnicos.push({
+            id: value[i].id,
+            tecnico: value[i].nombre + " " + value[i].paterno + " " + value[i].materno,
+            tecnico_color: value[i].tecnico_color
+          });
+        }
+
+        let dialogRef = this.dialog.open(CalendarioComponent, {
+          width: '100%',
+          height: '95%',
+          disableClose: true,
+          data: { tecnicos: this.tecnicos, tipo_servicio: this.tipo_servicio, horas_tecnico: 0, no_tecnico: 1, id_producto_enviar: this.id_producto_enviar }
+        });
+        dialogRef.afterClosed().subscribe(result => {
+          console.log(resp[0].visitas[obj].id);
+          this.visita.id = resp[0].visitas[obj].id;
+          this.visita.id_tecnico = JSON.parse(localStorage.getItem("agenda")).tecnico[0].id;
+          this.visita.fecha_visita = JSON.parse(localStorage.getItem("agenda")).fecha;
+          this.visita.hora = JSON.parse(localStorage.getItem("agenda")).event;
+          this.heroService.service_general("servicios/Actualizar_visita", this.visita).subscribe((value) => {
+
+            this.heroService.service_general_get("servicios/" + this.id, {}).subscribe((value) => {
+              console.log(value[0].visitas);
+              this.detalle_visita = value[0].visitas;
+            });
+          });
+
+        });
+      });
+    });
+  }
+
+  openAgendaVisita(): void {
+
+    this.sub = this.route.params.subscribe(params => {
+      this.id = +params['id'];
+    });
+
+    this.tecnicos = [];
+    this.id_producto_enviar = "";
+
+    this.heroService.service_general_get("servicios/" + this.id, {}).subscribe((resp) => {
+      //console.log(resp[0].visitas[obj].id);
+      for (var i = 0; i < resp[0].productos.length; i++) {
+        this.id_producto_enviar += resp[0].productos[i].id + ",";
+      }
+
+      this.tipo_servicio.push({
+        "desc_tipo_servicio": "",
+        "id": resp[0].id_tipo_servicio
+      })
+
+      //console.log(this.id_producto_enviar);
+      this.heroService.service_general("servicios/TecnicoAgenda", { id: resp[0].id_tipo_servicio, productos: this.id_producto_enviar }).subscribe((value) => {
+        console.log(value);
+        for (var i = 0; i < value.length; i++) {
+          this.tecnicos.push({
+            id: value[i].id,
+            tecnico: value[i].nombre + " " + value[i].paterno + " " + value[i].materno,
+            tecnico_color: value[i].tecnico_color
+          });
+        }
+
+        let dialogRef = this.dialog.open(CalendarioComponent, {
+          width: '100%',
+          height: '95%',
+          disableClose: true,
+          data: { tecnicos: this.tecnicos, tipo_servicio: this.tipo_servicio, horas_tecnico: 0, no_tecnico: 1, id_producto_enviar: this.id_producto_enviar }
+        });
+        dialogRef.afterClosed().subscribe(result => {
+          console.log(resp[0]);
+          this.nueva_visita.id_servicio = resp[0].visitas[0].id_servicio;
+          this.nueva_visita.id_direccion = resp[0].visitas[0].id_direccion;
+          this.nueva_visita.id_direccion = resp[0].visitas[0].id_direccion;
+          this.nueva_visita.actividades_realizar = resp[0].productos;
+          this.nueva_visita.servicio_producto = resp[0].visitas[0].actividades_realizar;
+          this.nueva_visita.id_tecnico = JSON.parse(localStorage.getItem("agenda")).tecnico[0].id;
+          this.nueva_visita.fecha_visita = JSON.parse(localStorage.getItem("agenda")).fecha;
+          this.nueva_visita.hora = JSON.parse(localStorage.getItem("agenda")).event;
+          this.heroService.service_general("servicios/Agregar_visita", this.nueva_visita).subscribe((value) => {
+
+            this.heroService.service_general_get("servicios/" + this.id, {}).subscribe((value) => {
+              console.log(value[0].visitas);
+              this.detalle_visita = value[0].visitas;
+            });
+          });
+        });
+      });
     });
   }
 }
@@ -328,7 +445,7 @@ export class DialogFinal {
   editar_estatus() {
     console.log(this.data);
 
-    
+
   }
 }
 
@@ -408,3 +525,51 @@ export class DialogCancelarEstatus {
   styles: [`.example-pizza-party { color: hotpink; }`],
 })
 export class PizzaPartyComponent { }
+
+export class Productos_Servicio {
+  id_producto: number;
+  modelo: string;
+  sku: string;
+  tipo: string;
+  hora_tecnico: number;
+  hora_precio: string;
+  precio_visita: number;
+}
+
+export class visita {
+  id: number;
+  fecha_visita: string;
+  id_tecnico: number;
+  hora: string;
+}
+
+export class nueva_visita {
+  id_servicio: number;
+  id_direccion: number;
+  fecha_visita: string;
+  id_tecnico: number;
+  hora: string;
+  hora_fin: string;
+  actividades_realizar: string;
+  concepto: string;
+  cantidad: number;
+  pagado: boolean = false;
+  pago_pendiente: boolean = false;
+  garantia: boolean = false;
+  fecha_deposito: string;
+  fecha_inicio_visita: string;
+  no_operacion: string;
+  comprobante: string;
+  terminos_condiciones: boolean = true;
+  factura: boolean = false;
+  estatus: number
+
+  servicio_producto: Rel_servicio_visita_producto[] = [];
+}
+
+export class Rel_servicio_visita_producto {
+  id_producto: number;
+  descripcion_cierre: string;
+  estatus: number = 1;
+
+}
