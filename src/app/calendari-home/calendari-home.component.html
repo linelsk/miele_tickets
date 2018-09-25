@@ -1,233 +1,169 @@
-<style>
 
-  .btn-default {
-    background-color: #EEEDEB;
-    color: #847d70;
-    border-color: #ddd;
-    padding-left: 50px;
-    padding-right: 50px;
-    font-weight: bold;
-  }
-
-  .btn-default-rojo {
-    background-color: #E60000;
-    color: #fff;
-    border-color: #E60000;
-  }
-
-    .btn-default-rojo:hover {
-      background-color: #E60000;
-      color: #fff;
-      border-color: #E60000;
-    }
-</style>
-<div style="padding-bottom: 5em; width:100%; height:50%">
-  <div class="row">
-    <div class="form-group col-xs-12">
-      <div class="col-xs-12 col-md-6" style="text-align:left; padding:0;">
-        <span style="display: inline-block; font-size: 18px; margin: 0; line-height: 1; font-weight: bold;">
-          Agendar visita.
-        </span>
-      </div>
-      <div class="col-xs-12 col-md-6" style="text-align:right; padding:0;">
-        <i class="fa fa-times" aria-hidden="true" (click)="onNoClick()" style="font-size:large"></i>
-      </div>
-    </div>
-    <div class="col-xs-12" style="padding-left:0; padding-right:0; padding-bottom:10px">
-      <mat-divider></mat-divider>
-    </div>
-
-    <div class="form-group col-xs-12">
-      <div class="col-md-3 col-xs-12" style="padding-left:0; padding-right:0; text-align:center;">
-        <div class="col-xs-12" style="padding-bottom:15px"></div>
-        <div class="col-xs-12 btn-group" style="padding-left:0; padding-right:0;">
-
-          <div class="btn btn-primary"
-               (click)="view = 'month'"
-               [class.active]="view === 'month'">
-            Mes
-          </div>
-          <div class="btn btn-primary"
-               (click)="view = 'week'"
-               [class.active]="view === 'week'">
-            Semana
-          </div>
-          <div class="btn btn-primary"
-               (click)="view = 'day'"
-               [class.active]="view === 'day'">
-            Día
-          </div>
-        </div>
-        <div class="col-xs-12" style="padding-bottom:19px"></div>
-
-        <div class="col-xs-12" style="border: 1px solid #e1e1e1; text-align:left; padding: 10px 6px 10px 6px; padding:0; height:auto">
-          <div class="col-xs-12">
-            <br />
-            <label style="display: inline-block;
-                          max-width: 100%;
-                          margin-bottom: 5px;
-                          font-weight: bold;
-                          color: #847d70;">Técnicos</label>
-            <br />
-            <!--<mat-radio-group id="tecnico" name="tecnico" #tecnico="ngModel" [(ngModel)]="rdtecnico">
-              <mat-radio-button *ngFor="let option of data.tecnicos" [value]="option" (click)="filtro_tecnico(option);">
-                <a style="display: inline-block;
-                          max-width: 100%;
-                          font-weight: 100;
-                          color: inherit;" title="{{option.tecnico}}">{{option.tecnico | slice:0:15}}<span *ngIf="option.tecnico.length > 20">...</span></a>
-              </mat-radio-button><br />
-            </mat-radio-group>-->
-            <!--<div *ngFor="let option of data.tecnicos; let i = index">
-              <mat-checkbox class="example-margin" id="tecnico" name="tecnico" #tecnico="ngModel" [(ngModel)]="rdtecnico" [formControlName]="i" (change)="filtro_tecnico(option); set_tecnico(option);">
-                <a style="display: inline-block;
-                          max-width: 100%;
-                          font-weight: 100;
-                          color: inherit;" title="{{option.tecnico}}">{{option.tecnico | slice:0:15}}<span *ngIf="option.tecnico.length > 20">...</span></a>
-              </mat-checkbox>
-            </div>-->
-            <mat-checkbox class="example-margin" *ngFor="let option of data.tecnicos; let i = index" [value]="option" (change)="filtro_tecnico($event, option);">
-              <a style="display: inline-block;
-                          max-width: 100%;
-                          font-weight: 100;
-                          color: inherit;" title="{{option.tecnico}}">{{option.tecnico | slice:0:45}}<span *ngIf="option.tecnico.length > 45">...</span></a>
-            </mat-checkbox>
-            <br />
-            <br />
-            <label class="small" style="color:#A5000D;">Nota: para este servicio se necesitan {{data.no_tecnico}} técnico</label>
-          </div>
-          <div class="col-xs-12" style="padding-left:0; padding-right:0; padding-bottom:10px">
-            <mat-divider></mat-divider>
-          </div>
-          <div class="col-xs-12">
-            <br />
-            <label style="display: inline-block;
-                          max-width: 100%;
-                          margin-bottom: 5px;
-                          font-weight: bold;
-                          color: #847d70;">Código de colores</label>
-            <br />
-            <span *ngFor="let option of data.tecnicos">
-              <span [style.color]="option.tecnico_color"><i class="fa fa-square" style="font-size:medium" aria-hidden="true"></i>&nbsp;&nbsp;</span>
-              <label style="display: inline-block;
-                          max-width: 100%;
-                          font-weight: 300;
-                          font-size:medium;
-                          color: inherit;" title="{{option.tecnico}}">{{option.tecnico | slice:0:45}}<span *ngIf="option.tecnico.length > 45">...</span></label><br />
-            </span><br />
-
-          </div>
-        </div>
-        <div class="col-xs-12" style="padding-bottom:15px"></div>
-        <button mat-button class="btn-default btn-primary btn-xs" (click)="ver_todos();">Borrar filtros</button>
-      </div>
-      <div class="col-md-9 col-xs-12" style="padding:0;">
-        <div class="col-xs-12 text-center">
-          <div class="btn-group" style="float: none;">
-            <div class="btn btn-primary" style="float: none;"
-                 mwlCalendarPreviousView
-                 [view]="view"
-                 [(viewDate)]="viewDate">
-              <i class="fa fa-angle-left" aria-hidden="true"></i>
+<div class="content-wrapper">
+  <br class="visible-xs" />
+  <br class="visible-xs" />
+  <form #verservicioForm="ngForm">
+    <section class="content">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="box">
+            <div class="box-header with-border">
+              <div class="col-xs-12">
+                <h2 class="box-title negritas">Calendario</h2>
+                <div class="box-tools pull-right">
+                  <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                    <i class="fa fa-minus"></i>
+                  </button>
+                </div>
+              </div>
             </div>
-            <div class="btn btn-outline-secondary" style="float: none;"
-                 mwlCalendarToday
-                 [(viewDate)]="viewDate">
-              <span style="font-size:x-large">
-                {{ viewDate | calendarDate:'weekViewColumnHeader':locale }}, {{ viewDate | calendarDate:'monthViewTitle':locale }}
-              </span>
+            <!-- /.box-header -->
+            <form #buscarForm="ngForm">
+              <div class="box-body">
+                <div class="form-group col-xs-12">                  
+                  <div class="col-md-12 col-xs-12" style="padding:0;">
+                    <div class="col-md-3 col-xs-12 text-left">
+                      <div class="btn-group">
 
-            </div>
-            <div class="btn btn-primary" style="float: none;"
-                 mwlCalendarNextView
-                 [view]="view"
-                 [(viewDate)]="viewDate">
-              <i class="fa fa-angle-right" aria-hidden="true"></i>
-            </div>
-          </div>
-        </div>
-        <div class="col-xs-12" style="padding-bottom:20px"></div>
-        <ng-template #customCellTemplate let-day="day" let-locale="locale">
-          <div class="cal-cell-top">
-            <span class="cal-day-badge" *ngIf="day.badgeTotal > 0">{{ day.badgeTotal }}</span>
-            <span class="cal-day-number">{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span>
-          </div>
-          <div class="cal-events" *ngIf="day.events.length > 0">
-            <div class="cal-event"
-                 *ngFor="let event of day.events"
-                 [style.backgroundColor]="event.color.primary"
-                 [ngClass]="event?.cssClass"
-                 (mouseenter)="highlightDay.emit({event: event})"
-                 (mouseleave)="unhighlightDay.emit({event: event})"
-                 [mwlCalendarTooltip]="event.title | calendarEventTitle:'monthTooltip':event"
-                 [tooltipPlacement]="tooltipPlacement"
-                 [tooltipEvent]="event"
-                 [tooltipTemplate]="tooltipTemplate"
-                 [tooltipAppendToBody]="tooltipAppendToBody"
-                 mwlDraggable
-                 [dropData]="{event: event}"
-                 [dragAxis]="{x: event.draggable, y: event.draggable}"
-                 (mwlClick)="onEventClick($event, event)">
-            </div>
-          </div>
-          <small style="margin: 5px; color:#A5000D;" *ngIf="day.events.length == 0">No hay visitas agendadas para este día</small>
-        </ng-template>
+                        <div class="btn btn-primary"
+                             (click)="view = 'month'"
+                             [class.active]="view === 'month'">
+                          Mes
+                        </div>
+                        <div class="btn btn-primary"
+                             (click)="view = 'week'"
+                             [class.active]="view === 'week'">
+                          Semana
+                        </div>
+                        <div class="btn btn-primary"
+                             (click)="view = 'day'"
+                             [class.active]="view === 'day'">
+                          Día
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-5 col-md-offset-1 text-center">
+                      <div class="btn-group" style="float: none;">
+                        <div class="btn btn-primary" style="float: none;"
+                             mwlCalendarPreviousView
+                             [view]="view"
+                             [(viewDate)]="viewDate">
+                          <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        </div>
+                        <div class="btn btn-outline-secondary" style="float: none;"
+                             mwlCalendarToday
+                             [(viewDate)]="viewDate">
+                          <span style="font-size:x-large">
+                            {{ viewDate | calendarDate:'weekViewColumnHeader':locale }}, {{ viewDate | calendarDate:'monthViewTitle':locale }}
+                          </span>
 
-        <ng-template #hourSegmentTemplate let-segment="segment" let-locale="locale" style="height: 30px;">
-          <div class="cal-hour-segment"
-               [class.cal-hour-start]="segment.isStart"
-               [class.cal-after-hour-start]="!segment.isStart"
-               [ngClass]="segment.cssClass">
-            <span class="cal-time">
-              {{ segment.date | calendarDate:'dayViewHour':locale }}
-            </span>
+                        </div>
+                        <div class="btn btn-primary" style="float: none;"
+                             mwlCalendarNextView
+                             [view]="view"
+                             [(viewDate)]="viewDate">
+                          <i class="fa fa-angle-right" aria-hidden="true"></i>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-12" style="padding:0 50px 0 50px">
+                      <ng-template #customCellTemplate let-day="day" let-locale="locale">
+                        <div class="cal-cell-top">
+                          <span class="cal-day-badge" *ngIf="day.badgeTotal > 0">{{ day.badgeTotal }}</span>
+                          <span class="cal-day-number">{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span>
+                        </div>
+                        <div class="cal-events" *ngIf="day.events.length > 0">
+                          <div class="cal-event"
+                               *ngFor="let event of day.events"
+                               [style.backgroundColor]="event.color.primary"
+                               [ngClass]="event?.cssClass"
+                               (mouseenter)="highlightDay.emit({event: event})"
+                               (mouseleave)="unhighlightDay.emit({event: event})"
+                               [mwlCalendarTooltip]="event.title | calendarEventTitle:'monthTooltip':event"
+                               [tooltipPlacement]="tooltipPlacement"
+                               [tooltipEvent]="event"
+                               [tooltipTemplate]="tooltipTemplate"
+                               [tooltipAppendToBody]="tooltipAppendToBody"
+                               mwlDraggable
+                               [dropData]="{event: event}"
+                               [dragAxis]="{x: event.draggable, y: event.draggable}"
+                               (mwlClick)="onEventClick($event, event)">
+                          </div>
+                        </div>
+                        <small style="margin: 5px; color:#A5000D;" *ngIf="day.events.length == 0">No hay visitas agendadas para este día</small>
+                      </ng-template>
+
+                      <ng-template #hourSegmentTemplate let-segment="segment" let-locale="locale" style="height: 30px;">
+                        <div class="cal-hour-segment"
+                             [class.cal-hour-start]="segment.isStart"
+                             [class.cal-after-hour-start]="!segment.isStart"
+                             [ngClass]="segment.cssClass">
+                          <span class="cal-time">
+                            {{ segment.date | calendarDate:'dayViewHour':locale }}
+                          </span>
+                        </div>
+                      </ng-template>
+                      <div class="col-xs-12" style="padding:0;">
+                        <div [ngSwitch]="view">
+                          <mwl-calendar-month-view *ngSwitchCase="'month'"
+                                                   [viewDate]="viewDate"
+                                                   [events]="events"
+                                                   [locale]="locale"
+                                                   [weekStartsOn]="weekStartsOn"
+                                                   [weekendDays]="weekendDays"
+                                                   [refresh]="refresh"
+                                                   (dayClicked)="viewDate = $event.day.date; view = 'week'"
+                                                   [cellTemplate]="customCellTemplate"
+                                                   [excludeDays]="excludeDays">
+                          </mwl-calendar-month-view>
+                          <iq-calendar-week-hours-view *ngSwitchCase="'week'"
+                                                       [viewDate]="viewDate"
+                                                       [events]="events"
+                                                       [locale]="locale"
+                                                       [weekStartsOn]="weekStartsOn"
+                                                       [weekendDays]="weekendDays"
+                                                       [hourSegments]="1"
+                                                       [dayStartHour]="8"
+                                                       [dayEndHour]="18"
+                                                       (eventClicked)="eventClicked($event)"
+                                                       (hourSegmentClicked)="hourSegmentClicked($event)"
+                                                       (eventTimesChanged)="eventTimesChanged($event)"
+                                                       [refresh]="refresh"
+                                                       (dayHeaderClicked)="viewDate = $event.day.date; view = 'day'"
+                                                       [hourSegmentTemplate]="hourSegmentTemplate"
+                                                       [excludeDays]="excludeDays">
+                          </iq-calendar-week-hours-view>
+                          <mwl-calendar-day-view *ngSwitchCase="'day'"
+                                                 [viewDate]="viewDate"
+                                                 [events]="events"
+                                                 [locale]="locale"
+                                                 [hourSegments]="1"
+                                                 [dayStartHour]="8"
+                                                 [dayEndHour]="18"
+                                                 [refresh]="refresh">
+                          </mwl-calendar-day-view>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-xs-12" style="padding-bottom:20px"></div>
+
+                    <div class="col-xs-12" style="padding-bottom:10px"></div>
+
+                  </div>
+                </div>
+              </div>
+            </form>
+            <!-- /.box -->
           </div>
-        </ng-template>
-        <div class="col-xs-12" style="padding:0;">
-          <div [ngSwitch]="view">
-            <mwl-calendar-month-view *ngSwitchCase="'month'"
-                                     [viewDate]="viewDate"
-                                     [events]="events"
-                                     [locale]="locale"
-                                     [weekStartsOn]="weekStartsOn"
-                                     [weekendDays]="weekendDays"
-                                     [refresh]="refresh"
-                                     (dayClicked)="viewDate = $event.day.date; view = 'week'"
-                                     [cellTemplate]="customCellTemplate"
-                                     [excludeDays]="excludeDays">
-            </mwl-calendar-month-view>
-            <iq-calendar-week-hours-view *ngSwitchCase="'week'"
-                                         [viewDate]="viewDate"
-                                         [events]="events"
-                                         [locale]="locale"
-                                         [weekStartsOn]="weekStartsOn"
-                                         [weekendDays]="weekendDays"
-                                         [hourSegments]="1"
-                                         [dayStartHour]="8"
-                                         [dayEndHour]="18"
-                                         (eventClicked)="eventClicked($event)"
-                                         (hourSegmentClicked)="hourSegmentClicked($event)"
-                                         (eventTimesChanged)="eventTimesChanged($event)"
-                                         [refresh]="refresh"
-                                         (dayHeaderClicked)="viewDate = $event.day.date; view = 'day'"
-                                         [hourSegmentTemplate]="hourSegmentTemplate"
-                                         [excludeDays]="excludeDays">
-            </iq-calendar-week-hours-view>
-            <mwl-calendar-day-view *ngSwitchCase="'day'"
-                                   [viewDate]="viewDate"
-                                   [events]="events"
-                                   [locale]="locale"
-                                   [hourSegments]="1"
-                                   [dayStartHour]="9"
-                                   [dayEndHour]="18"
-                                   [refresh]="refresh">
-            </mwl-calendar-day-view>
-          </div>
-        </div>
-        <div class="col-xs-12" style="padding-bottom:10px"></div>
-        <div class="col-xs-12" style="text-align:center;">
-          <button mat-button [mat-dialog-close]="data" cdkFocusInitial class="btn-default btn-default-rojo">Agendar</button>
+          <!-- /.col -->
         </div>
       </div>
-    </div>
-  </div>
+    </section>
+    <!-- /.content -->
+  </form>
 </div>
+
+
+
+
+

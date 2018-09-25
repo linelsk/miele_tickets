@@ -30,9 +30,10 @@ export class InfoTecnicoComponent implements OnInit {
   public ischeck = false;
   public sub: any;
   id: number;
+  public text_busqueda: string;
   public mask = ['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]
 
-  constructor(private heroService: DatosService, private route: ActivatedRoute, public snackBar: MatSnackBar, public dialog: MatDialog,) { }
+  constructor(private heroService: DatosService, private route: ActivatedRoute, public snackBar: MatSnackBar, public dialog: MatDialog, ) { }
 
   ngOnInit() {
     this.body.classList.add('skin-blue');
@@ -71,12 +72,7 @@ export class InfoTecnicoComponent implements OnInit {
             }
           }
         });
-
-      this.heroService.service_general("Refacciones/Inventario_tecnico", value[0])
-        .subscribe((result) => {
-          this.dataSource.data = result;
-        });
-
+      this.buscar();
       this.tecnico = value[0]
     });
 
@@ -159,6 +155,34 @@ export class InfoTecnicoComponent implements OnInit {
     console.log(this.tecnico);
   }
 
+  buscar() {
+    this.sub = this.route.params.subscribe(params => {
+      this.id = +params['id'];
+    });
+
+    this.heroService.service_general("Refacciones/Inventario_tecnico", {
+      id: this.id,
+      noalmacen: this.text_busqueda
+    })
+      .subscribe((result) => {
+        this.dataSource.data = result;
+      });
+  }
+
+  limpiartabla() {
+    this.sub = this.route.params.subscribe(params => {
+      this.id = +params['id'];
+    });
+
+    this.heroService.service_general("Refacciones/Inventario_tecnico", {
+      id: this.id,
+      noalmacen: ""
+    })
+      .subscribe((result) => {
+        this.dataSource.data = result;
+        this.text_busqueda = "";
+      });
+  }
 
   editar_refaccion(obj): void {
     console.log(obj);
@@ -191,7 +215,7 @@ export class InfoTecnicoComponent implements OnInit {
           else {
             this.dataSource.data = result;
           }
-          
+
         });
     });
   }

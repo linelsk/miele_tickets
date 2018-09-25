@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var moment = require("moment");
 var Clientes = /** @class */ (function () {
     function Clientes() {
+        this.datos_fiscales = new datosfiscales();
     }
     return Clientes;
 }());
@@ -30,6 +31,11 @@ var servicio = /** @class */ (function () {
 exports.servicio = servicio;
 var visita = /** @class */ (function () {
     function visita() {
+        this.pago_pendiente = false;
+        this.asignacion_refacciones = false;
+        this.pre_diagnostico = false;
+        this.si_acepto_tecnico_refaccion = false;
+        this.entrega_refacciones = false;
     }
     return visita;
 }());

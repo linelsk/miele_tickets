@@ -57,14 +57,16 @@
     "jquery-slimscroll": "^1.3.8",
     "jquery-sparkline": "^2.4.0",
     "jqueryui": "^1.11.1",
+    "jspdf": "^1.4.1",
     "moment": "^2.18.1",
     "morris.js": "^0.5.0",
     "ng2-daterange-picker": "^1.1.0",
     "ng2-daterangepicker": "^2.0.12",
     "ngx-chips": "^1.6.3",
+    "ngx-permissions": "^4.1.0",
     "npm": "^5.3.0",
     "raphael": "^2.2.7",
-    "rxjs": "^5.5.5",
+    "rxjs": "^5.5.12",
     "zone.js": "^0.8.17"
   },
   "devDependencies": {

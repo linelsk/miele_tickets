@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { DatosService } from '../../datos.service';
 
 @Component({
   selector: 'app-starter-left-side',
@@ -7,12 +8,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class StarterLeftSideComponent implements OnInit {
 
-  constructor() { }
+  constructor(private heroService: DatosService) { }
 
   ngOnInit() {
-
-    //console.log(document.documentElement.clientHeight);
-    console.log(document.body.clientHeight);
+    
   }
 
 }

@@ -64,6 +64,7 @@ export class VerServicioComponent implements OnInit {
       this.heroService.service_general("Clientes/Busqueda", {
         "texto": this.text_busqueda
       }).subscribe((value) => {
+        console.log(value);
         setTimeout(() => {
           this.preventAbuse = false;
           this.valid = false;

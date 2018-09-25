@@ -12,6 +12,7 @@ import { of } from 'rxjs/observable/of';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
 import * as moment from 'moment';
+import { NgxPermissionsService } from 'ngx-permissions';
 
 const httpOptions = {
  //headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -24,7 +25,7 @@ export class DatosService {
   private heroesUrl = 'http://localhost:50570/api/';  // URL to web api
   public imageUrl = 'http://104.130.1.18/';  // URL images
 
-  constructor(private http: HttpClient, private https: Http) { }
+  constructor(private http: HttpClient, private https: Http, private permissionsService: NgxPermissionsService) { }
 
   login(name, pass): Observable<any> {
     //console.log(name + pass);
@@ -160,6 +161,11 @@ export class DatosService {
     return false;
   }
 
+  getrol(): void {
+    let rol: any[] = [localStorage.getItem("rol")];
+    this.permissionsService.loadPermissions([rol.toString().trim()]);
+  }
+
   verificarsesion() {
     //console.log(localStorage.getItem("token"));
     let headers = new Headers({
@@ -192,6 +198,13 @@ export class DatosService {
     input.append("file", fileToUpload);
 
     return this.http.post(this.heroesUrl + "Servicios/Upload", input);
+  }
+
+  upload_xls(fileToUpload: any) {
+    let input = new FormData();
+    input.append("file", fileToUpload);
+
+    return this.http.post(this.heroesUrl + "Servicios/Upload_xls", input);
   }
 
   //Validaciones

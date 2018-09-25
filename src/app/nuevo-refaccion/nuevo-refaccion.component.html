@@ -1,141 +1,220 @@
 <div class="content-wrapper">
   <br class="visible-xs" />
   <br class="visible-xs" />
-  <section class="content">
-    <div class="col-md-12" style="padding:0;">
-      <div class="box">
-        <div class="box-header with-border">
-          <div class="col-xs-12" style="padding:0;">
-            <h2 class="box-title negritas">Agregar refacciones</h2>
-            <div class="box-tools pull-right">
-              <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                <i class="fa fa-minus"></i>
-              </button>
-            </div>
-          </div>
-        </div>
-        <!-- /.box-header -->
-        <form #buscarForm="ngForm">
-          <div class="box-body">
-            <div class="row">
-              <div class="col-md-12" style="margin-bottom:15px;">
-                <label>Número de refacción: <strong style="color:#A5000D">{{refaccion.no_material}}</strong></label>
-              </div>
-              <div class="col-md-12">
-                <div class="col-md-2" style="padding-left:0;">
-                  <mat-form-field class="full-width">
-                    <input matInput type="number" id="cantidad" name="cantidad" [(ngModel)]="refaccion.cantidad" #cantidad="ngModel" placeholder="Cantidad">
-                  </mat-form-field>
-                </div>
-                <div class="col-md-5" style="padding-right:0;">
-                  <mat-form-field class="full-width">
-                    <input matInput type="text" id="descripcion" name="descripcion" [(ngModel)]="refaccion.descripcion" #descripcion="ngModel" placeholder="Descripción">
-                  </mat-form-field>
-                </div>
-                <div class="col-md-5" style="padding-right:0;">
-                  <mat-form-field class="full-width">
-                    <mat-select placeholder="Lista de precios" id="listaprecio" name="listaprecio" #listaprecio="ngModel" [(ngModel)]="refaccion.id_grupo_precio">
-                      <mat-option *ngFor="let value of listaprecios; trackBy: index;" [value]="value.id">
-                        Grupo: {{value.grupo_precio}} - ${{value.precio_sin_iva}}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field>
+  <form #verservicioForm="ngForm">
+    <section class="content">
+      <div class="row">
+        <form #cambiarForm="ngForm">          
+          <div class="col-md-12">
+            <div class="box">
+              <div class="box-header with-border">
+                <h3 class="box-title negritas">Agregar refacciones</h3>
+                <div class="box-tools pull-right">
+                  <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                    <i class="fa fa-minus"></i>
+                  </button>
                 </div>
               </div>
-              <div class="col-xs-12" style="text-align:center; margin-bottom:15px">
-                <button mat-button cdkFocusInitial class="btn-default btn-default-rojo" (click)="guardar_refaccion();">Guardar</button>
-              </div>
-            </div>
-
-          </div>
-        </form>
-        <!-- /.box -->
-      </div>
-      <!-- /.col -->
-    </div>
-  </section>
-
-  <section class="content">
-    <div class="col-md-12" style="padding:0;">
-      <div class="box">
-        <div class="box-header with-border">
-          <div class="col-xs-12" style="padding:0;">
-            <h2 class="box-title negritas">Carga masiva</h2>
-            <div class="box-tools pull-right">
-              <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                <i class="fa fa-minus"></i>
-              </button>
-            </div>
-          </div>
-        </div>
-        <!-- /.box-header -->
-        <form #buscarForm="ngForm">
-          <div class="box-body">
-            <div class="row">
-              <div class="col-xs-12" style="text-align:center; margin-bottom:15px">
-                <div class="upload-btn-wrapper" style="cursor:pointer">
-                  <label>Para subir varios registros, da click en el botón </label> <br /><br /><button mat-button cdkFocusInitial class="btn-default btn-default-rojo"><i class="fa fa-upload" aria-hidden="true"></i> Subir excel</button>
-                  <input type="file" name="myfile" />
+              <!-- /.box-header -->
+              <div class="box-body">
+                <div class="input-group col-xs-12" style="margin-bottom:20px;">
+                  <div class="col-md-3">
+                    <mat-form-field class="full-width">
+                      <input matInput type="text" id="no_material" name="no_material" [(ngModel)]="refaccion.no_material" #no_material="ngModel" (change)="validar_refaccion()" placeholder="Número de refacción">
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-3">
+                    <mat-form-field class="full-width">
+                      <input matInput type="text" id="descripcion" name="descripcion" [(ngModel)]="refaccion.descripcion" #descripcion="ngModel" placeholder="Descripción">
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-3">
+                    <mat-form-field class="full-width">
+                      <mat-select placeholder="Lista de precios" id="listaprecio" name="listaprecio" #listaprecio="ngModel" [(ngModel)]="refaccion.id_grupo_precio">
+                        <mat-option *ngFor="let value of listaprecios; trackBy: index;" [value]="value.id">
+                          Grupo: {{value.grupo_precio}} - ${{value.precio_sin_iva}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-3">
+                    <mat-form-field class="full-width">
+                      <input matInput type="number" id="cantidad" name="cantidad" [(ngModel)]="refaccion.cantidad" #cantidad="ngModel" placeholder="Cantidad">
+                    </mat-form-field>
+                  </div>
+                  <span class="input-group-btn" style="padding-right:15px;">
+                    <button mat-button type="submit" class="pull-center btn btn-default btn-default-rojo" (click)="guardar_refaccion()" style="margin-right:5px;">
+                      Guardar
+                    </button>
+                    <div class="upload-btn-wrapper" style="cursor:pointer">
+                      <button mat-button class="btn-default btn-default" (click)="addFile()"><i class="fa fa-upload" aria-hidden="true"></i> Subir excel</button>
+                      <input #fileInput type="file" (change)="handleFileInput($event.target.files)" />
+                    </div>
+                  </span>
                 </div>
-              </div>
 
+                <div class="col-xs-12" style="text-align:center; margin-bottom:15px;" *ngIf="excel_visible">
+                  <div class="example-container mat-elevation-z2">
+                    <mat-table #table [dataSource]="dataSource_excel">
 
-              <div class="col-xs-12" style="padding:0;">
-                <div class="col-xs-12" style="padding:0;">
-                  <div class="box-header with-border">
-                    <h3 class="box-title negritas">Refacciones</h3>
+                      <!-- refacción Column -->
+                      <ng-container matColumnDef="no">
+                        <mat-header-cell *matHeaderCellDef> No. de refacción </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                          <a style="cursor:pointer; color:inherit">{{element.no_material}}</a>
+                        </mat-cell>
+                      </ng-container>
+
+                      <!-- Descripción Column -->
+                      <ng-container matColumnDef="nombre">
+                        <mat-header-cell *matHeaderCellDef> Descripción </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                          <a style="cursor:pointer; color:inherit">{{element.descripcion}}</a>
+                        </mat-cell>
+                      </ng-container>
+
+                      <!-- Cantidad Column -->
+                      <ng-container matColumnDef="cantidad">
+                        <mat-header-cell *matHeaderCellDef> Cantidad </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                          <a style="cursor:pointer; color:inherit">{{element.cantidad}}</a>
+                        </mat-cell>
+                      </ng-container>
+
+                      <!-- Editar Column -->
+                      <ng-container matColumnDef="editar">
+                        <mat-header-cell *matHeaderCellDef>  </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                          <button type="submit" class="pull-center btn btn-default btn-default-rojo btn-sm" [disabled]="preventAbuse" style="margin-right:5px;padding-left:10px;padding-right:10px" (click)="editar_refaccion(element);">
+                            Editar
+                          </button>
+                          <button type="submit" class="pull-center btn btn-default btn-default-rojo btn-sm" [disabled]="preventAbuse" style="margin-right:5px;padding-left:10px;padding-right:10px" (click)="asignar_refaccion(element);">
+                            Asignar
+                          </button>
+                          <button type="submit" class="pull-center btn btn-default btn-sm" [disabled]="preventAbuse" style="margin-right:5px; padding-left:10px;padding-right:10px" (click)="eliminar_refaccion(element);">
+                            Eliminar
+                          </button>
+                        </mat-cell>
+                      </ng-container>
+
+                      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                    </mat-table>
+
+                    <mat-paginator #paginator
+                                   [pageSize]="5"
+                                   [pageSizeOptions]="[5, 10]">
+                    </mat-paginator>
                   </div>
                 </div>
-              </div>
-              <div class="col-md-12">
-                <mat-divider></mat-divider>
-              </div>
-              <div class="col-xs-12" style="text-align:center;">
-                <div class="example-container mat-elevation-z2">
-                  <mat-table #table [dataSource]="dataSource">
-
-                    <!-- refacción Column -->
-                    <ng-container matColumnDef="no">
-                      <mat-header-cell *matHeaderCellDef> No. de refacción </mat-header-cell>
-                      <mat-cell *matCellDef="let element">
-                        <a style="cursor:pointer; color:inherit">{{element.no_material}}</a>
-                      </mat-cell>
-                    </ng-container>
-
-                    <!-- Descripción Column -->
-                    <ng-container matColumnDef="nombre">
-                      <mat-header-cell *matHeaderCellDef> Descripción </mat-header-cell>
-                      <mat-cell *matCellDef="let element">
-                        <a style="cursor:pointer; color:inherit">{{element.descripcion}}</a>
-                      </mat-cell>
-                    </ng-container>
-
-                    <!-- Cantidad Column -->
-                    <ng-container matColumnDef="cantidad">
-                      <mat-header-cell *matHeaderCellDef> Cantidad </mat-header-cell>
-                      <mat-cell *matCellDef="let element">
-                        <a style="cursor:pointer; color:inherit">{{element.cantidad}}</a>
-                      </mat-cell>
-                    </ng-container>
-                    
-                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-                  </mat-table>
-
-                  <mat-paginator #paginator
-                                 [pageSize]="5"
-                                 [pageSizeOptions]="[5, 10]">
-                  </mat-paginator>
+                <div class="col-xs-12" style="text-align:center;" *ngIf="excel_visible">
+                  <button mat-button type="button" class="pull-center btn btn-default btn-default-rojo" (click)="Guardar_Refacciones()" style="margin-right:5px;">
+                    Guardar en base de datos
+                  </button>
                 </div>
               </div>
             </div>
-
+            <!-- /.box -->
           </div>
+
+          <div class="col-md-12">
+            <div class="box">
+              <div class="box-header with-border">
+                <h3 class="box-title negritas">Refacciones</h3>
+                <div class="box-tools pull-right">
+                  <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                    <i class="fa fa-minus"></i>
+                  </button>
+                </div>
+              </div>
+              <!-- /.box-header -->
+              <div class="box-body">
+                <form #buscarForm="ngForm">
+                  <div class="box-body">
+                    <div class="input-group col-xs-12">
+                      <div class="col-md-12">
+                        <mat-form-field class="full-width">
+                          <input matInput type="text" id="busqueda" name="busqueda" [(ngModel)]="text_busqueda" #busqueda="ngModel" placeholder="Buscar por: Número de refacion, nombre"
+                                 [errorStateMatcher]="matcher">
+                          <mat-error *ngIf="busqueda.hasError('required')">
+                            Es necesario ingresar alguna <strong>busqueda</strong>
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                      <span class="input-group-btn" style="padding-right:10px;">
+                        <button type="submit" class="pull-center btn btn-default btn-default-rojo" (click)="buscar()" [disabled]="preventAbuse" style="margin-right:5px;">
+                          {{ preventAbuse ? 'Buscando...' : 'Buscar' }}
+                        </button>
+                      </span>
+                    </div>
+                    <br />
+
+                    <div class="col-xs-12" style="text-align:center;">
+                      <div class="example-container mat-elevation-z2">
+                        <mat-table #table [dataSource]="dataSource">
+
+                          <!-- refacción Column -->
+                          <ng-container matColumnDef="no">
+                            <mat-header-cell *matHeaderCellDef> No. de refacción </mat-header-cell>
+                            <mat-cell *matCellDef="let element">
+                              <a style="cursor:pointer; color:inherit">{{element.no_material}}</a>
+                            </mat-cell>
+                          </ng-container>
+
+                          <!-- Descripción Column -->
+                          <ng-container matColumnDef="nombre">
+                            <mat-header-cell *matHeaderCellDef> Descripción </mat-header-cell>
+                            <mat-cell *matCellDef="let element">
+                              <a style="cursor:pointer; color:inherit">{{element.descripcion}}</a>
+                            </mat-cell>
+                          </ng-container>
+
+                          <!-- Cantidad Column -->
+                          <ng-container matColumnDef="cantidad">
+                            <mat-header-cell *matHeaderCellDef> Cantidad </mat-header-cell>
+                            <mat-cell *matCellDef="let element">
+                              <a style="cursor:pointer; color:inherit">{{element.cantidad}}</a>
+                            </mat-cell>
+                          </ng-container>
+
+                          <!-- Editar Column -->
+                          <!--<ng-container matColumnDef="editar">
+                            <mat-header-cell *matHeaderCellDef>  </mat-header-cell>
+                            <mat-cell *matCellDef="let element">
+                              <button type="submit" class="pull-center btn btn-default btn-default-rojo btn-sm" [disabled]="preventAbuse" style="margin-right:5px;padding-left:10px;padding-right:10px" (click)="editar_refaccion(element);">
+                                Editar
+                              </button>
+                              <button type="submit" class="pull-center btn btn-default btn-default-rojo btn-sm" [disabled]="preventAbuse" style="margin-right:5px;padding-left:10px;padding-right:10px" (click)="asignar_refaccion(element);">
+                                Asignar
+                              </button>
+                              <button type="submit" class="pull-center btn btn-default btn-sm" [disabled]="preventAbuse" style="margin-right:5px; padding-left:10px;padding-right:10px" (click)="eliminar_refaccion(element);">
+                                Eliminar
+                              </button>
+                            </mat-cell>
+                          </ng-container>-->
+
+                          <mat-header-row *matHeaderRowDef="displayedColumns_buscar"></mat-header-row>
+                          <mat-row *matRowDef="let row; columns: displayedColumns_buscar;"></mat-row>
+                        </mat-table>
+
+                        <mat-paginator #paginator
+                                       [pageSize]="5"
+                                       [pageSizeOptions]="[5, 10]">
+                        </mat-paginator>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <!-- /.box -->
+            </div>
+          </div>
+        
         </form>
-        <!-- /.box -->
+        <!-- /.col -->
       </div>
-      <!-- /.col -->
-    </div>
-  </section>
+    </section>
+    <!-- /.content -->
+  </form>
   <!-- /.content -->
 </div>

@@ -19,44 +19,35 @@
             <div class="box-body">
               <div class="form-group col-xs-12">
                 <br />
-                <mat-radio-group id="tipo_persona" name="tipo_persona" #tipo_persona="ngModel" [(ngModel)]="cliente.tipo_persona">
+                <mat-radio-group id="tipo_persona" class="accent" name="tipo_persona" #tipo_persona="ngModel" [(ngModel)]="cliente.tipo_persona">
                   <mat-radio-button value="Persona fisica">Persona fisica</mat-radio-button>
-                  <mat-radio-button value="Persona moral">Persona moral</mat-radio-button>
+                  <mat-radio-button value="Persona moral">Persona moral</mat-radio-button>                 
                 </mat-radio-group>
               </div>
               <div class="col-md-12" style="padding:0;">
                 <div class="form-group col-md-4" *ngIf="cliente.tipo_persona != 'Persona moral'">
                   <mat-form-field class="full-width">
                     <input type="text" matInput id="nombre" name="nombre" [(ngModel)]="cliente.nombre" #nombre="ngModel" placeholder="Nombre(s)" required>
+                    <mat-error *ngIf="nombre.dirty || nombre.pristine">
+                      Nombre es <strong>requerido</strong>
+                    </mat-error>
                   </mat-form-field>
-                  <div *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)"
-                       class="alert alert-danger">
-                    <div *ngIf="nombre.errors.required">
-                      Nombre requerido requerido.
-                    </div>
-                  </div>
                 </div>
                 <div class="form-group col-md-4" *ngIf="cliente.tipo_persona == 'Persona moral'">
                   <mat-form-field class="full-width">
                     <input type="text" matInput id="nombre_comercial" name="nombre_comercial" [(ngModel)]="cliente.nombre_comercial" #nombre_comercial="ngModel" placeholder="Nombre comercial" required>
+                    <mat-error *ngIf="nombre_comercial.dirty || nombre_comercial.pristine">
+                      Nombre comercial es <strong>requerido</strong>
+                    </mat-error>
                   </mat-form-field>
-                  <div *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)"
-                       class="alert alert-danger">
-                    <div *ngIf="nombre_comercial.errors.required">
-                      Nombre comercial requerido requerido.
-                    </div>
-                  </div>
                 </div>
                 <div class="form-group col-md-4" *ngIf="cliente.tipo_persona != 'Persona moral'">
                   <mat-form-field class="full-width">
                     <input type="text" matInput id="paterno" name="paterno" [(ngModel)]="cliente.paterno" #paterno="ngModel" placeholder="Apellido paterno" required>
+                    <mat-error *ngIf="paterno.dirty || paterno.pristine">
+                      Apellido paterno es <strong>requerido</strong>
+                    </mat-error>
                   </mat-form-field>
-                  <div *ngIf="paterno.invalid && (paterno.dirty || paterno.touched)"
-                       class="alert alert-danger">
-                    <div *ngIf="paterno.errors.required">
-                      Apellido paterno requerido.
-                    </div>
-                  </div>
                 </div>
                 <div class="form-group col-md-4" *ngIf="cliente.tipo_persona != 'Persona moral'">
                   <mat-form-field class="full-width">
@@ -66,41 +57,32 @@
                 <div class="form-group col-md-8" *ngIf="cliente.tipo_persona == 'Persona moral'">
                   <mat-form-field class="full-width">
                     <input type="text" matInput id="nombre_contacto" name="nombre_contacto" [(ngModel)]="cliente.nombre_contacto" #nombre_contacto="ngModel" placeholder="Nombre de contacto" required>
+                    <mat-error *ngIf="nombre_contacto.dirty || nombre_contacto.pristine">
+                      Nombre de contacto es <strong>requerido</strong>
+                    </mat-error>
                   </mat-form-field>
-                  <div *ngIf="nombre_contacto.invalid && (nombre.dirty || nombre.touched)"
-                       class="alert alert-danger">
-                    <div *ngIf="nombre.errors.required">
-                      Nombre de contacto requerido requerido.
-                    </div>
-                  </div>
                 </div>
               </div>
 
               <div class="col-md-12" style="padding:0;">
                 <div class="form-group col-md-4">
                   <mat-form-field class="full-width">
-                    <input type="email" matInput id="email" name="email" [(ngModel)]="cliente.email" #email="ngModel" placeholder="Email" required pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,6})+$">
-                  </mat-form-field>
-                  <div *ngIf="email.invalid && (email.dirty || email.touched)"
-                       class="alert alert-danger">
-                    <div *ngIf="email.errors.required">
-                      Email requerido.
-                    </div>
-                    <div *ngIf="email.errors && email.errors.pattern">
+                    <input type="email" matInput id="email" name="email" [(ngModel)]="cliente.email" #email="ngModel" placeholder="Email" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,6})+$" required>
+                    <!--<mat-error *ngIf="email.dirty || email.pristine">
+                      Email es <strong>requerido</strong>
+                    </mat-error>-->
+                    <mat-error *ngIf="email.errors && email.errors.pattern || email.dirty || email.pristine">
                       El Email no es valido (ej. ejemplo@do.com)
-                    </div>
-                  </div>
+                    </mat-error>
+                  </mat-form-field>
                 </div>
                 <div class="form-group col-md-4">
                   <mat-form-field class="full-width">
                     <input type="text" [textMask]="{mask: mask_cp, guide: false}" matInput id="cp" name="cp" [(ngModel)]="direccion.cp" #cp="ngModel" (ngModelChange)="sepomex();" placeholder="CP" required>
+                    <mat-error *ngIf="cp.dirty || cp.pristine">
+                      Código postal es <strong>requerido</strong>
+                    </mat-error>
                   </mat-form-field>
-                  <div *ngIf="cp.invalid && (cp.dirty || cp.touched)"
-                       class="alert alert-danger">
-                    <div *ngIf="cp.errors.required">
-                      C.P requerido.
-                    </div>
-                  </div>
                 </div>
                 <div class="form-group col-md-4">
                   <mat-form-field class="full-width">
@@ -109,46 +91,37 @@
                         {{value.desc_estado | uppercase}}
                       </mat-option>
                     </mat-select>
+                    <mat-error *ngIf="estado.dirty || estado.pristine">
+                      Estado es <strong>requerido</strong>
+                    </mat-error>
                   </mat-form-field>
-                  <div *ngIf="estado.invalid && (estado.dirty || estado.touched)"
-                       class="alert alert-danger">
-                    <div *ngIf="estado.errors.required">
-                      Estado requerido.
-                    </div>
-                  </div>
                 </div>
               </div>
 
               <div class="col-md-12" style="padding:0;">
                 <div class="form-group col-md-4">
                   <mat-form-field class="full-width">
-                    <mat-select placeholder="Delegación / Municipio" id="municipio" name="municipio" #municipio="ngModel" [(ngModel)]="direccion.id_municipio">
+                    <mat-select placeholder="Delegación / Municipio" id="municipio" name="municipio" #municipio="ngModel" [(ngModel)]="direccion.id_municipio" required>
                       <mat-option *ngFor="let value of municipios; trackBy: index;" [value]="value.id">
                         {{value.municipio | uppercase}}
                       </mat-option>
                     </mat-select>
+                    <mat-error *ngIf="municipio.dirty || municipio.pristine">
+                      Delegación / Municipio es <strong>requerido</strong>
+                    </mat-error>
                   </mat-form-field>
-                  <div *ngIf="municipio.invalid && (municipio.dirty || municipio.touched)"
-                       class="alert alert-danger">
-                    <div *ngIf="municipio.errors.required">
-                      Delegación / Municipio requerido.
-                    </div>
-                  </div>
                 </div>
                 <div class="form-group col-md-4">
                   <mat-form-field class="full-width">
-                    <mat-select placeholder="Colonia" id="colonia" name="colonia" #colonia="ngModel" [(ngModel)]="direccion.colonia" required>
-                      <mat-option *ngFor="let value of localidades; trackBy: index;" [value]="value.id_localidad">
+                    <mat-select placeholder="Colonia" id="colonia" name="colonia" #colonia="ngModel" [(ngModel)]="direccion.id_localidad" required>
+                      <mat-option *ngFor="let value of localidades; trackBy: index;" [value]="value.id_localidad" (click)="set_colonia(value.localidad);">
                         {{value.localidad | uppercase}}
                       </mat-option>
                     </mat-select>
+                    <mat-error *ngIf="colonia.dirty || colonia.pristine">
+                      Colonia es <strong>requerido</strong>
+                    </mat-error>
                   </mat-form-field>
-                  <div *ngIf="colonia.invalid && (colonia.dirty || colonia.touched)"
-                       class="alert alert-danger">
-                    <div *ngIf="colonia.errors.required">
-                      Colonia requerido.
-                    </div>
-                  </div>
                 </div>
                 <div class="form-group col-md-4">
                   <div class="col-md-4" style="padding-left:0; padding-right:1px;">
@@ -170,22 +143,23 @@
                           CERRADA
                         </mat-option>
                       </mat-select>
+                      <mat-error *ngIf="tipo_calle.dirty || tipo_calle.pristine">
+                        Calle es <strong>requerido</strong>
+                      </mat-error>
                     </mat-form-field>
+
                   </div>
                   <div class="col-md-8" style="padding-right:0; padding-left:0;">
                     <mat-form-field class="full-width">
                       <input type="text" matInput id="calle_numero" name="calle_numero" [(ngModel)]="direccion.calle_numero" (ngModelChange)="validar_calle()" #calle_numero="ngModel" placeholder="Nombre calle" required>
-                    </mat-form-field>
-                    <div *ngIf="calle_numero.invalid && (calle_numero.dirty || calle_numero.touched)"
-                         class="alert alert-danger">
-                      <div *ngIf="calle_numero.errors.required">
-                        Calle y número requerido.
+                      <mat-error *ngIf="calle_numero.dirty || calle_numero.pristine">
+                        Nombre de la calle es <strong>requerido</strong>
+                      </mat-error>
+                      <div *ngIf="_tipo_calle_direccion" class="mat-input-subscript-wrapper mat-form-field-subscript-wrapper" style="margin-top: 1.94567892em;">
+                        <div class="mat-error" role="alert">
+                          El nombre de la calle no puede contener la palabra <strong>{{_nombre_calle}}</strong></div> 
                       </div>
-                    </div>
-                    <div *ngIf="_tipo_calle_direccion"
-                         class="alert alert-danger">
-                      El nombre de la calle no puede contener la palabra {{_nombre_calle}}.
-                    </div>
+                    </mat-form-field>
                   </div>
                 </div>
               </div>
@@ -194,6 +168,9 @@
                 <div class="form-group col-md-4">
                   <mat-form-field class="full-width">
                     <input type="text" matInput id="NumExt" name="NumExt" [(ngModel)]="direccion.NumExt" #NumExt="ngModel" placeholder="No. exterior" required>
+                    <mat-error *ngIf="NumExt.dirty || NumExt.pristine">
+                      Número exterior es <strong>requerido</strong>
+                    </mat-error>
                   </mat-form-field>
                 </div>
                 <div class="form-group col-md-4">
@@ -204,13 +181,10 @@
                 <div class="form-group col-md-4">
                   <mat-form-field class="full-width">
                     <input type="text" [textMask]="{mask: mask_telefono, guide: false}" matInput id="telefono" name="telefono" [(ngModel)]="cliente.telefono" #telefono="ngModel" placeholder="Teléfono fijo" required>
+                    <mat-error *ngIf="telefono.dirty || telefono.pristine">
+                      Teléfono es <strong>requerido</strong>
+                    </mat-error>
                   </mat-form-field>
-                  <div *ngIf="telefono.invalid && (telefono.dirty || telefono.touched)"
-                       class="alert alert-danger">
-                    <div *ngIf="telefono.errors.required">
-                      Teléfono requerido.
-                    </div>
-                  </div>
                 </div>
               </div>
 
@@ -218,25 +192,19 @@
                 <div class="form-group col-md-4">
                   <mat-form-field class="full-width">
                     <input type="text" [textMask]="{mask: mask_telefono, guide: false}" matInput id="telefono_movil" name="telefono_movil" [(ngModel)]="cliente.telefono_movil" #telefono_movil="ngModel" placeholder="Teléfono celular" required>
+                    <mat-error *ngIf="telefono_movil.dirty || telefono_movil.pristine">
+                      Teléfono movil es <strong>requerido</strong>
+                    </mat-error>
                   </mat-form-field>
-                  <div *ngIf="telefono_movil.invalid && (telefono_movil.dirty || telefono_movil.touched)"
-                       class="alert alert-danger">
-                    <div *ngIf="telefono_movil.errors.required">
-                      Teléfono celular requerido.
-                    </div>
-                  </div>
                 </div>
 
                 <div class="form-group col-md-12">
                   <mat-form-field class="full-width">
                     <textarea matInput placeholder="Referencias" id="referencias" name="referencias" [(ngModel)]="cliente.referencias" #referencias="ngModel" required></textarea>
+                    <mat-error *ngIf="referencias.dirty || referencias.pristine">
+                      Referencia es <strong>requerido</strong>
+                    </mat-error>
                   </mat-form-field>
-                  <div *ngIf="referencias.invalid && (referencias.dirty || referencias.touched)"
-                       class="alert alert-danger">
-                    <div *ngIf="referencias.errors.required">
-                      Referencias requerido.
-                    </div>
-                  </div>
                 </div>
               </div>
 
@@ -264,102 +232,82 @@
                 <div class="form-group col-md-4">
                   <mat-form-field class="full-width">
                     <input type="text" matInput id="razon_social" name="razon_social" [(ngModel)]="datosfiscales.razon_social" #razon_social="ngModel" placeholder="Razón social" required>
+                    <mat-error *ngIf="razon_social.dirty || razon_social.pristine">
+                      Razón social es <strong>requerido</strong>
+                    </mat-error>
                   </mat-form-field>
-                  <div *ngIf="razon_social.invalid && (razon_social.dirty || razon_social.touched)"
-                       class="alert alert-danger">
-                    <div *ngIf="razon_social.errors.required">
-                      Razon social requerido.
-                    </div>
-                  </div>
                 </div>
                 <div class="form-group col-md-4">
                   <mat-form-field class="full-width">
                     <input type="text" matInput id="rfc" name="rfc" [(ngModel)]="datosfiscales.rfc" #rfc="ngModel" placeholder="RFC" required>
+                    <mat-error *ngIf="rfc.dirty || rfc.pristine">
+                      RFC es <strong>requerido</strong>
+                    </mat-error>
                   </mat-form-field>
-                  <div *ngIf="rfc.invalid && (rfc.dirty || rfc.touched)"
-                       class="alert alert-danger">
-                    <div *ngIf="rfc.errors.required">
-                      RFC requerido.
-                    </div>
-                  </div>
                 </div>
                 <div class="form-group col-md-4">
                   <mat-form-field class="full-width">
                     <input type="text" matInput id="emailfiscales" name="emailfiscales" [(ngModel)]="datosfiscales.email" #emailfiscales="ngModel" placeholder="Email" required>
+                    <mat-error *ngIf="emailfiscales.dirty || emailfiscales.pristine">
+                      Email es <strong>requerido</strong>
+                    </mat-error>
                   </mat-form-field>
-                  <div *ngIf="emailfiscales.invalid && (emailfiscales.dirty || emailfiscales.touched)"
-                       class="alert alert-danger">
-                    <div *ngIf="emailfiscales.errors.required">
-                      Email requerido.
-                    </div>
-                  </div>
                 </div>
               </div>
 
               <div class="col-md-12" style="padding:0;">
                 <div class="form-group col-md-4">
                   <mat-form-field class="full-width">
-                    <input type="text" [textMask]="{mask: mask_cp, guide: false}" matInput id="cp" name="cp" [(ngModel)]="datosfiscales.cp" #cp="ngModel" (ngModelChange)="sepomex_datos_fiscales();" placeholder="CP" required>
+                    <input type="text" [textMask]="{mask: mask_cp, guide: false}" matInput id="cpfiscales" name="cpfiscales" [(ngModel)]="datosfiscales.cp" #cpfiscales="ngModel" (ngModelChange)="sepomex_datos_fiscales();" placeholder="CP" required>
+                    <mat-error *ngIf="cpfiscales.dirty || cpfiscales.pristine">
+                      C.P es <strong>requerido</strong>
+                    </mat-error>
                   </mat-form-field>
-                  <div *ngIf="cp.invalid && (cp.dirty || cp.touched)"
-                       class="alert alert-danger">
-                    <div *ngIf="cp.errors.required">
-                      C.P requerido.
-                    </div>
-                  </div>
                 </div>
                 <div class="form-group col-md-4">
                   <mat-form-field class="full-width">
-                    <mat-select placeholder="Estado" id="estado" name="estado" #estado="ngModel" [(ngModel)]="datosfiscales.id_estado" (ngModelChange)="getmunicipios_datos_fiscales()" required>
+                    <mat-select placeholder="Estado" id="estadofiscales" name="estadofiscales" #estadofiscales="ngModel" [(ngModel)]="datosfiscales.id_estado" (ngModelChange)="getmunicipios_datos_fiscales()" required>
                       <mat-option *ngFor="let value of estados_datos_fiscales; trackBy: index;" [value]="value.id">
                         {{value.desc_estado | uppercase}}
                       </mat-option>
                     </mat-select>
+                    <mat-error *ngIf="estadofiscales.dirty || estadofiscales.pristine">
+                     Estado es <strong>requerido</strong>
+                    </mat-error>
                   </mat-form-field>
-                  <div *ngIf="estado.invalid && (estado.dirty || estado.touched)"
-                       class="alert alert-danger">
-                    <div *ngIf="estado.errors.required">
-                      Estado requerido.
-                    </div>
-                  </div>
                 </div>
                 <div class="form-group col-md-4">
                   <mat-form-field class="full-width">
-                    <mat-select placeholder="Delegación / Municipio" id="municipio" name="municipio" #municipio="ngModel" [(ngModel)]="datosfiscales.id_municipio">
+                    <mat-select placeholder="Delegación / Municipio" id="municipiofiscales" name="municipiofiscales" #municipiofiscales="ngModel" [(ngModel)]="datosfiscales.id_municipio" required>
                       <mat-option *ngFor="let value of municipios_datos_fiscales; trackBy: index;" [value]="value.id">
                         {{value.municipio | uppercase}}
                       </mat-option>
                     </mat-select>
+                    <mat-error *ngIf="municipiofiscales.dirty || municipiofiscales.pristine">
+                      Municipio es <strong>requerido</strong>
+                    </mat-error>
                   </mat-form-field>
-                  <div *ngIf="municipio.invalid && (municipio.dirty || municipio.touched)"
-                       class="alert alert-danger">
-                    <div *ngIf="municipio.errors.required">
-                      Delegación / Municipio requerido.
-                    </div>
-                  </div>
                 </div>
               </div>
 
               <div class="col-md-12" style="padding:0;">
                 <div class="form-group col-md-4">
                   <mat-form-field class="full-width">
-                    <mat-select placeholder="Colonia" id="colonia" name="colonia" #colonia="ngModel" [(ngModel)]="datosfiscales.colonia" required>
+                    <!--<mat-select placeholder="Colonia" id="colonia" name="colonia" #colonia="ngModel" [(ngModel)]="datosfiscales.colonia" >
                       <mat-option *ngFor="let value of localidades_datos_fiscales; trackBy: index;" [value]="value.id_localidad">
                         {{value.localidad | uppercase}}
                       </mat-option>
-                    </mat-select>
+                    </mat-select>-->
+                    <input type="text" matInput placeholder="Colonia" id="coloniafiscales" name="coloniafiscales" #coloniafiscales="ngModel" [(ngModel)]="datosfiscales.colonia" required>
+                    <mat-error *ngIf="coloniafiscales.dirty || coloniafiscales.pristine">
+                      Colonia es <strong>requerido</strong>
+                    </mat-error>
                   </mat-form-field>
-                  <div *ngIf="colonia.invalid && (colonia.dirty || colonia.touched)"
-                       class="alert alert-danger">
-                    <div *ngIf="colonia.errors.required">
-                      Colonia requerido.
-                    </div>
-                  </div>
                 </div>
                 <div class="form-group col-md-4">
                   <div class="col-md-4" style="padding-left:0; padding-right:1px;">
                     <mat-form-field class="full-width">
-                      <mat-select placeholder="Tipo de calle" id="tipo_calle" name="tipo_calle" #tipo_calle="ngModel" [(ngModel)]="direccion.tipo_calle" required>
+                      <mat-select placeholder="Tipo de calle" id="tipo_callefiscales" name="tipo_callefiscales" #tipo_callefiscales="ngModel" [(ngModel)]="direccion.tipo_calle" required>
                         <mat-option value="Calle">
                           CALLE
                         </mat-option>
@@ -376,27 +324,31 @@
                           CERRADA
                         </mat-option>
                       </mat-select>
+                      <mat-error *ngIf="tipo_callefiscales.dirty || tipo_callefiscales.pristine">
+                        Calle es <strong>requerido</strong>
+                      </mat-error>
                     </mat-form-field>
                   </div>
                   <div class="col-md-8" style="padding-right:0; padding-left:0;">
                     <mat-form-field class="full-width">
-                      <input type="text" matInput id="calle_numero" name="calle_numero" [(ngModel)]="datosfiscales.calle_numero" #calle_numero="ngModel" (ngModelChange)="validar_calle_datos_ficales()" placeholder="Calle" required>
-                    </mat-form-field>
-                    <div *ngIf="calle_numero.invalid && (calle_numero.dirty || calle_numero.touched)"
-                         class="alert alert-danger">
-                      <div *ngIf="calle_numero.errors.required">
-                        Calle y número requerido.
+                      <input type="text" matInput id="calle_numerofiscales" name="calle_numerofiscales" [(ngModel)]="datosfiscales.calle_numero" #calle_numerofiscales="ngModel" (ngModelChange)="validar_calle_datos_ficales()" placeholder="Calle" required>
+                      <mat-error *ngIf="calle_numerofiscales.dirty || calle_numerofiscales.pristine">
+                        Nombre de la calle es <strong>requerido</strong>
+                      </mat-error>
+                      <div *ngIf="_tipo_calle_datos_fiscales" class="mat-input-subscript-wrapper mat-form-field-subscript-wrapper" style="margin-top: 1.94567892em;">
+                        <div class="mat-error" role="alert">
+                          El nombre de la calle no puede contener la palabra <strong>{{_nombre_calle_datos_fiscales}}</strong>
+                        </div>
                       </div>
-                    </div>
-                    <div *ngIf="_tipo_calle_datos_fiscales"
-                         class="alert alert-danger">
-                      El nombre de la calle no puede contener la palabra {{_nombre_calle_datos_fiscales}}.
-                    </div>
+                    </mat-form-field>
                   </div>
                 </div>
                 <div class="form-group col-md-4">
                   <mat-form-field class="full-width">
-                    <input type="text" matInput id="NumExt" name="NumExt" [(ngModel)]="datosfiscales.Ext_fact" #NumExt="ngModel" placeholder="No. exterior" required>
+                    <input type="text" matInput id="NumExtfiscales" name="NumExtfiscales" [(ngModel)]="datosfiscales.Ext_fact" #NumExtfiscales="ngModel" placeholder="No. exterior" required>
+                    <mat-error *ngIf="NumExtfiscales.dirty || NumExtfiscales.pristine">
+                      Número exterior es <strong>requerido</strong>
+                    </mat-error>
                   </mat-form-field>
                 </div>
 
@@ -410,19 +362,16 @@
                 </div>
                 <div class="form-group col-md-4">
                   <mat-form-field class="full-width">
-                    <input type="text" matInput [textMask]="{mask: mask_telefono, guide: false}" id="telefono" name="telefono" [(ngModel)]="datosfiscales.telefono_fact" #telefono="ngModel" placeholder="Teléfono fijo" required>
+                    <input type="text" matInput [textMask]="{mask: mask_telefono, guide: false}" id="telefonofiscales" name="telefonofiscales" [(ngModel)]="datosfiscales.telefono_fact" #telefonofiscales="ngModel" placeholder="Teléfono fijo" required>
+                    <mat-error *ngIf="telefonofiscales.dirty || telefonofiscales.pristine">
+                      Teléfono fijo es <strong>requerido</strong>
+                    </mat-error>
                   </mat-form-field>
-                  <div *ngIf="telefono.invalid && (telefono.dirty || telefono.touched)"
-                       class="alert alert-danger">
-                    <div *ngIf="telefono.errors.required">
-                      Teléfono requerido.
-                    </div>
-                  </div>
                 </div>
               </div>
 
               <div class="form-group col-md-12" style="text-align:right">
-                <button type="submit" (click)="copiar_direccion()" class="pull-center btn btn-default btn-default-rojo" [disabled]="validform">
+                <button type="button" (click)="copiar_direccion()" class="pull-center btn btn-default btn-default-rojo">
                   Copiar dirección del cliente
                 </button>
               </div>
@@ -445,25 +394,40 @@
             <!-- /.box-header -->
             <div class="box-body">
               <div class="col-xs-12" style="padding:0;">
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-3">
                   <mat-form-field class="full-width">
                     <mat-select placeholder="Tipo de servicio solicitado" id="id_tipo_servicio" name="id_tipo_servicio" #id_tipo_servicio="ngModel" [(ngModel)]="servicio.id_tipo_servicio" (change)="getproductos()" required>
                       <mat-option *ngFor="let value of tipo_servicio; trackBy: index;" [value]="value">
                         {{value.desc_tipo_servicio | uppercase}}
                       </mat-option>
                     </mat-select>
+                    <mat-error *ngIf="id_tipo_servicio.dirty || id_tipo_servicio.pristine">
+                      Tipo de servicio es <strong>requerido</strong>
+                    </mat-error>
                   </mat-form-field>
                 </div>
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-3">
+                  <mat-form-field class="full-width">
+                    <mat-select placeholder="Sub-tipo de servicio solicitado" id="id_sub_tipo_servicio" name="id_sub_tipo_servicio" #id_sub_tipo_servicio="ngModel" [(ngModel)]="servicio.id_sub_tipo_servicio" required>
+                      <mat-option *ngFor="let value of sub_tipo_servicio; trackBy: index;" [value]="value.id">
+                        {{value.sub_desc_tipo_servicio | uppercase}}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="id_tipo_servicio.dirty || id_tipo_servicio.pristine">
+                      Sub-Tipo de servicio es <strong>requerido</strong>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="form-group col-md-3">
                   <label>Solicitado por</label><br />
-                  <mat-radio-group id="id_solicitado_por" name="id_solicitado_por" #id_solicitado_por="ngModel" [(ngModel)]="servicio.id_solicitado_por" required>
+                  <mat-radio-group id="id_solicitado_por" name="id_solicitado_por" #id_solicitado_por="ngModel" [(ngModel)]="servicio.id_solicitado_por">
                     <mat-radio-button value="1" (click)="ver_distribuidor(1);">Cliente directo</mat-radio-button><br />
                     <mat-radio-button value="2" (click)="ver_distribuidor(2);">Distribuidor autorizado</mat-radio-button>
                   </mat-radio-group>
                 </div>
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-3">
                   <label>Solicitud vía</label><br />
-                  <mat-radio-group id="id_solicitud_via" name="id_solicitud_via" #id_solicitud_via="ngModel" [(ngModel)]="servicio.id_solicitud_via" required>
+                  <mat-radio-group id="id_solicitud_via" name="id_solicitud_via" #id_solicitud_via="ngModel" [(ngModel)]="servicio.id_solicitud_via">
                     <mat-radio-button value="1">Teléfono</mat-radio-button>
                     <mat-radio-button value="2">Web</mat-radio-button><br />
                     <mat-radio-button value="3">Correo</mat-radio-button>
@@ -475,7 +439,7 @@
                   <label></label><br />
                   <mat-checkbox class="example-margin" id="activar_credito" name="activar_credito" #activar_credito="ngModel" [(ngModel)]="servicio.activar_credito">Activar credito</mat-checkbox>
                 </div>
-                <div class="form-group col-md-4" [hidden]="mostrar_distribuidor">
+                <div class="form-group col-md-4" *ngIf="servicio.id_solicitado_por == 2">
                   <div>
                     <mat-form-field class="full-width">
                       <mat-select placeholder="Distribuidor autorizado" id="id_distribuidor_autorizado" name="id_distribuidor_autorizado" #id_distribuidor_autorizado="ngModel" [(ngModel)]="servicio.id_distribuidor_autorizado" required>
@@ -483,6 +447,9 @@
                           {{value.desc_distribuidor | uppercase}}
                         </mat-option>
                       </mat-select>
+                      <mat-error *ngIf="id_distribuidor_autorizado.dirty || id_distribuidor_autorizado.pristine">
+                        Distribuidor autorizado es <strong>requerido</strong>
+                      </mat-error>
                     </mat-form-field>
                   </div>
                 </div>
@@ -490,13 +457,16 @@
 
                 </div>
               </div>
-              <div class="col-xs-12" style="padding:0;" [hidden]="mostrar_distribuidor">
+              <div class="col-xs-12" style="padding:0;" *ngIf="servicio.id_solicitado_por == 2">
                 <div class="form-group col-md-4">
 
                 </div>
                 <div class="form-group col-md-4">
                   <mat-form-field class="full-width">
-                    <input type="text" matInput id="contacto" name="contacto" [(ngModel)]="servicio.contacto" #contacto="ngModel" placeholder="Contacto" required>
+                    <input type="text" matInput id="contactodistribuidor" name="contactodistribuidor" [(ngModel)]="servicio.contacto" #contactodistribuidor="ngModel" placeholder="Contacto" required>
+                    <mat-error *ngIf="contactodistribuidor.dirty || contactodistribuidor.pristine">
+                      Contacto es <strong>requerido</strong>
+                    </mat-error>
                   </mat-form-field>
                 </div>
                 <div class="form-group col-md-4">
@@ -528,7 +498,7 @@
                     </mat-form-field>
                   </div>
                   <span class="input-group-btn">
-                    <button type="submit" class="pull-center btn btn-default btn-default-rojo" (click)="buscar()" [disabled]="preventAbuse">
+                    <button type="button" class="pull-center btn btn-default btn-default-rojo" (click)="buscar()" [disabled]="preventAbuse">
                       {{ preventAbuse ? 'Buscando...' : 'Buscar' }}
                     </button>
                   </span>
@@ -594,7 +564,7 @@
                     </div>
                     <div class="form-group col-md-8" style="padding:0;">
                       <mat-form-field class="full-width">
-                        <input type="text" matInput id="modelo" name="modelo" [(ngModel)]="producto.modelo" #modelo="ngModel" placeholder="Modelo" required>
+                        <input type="text" matInput id="modelo" name="modelo" [(ngModel)]="producto.modelo" #modelo="ngModel" placeholder="Modelo" >
                       </mat-form-field>
                     </div>
                   </div>
@@ -603,14 +573,14 @@
                     &nbsp;&nbsp;
                     <br class="visible-xs" />
                     <br class="visible-xs" />
-                    <button type="submit" class="pull-center btn btn-default" (click)="guardar_producto()">Guardar</button><!--[disabled]="validform"-->
+                    <button type="button" class="pull-center btn btn-default" (click)="guardar_producto()">Guardar</button><!--[disabled]="validform"-->
                   </div>
                 </div>
 
                 <div class="col-md-4" *ngIf="value_productos.length > 0">
                   <label>Productos seleccionados</label><br />
                   <label *ngFor="let value of value_productos; trackBy: index;" class="col-xs-12">
-                    <i class="fa fa-times-circle-o" aria-hidden="true" style="color:#A5000D" (click)="delete_producto(value.id_producto);"></i>
+                    <i class="fa fa-times-circle-o" aria-hidden="true" style="color:#A5000D" (click)="delete_producto(value);"></i>
                     {{value.tipo}} - {{value.modelo}}
                   </label>
                 </div>
@@ -618,155 +588,12 @@
 
               <div class="col-xs-12" style="padding-bottom:15px">
                 <mat-form-field class="full-width">
-                  <textarea matInput id="descripcion_actividades" name="descripcion_actividades" [(ngModel)]="servicio.descripcion_actividades" #descripcion_actividades="ngModel" required placeholder="Reporte del cliente"></textarea>
+                  <textarea matInput id="descripcion_actividades" name="descripcion_actividades" [(ngModel)]="servicio.descripcion_actividades" #descripcion_actividades="ngModel"  placeholder="Reporte del cliente" required></textarea>
+                  <mat-error *ngIf="descripcion_actividades.dirty || descripcion_actividades.pristine">
+                    Reporte del cliente es <strong>requerido</strong>
+                  </mat-error>
                 </mat-form-field>
-                <div *ngIf="descripcion_actividades.invalid && (descripcion_actividades.dirty || descripcion_actividades.touched)" class="alert alert-danger">
-                  <div>
-                    Descripción de actividades requerido.
-                  </div>
-                </div>
               </div>
-
-              <!--<div [hidden]="valid_tipo_taller">
-                <div class="col-xs-12" style="padding-bottom:15px">
-                  <label>Dirección de instalación</label>
-                  <mat-divider></mat-divider>
-                  <br />
-                  <form #registroForm="ngForm">
-                    <div class="col-xs-12" style="padding:0;">
-                      <div class="form-group col-md-4" style="padding-left:0;">
-                        <mat-form-field class="full-width">
-                          <input type="text" [textMask]="{mask: mask_cp, guide: false}" matInput id="cp" name="cp" [(ngModel)]="direccion_servicio.cp" #cp="ngModel" (ngModelChange)="sepomex_servicios();" placeholder="CP" required>
-                        </mat-form-field>
-                        <div *ngIf="cp.invalid && (cp.dirty || cp.touched)"
-                             class="alert alert-danger">
-                          <div *ngIf="cp.errors.required">
-                            C.P requerido.
-                          </div>
-                        </div>
-                      </div>
-                      <div class="form-group col-md-4">
-                        <mat-form-field class="full-width">
-                          <mat-select placeholder="Estado" id="estado" name="estado" #estado="ngModel" [(ngModel)]="direccion_servicio.id_estado" (change)="getmunicipios_direccion_servicio()" required>
-                            <mat-option *ngFor="let value of estados_direccion_servicios; trackBy: index;" [value]="value.id">
-                              {{value.desc_estado}}
-                            </mat-option>
-                          </mat-select>
-                        </mat-form-field>
-                        <div *ngIf="estado.invalid && (estado.dirty || estado.touched)"
-                             class="alert alert-danger">
-                          <div *ngIf="estado.errors.required">
-                            Estado requerido.
-                          </div>
-                        </div>
-                      </div>
-                      <div class="form-group col-md-4" style="padding-right:0;">
-                        <mat-form-field class="full-width">
-                          <mat-select placeholder="Delegación / Municipio" id="municipio" name="municipio" #municipio="ngModel" [(ngModel)]="direccion_servicio.id_municipio">
-                            <mat-option *ngFor="let value of municipios_direccion_servicios; trackBy: index;" [value]="value.id">
-                              {{value.municipio}}
-                            </mat-option>
-                          </mat-select>
-                        </mat-form-field>
-                        <div *ngIf="municipio.invalid && (municipio.dirty || municipio.touched)"
-                             class="alert alert-danger">
-                          <div *ngIf="municipio.errors.required">
-                            Delegación / Municipio requerido.
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="col-xs-12" style="padding:0;">
-                      <div class="form-group col-md-4" style="padding-left:0;">
-                        <mat-form-field class="full-width">
-                          <mat-select placeholder="Colonia" id="colonia" name="colonia" #colonia="ngModel" [(ngModel)]="direccion_servicio.colonia" required>
-                            <mat-option *ngFor="let value of localidades_direccion_servicios; trackBy: index;" [value]="value.id_localidad">
-                              {{value.localidad}}
-                            </mat-option>
-                          </mat-select>
-                        </mat-form-field>
-                        <div *ngIf="colonia.invalid && (colonia.dirty || colonia.touched)"
-                             class="alert alert-danger">
-                          <div *ngIf="colonia.errors.required">
-                            Colonia requerido.
-                          </div>
-                        </div>
-                      </div>
-                      <div class="form-group col-md-4">
-                        <div class="col-md-4" style="padding-left:0; padding-right:1px;">
-                          <mat-form-field class="full-width">
-                            <mat-select placeholder="Tipo de calle" id="tipo_calle" name="tipo_calle" #tipo_calle="ngModel" [(ngModel)]="direccion.tipo_calle" required>
-                              <mat-option value="Calle">
-                                Calle
-                              </mat-option>
-                              <mat-option value="Calle">
-                                Av.
-                              </mat-option>
-                              <mat-option value="Calle">
-                                Callejon
-                              </mat-option>
-                              <mat-option value="Calle">
-                                Blvr.
-                              </mat-option>
-                              <mat-option value="Calle">
-                                Cerrada
-                              </mat-option>
-                            </mat-select>
-                          </mat-form-field>
-                        </div>
-                        <div class="col-md-8" style="padding-right:0; padding-left:0;">
-                          <mat-form-field class="full-width">
-                            <input type="text" matInput id="calle_numero" name="calle_numero" [(ngModel)]="direccion_servicio.calle_numero" #calle_numero="ngModel" (ngModelChange)="validar_calle_servicio()" placeholder="Calle" required>
-                          </mat-form-field>
-                          <div *ngIf="calle_numero.invalid && (calle_numero.dirty || calle_numero.touched)"
-                               class="alert alert-danger">
-                            <div *ngIf="calle_numero.errors.required">
-                              Calle y número requerido.
-                            </div>
-                          </div>
-                          <div *ngIf="_tipo_calle_direccion_servicios"
-                               class="alert alert-danger">
-                            El nombre de la calle no puede contener la palabra {{_nombre_calle_direccion_servicio}}.
-                          </div>
-                        </div>
-                      </div>
-                      <div class="form-group col-md-4" style="padding-right:0">
-                        <mat-form-field class="full-width">
-                          <input type="text" matInput id="NumExt" name="NumExt" [(ngModel)]="direccion_servicio.NumExt" #NumExt="ngModel" placeholder="No. exterior" required>
-                        </mat-form-field>
-                      </div>
-                    </div>
-
-                    <div class="col-xs-12" style="padding:0;">
-                      <div class="form-group col-md-4" style="padding-left:0;">
-                        <mat-form-field class="full-width">
-                          <input type="text" matInput id="NumInt" name="NumInt" [(ngModel)]="direccion_servicio.NumInt" #NumInt="ngModel" placeholder="No. interior">
-                        </mat-form-field>
-                      </div>
-                      <div class="form-group col-md-4">
-                        <mat-form-field class="full-width">
-                          <input type="text" matInput [textMask]="{mask: mask_telefono, guide: false}" id="telefono" name="telefono" [(ngModel)]="direccion_servicio.telefono" #telefono="ngModel" placeholder="Teléfono fijo" required>
-                        </mat-form-field>
-                        <div *ngIf="telefono.invalid && (telefono.dirty || telefono.touched)"
-                             class="alert alert-danger">
-                          <div *ngIf="telefono.errors.required">
-                            Teléfono requerido.
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="form-group col-md-12" style="text-align:right">
-                      <button type="submit" (click)="copiar_direccion_servicio()" class="pull-center btn btn-default btn-default-rojo" [disabled]="validform">
-                        Copiar dirección del cliente
-                      </button>
-                    </div>
-                  </form>
-
-                </div>
-              </div>-->
-
             </div>
           </div>
           <!-- /.box -->
@@ -792,29 +619,28 @@
                 </div>
                 <div class="form-group col-md-4">
                   <mat-form-field class="full-width">
-                    <input [textMask]="{mask: mask, guide: false}" type="text" matInput name="fecha_visita" #fecha_visita="ngModel" disabled [(ngModel)]="visita.fecha_visita" placeholder="Fecha">
+                    <input [textMask]="{mask: mask, guide: false}" type="text" matInput id="fecha_visita" name="fecha_visita" #fecha_visita="ngModel" [(ngModel)]="visita.fecha_visita" placeholder="Fecha" required>
                     <mat-icon matSuffix><i class="fa fa-calendar" aria-hidden="true"></i></mat-icon>
-                  </mat-form-field>
-                  <div *ngIf="fecha_visita.invalid && (fecha_visita.dirty || fecha_visita.touched)" class="alert alert-danger">
-                    <div>
-                      Fecha requerida.
-                    </div>
-                  </div>
-                </div>
-                <div class="form-group col-md-4">
-                  <mat-form-field class="full-width">
-                    <input id="id_tecnico" type="text" matInput name="id_tecnico" #id_tecnico="ngModel" [(ngModel)]="txt_tecnico" disabled placeholder="Técnico">
+                    <mat-error *ngIf="fecha_visita.dirty || fecha_visita.pristine">
+                      Fecha es<strong>requerido</strong>
+                    </mat-error>
                   </mat-form-field>
                 </div>
                 <div class="form-group col-md-4">
                   <mat-form-field class="full-width">
-                    <input matInput id="hora" type="text" name="hora" #hora="ngModel" [(ngModel)]="visita.hora" disabled placeholder="Hora">
+                    <input id="id_tecnico" type="text" matInput name="id_tecnico" #id_tecnico="ngModel" [(ngModel)]="txt_tecnico" placeholder="Técnico" required>
+                    <mat-error *ngIf="fecha_visita.dirty || fecha_visita.pristine">
+                      Técnico es <strong>requerido</strong>
+                    </mat-error>
                   </mat-form-field>
-                  <div *ngIf="hora.invalid && (hora.dirty || hora.touched)" class="alert alert-danger">
-                    <div>
-                      Hora requerida.
-                    </div>
-                  </div>
+                </div>
+                <div class="form-group col-md-4">
+                  <mat-form-field class="full-width">
+                    <input matInput id="hora" type="text" name="hora" #hora="ngModel" [(ngModel)]="visita.hora" placeholder="Hora" required>
+                    <mat-error *ngIf="hora.dirty || hora.pristine">
+                      Hora es <strong>requerido</strong>
+                    </mat-error>
+                  </mat-form-field>
                 </div>
               </div>
             </div>
@@ -899,44 +725,7 @@
                     </div>
                   </mat-tab>
                   <mat-tab label="Depósito referenciado">
-                    <!--<div class="demo-tab-content">
-                      <form #EquiposForm="ngForm">
-                        <div class="col-xs-12" style="padding:0">
-                          <div class="form-group col-xs-12 col-md-12">
-                            <div class="col-md-6" style="padding:0;">
-                              <label>Concepto</label><br />
-                              <span>Servicio de reparación</span><br /><br />
-                            </div>
-                            <div class="col-md-6" style="padding:0;">
-                              <label>Cantidad</label><br />
-                              <span style="color:#4B91E2">5,000</span><br /><br />
-                            </div>
-                            <br />
-                            <br />
-                            <br />
-                            <mat-divider></mat-divider>
-                          </div>
-
-                          <div class="form-group col-md-4">
-                            <mat-form-field class="full-width">
-                              <input type="text" name="fecha_deposito" matInput placeholder="Fecha de deposito" #fecha_deposito="ngModel" [(ngModel)]="txtfecha_deposito">
-                              <mat-icon matSuffix><i class="fa fa-calendar" aria-hidden="true"></i></mat-icon>
-                            </mat-form-field>
-                          </div>
-                          <div class="form-group col-md-4">
-                            <mat-form-field class="full-width">
-                              <input matInput id="no_operacion" type="text" name="no_operacion" #no_operacion="ngModel" [(ngModel)]="txtno_operacion" placeholder="Número de operación">
-                            </mat-form-field>
-                          </div>
-                          <div class="form-group col-md-4">
-                            <mat-form-field class="full-width">
-                              <input matInput id="comprobante" type="text" name="comprobante" #comprobante="ngModel" [(ngModel)]="txtcomprobante" placeholder="Comprobante">
-                              <mat-icon matSuffix><i class="fa fa-upload" aria-hidden="true"></i></mat-icon>
-                            </mat-form-field>
-                          </div>
-                        </div>
-                      </form>
-                    </div>-->
+              
                   </mat-tab>
                 </mat-tab-group>
                 <div class="col-xs-12" style="padding-bottom:15px;"></div>
@@ -950,7 +739,7 @@
                                   value="1">
                       No hay pago
                     </mat-checkbox>
-                    <mat-form-field *ngIf="chk_no_pago">
+                    <mat-form-field *ngIf="visita.pago_pendiente">
                       <mat-select placeholder="Selecciona">
                         <mat-option value="Garantía">
                           GARANTIA
@@ -970,103 +759,26 @@
                                   id="terminos_condiciones"
                                   name="terminos_condiciones"
                                   [(ngModel)]="visita.terminos_condiciones"
-                                  #terminos_condiciones="ngModel"
-                                  value="1">
+                                  #terminos_condiciones="ngModel" (change)="set_terminos($event)">
                       He leído y acepto los <span style="color:#E60000">terminos y condiciones</span>
                     </mat-checkbox>
-                    <div *ngIf="terminos_condiciones.invalid && (terminos_condiciones.dirty || terminos_condiciones.touched)"
-                         class="alert alert-danger">
-                      <div>
-                        Debes aceptar los términos y condiciones.
+                    <div *ngIf="terminos_y_condiciones" class="mat-input-subscript-wrapper mat-form-field-subscript-wrapper" style="margin-top: 1.34567892em; font-size: 85%;">
+                      <div class="mat-error" role="alert">
+                        Debes de aceptar <strong>terminos y condiciones</strong>
                       </div>
                     </div>
                   </div>
-
-                  <!--<div class="form-group col-xs-12 col-md-12">
-                    <mat-checkbox style="padding-right:10px"
-                                  id="factura"
-                                  name="factura"
-                                  [(ngModel)]="visita.factura"
-                                  #factura="ngModel"
-                                  value="1">
-                      Requiere factura
-                    </mat-checkbox>
-                  </div>-->
 
                   <div class="form-group col-md-12">
                     <span style="line-height: 24px; white-space: nowrap; font-weight: bold; font-size:14px; letter-spacing: .5px; font-family: Roboto,'Helvetica Neue',sans-serif;">
                       Requiere factura<br />
                     </span>
-                    <mat-radio-group id="factura" name="factura" #factura="ngModel" [(ngModel)]="visita.factura" required>
+                    <mat-radio-group id="factura" name="factura" #factura="ngModel" [(ngModel)]="visita.factura">
                       <mat-radio-button value="1">Si</mat-radio-button>
                       <mat-radio-button value="0">No</mat-radio-button>
                     </mat-radio-group>
-                    <div *ngIf="factura.invalid && (factura.dirty || factura.touched)"
-                         class="alert alert-danger">
-                      <div *ngIf="factura.errors.required">
-                        Requiere factura
-                      </div>
-                    </div>
                   </div>
                 </div>
-
-                <!--<div class="col-xs-12" *ngIf="visita.factura">
-                  <div class="col-xs-12" style="padding:0;">
-                    <div class="col-xs-12" style="padding-left:0; padding-right:0; padding-bottom:10px">
-                      <mat-divider></mat-divider>
-                    </div>
-                    <div class="form-group col-md-4">
-                      <mat-form-field class="full-width">
-                        <input matInput id="razonsocialfactura" type="text" name="razonsocialfactura" #razonsocialfactura="ngModel" [(ngModel)]="txtrazonsocialfactura" placeholder="Razón social">
-                      </mat-form-field>
-                    </div>
-                    <div class="form-group col-md-4">
-                      <mat-form-field class="full-width">
-                        <input matInput id="rfcfactura" type="text" name="rfcfactura" #rfcfactura="ngModel" [(ngModel)]="txtrfcfactura" placeholder="RFC">
-                      </mat-form-field>
-                    </div>
-                    <div class="form-group col-md-4">
-                      <mat-form-field class="full-width">
-                        <input matInput id="emailfactura" type="text" name="emailfactura" #emailfactura="ngModel" [(ngModel)]="txtemailfactura" placeholder="Email">
-                      </mat-form-field>
-                    </div>
-
-                    <div class="form-group col-md-4">
-                      <mat-form-field class="full-width">
-                        <input matInput id="callefactura" type="text" name="callefactura" #callefactura="ngModel" [(ngModel)]="txtcallefactura" placeholder="Calle y número">
-                      </mat-form-field>
-                    </div>
-                    <div class="form-group col-md-4">
-                      <mat-form-field class="full-width">
-                        <input matInput id="cpfactura" type="text" name="cpfactura" #cpfactura="ngModel" [(ngModel)]="txtcpfactura" placeholder="C.P">
-                      </mat-form-field>
-                    </div>
-                    <div class="form-group col-md-4">
-                      <mat-form-field class="full-width">
-                        <mat-select placeholder="Estado" id="factura_estado" name="factura_estado" #factura_estado="ngModel" [(ngModel)]="ddlfactura_estado" (change)="getfacturamunicipios()">
-                          <mat-option *ngFor="let value of estadosFactura; trackBy: index;" [value]="value.id">
-                            {{value.desc_estado}}
-                          </mat-option>
-                        </mat-select>
-                      </mat-form-field>
-                    </div>
-
-                    <div class="form-group col-md-4">
-                      <mat-form-field class="full-width">
-                        <mat-select placeholder="Delegación / Municipio" id="factura_municipio" name="factura_municipio" #factura_municipio="ngModel" [(ngModel)]="ddlfactura_municipio">
-                          <mat-option *ngFor="let value of municipiosfactura; trackBy: index;" [value]="value.id">
-                            {{value.municipio}}
-                          </mat-option>
-                        </mat-select>
-                      </mat-form-field>
-                    </div>
-                    <div class="form-group col-md-4">
-                      <mat-form-field class="full-width">
-                        <input matInput id="coloniafactura" type="text" name="coloniafactura" #coloniafactura="ngModel" [(ngModel)]="txtcoloniafactura" placeholder="Colonia">
-                      </mat-form-field>
-                    </div>
-                  </div>
-                </div>-->
               </div>
             </div>
 
@@ -1079,7 +791,7 @@
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <br class="visible-xs" />
           <br class="visible-xs" />
-          <button type="submit" class="pull-center btn btn-default" (click)="guardar_cliente();">Crear Servicio</button><!--[disabled]="validform"-->
+          <button type="submit" class="pull-center btn btn-default" (click)='verservicioForm.valid ? guardar_cliente() : validaciones(verservicioForm._directives)'>Crear Servicio</button><!--[disabled]="validform"-->
         </div>
       </div>
 

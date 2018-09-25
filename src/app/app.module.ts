@@ -20,15 +20,18 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 //Chips
 //import { TagInputModule } from 'ngx-chips';
 //
 //Data table
 //
+import { NgxPermissionsModule } from 'ngx-permissions';
 import { AppRoutingModule } from './app-routing/app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatButtonModule, MatPaginatorIntl } from '@angular/material';
+import { MatButtonModule, MatPaginatorIntl, MatNativeDateModule } from '@angular/material';
 import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatChipInputEvent } from '@angular/material';
@@ -64,7 +67,7 @@ import { ServicioDetalleComponent } from './servicio-detalle/servicio-detalle.co
 import { NuevoServicioComponent, DialogIbsDialog } from './nuevo-servicio/nuevo-servicio.component';
 import { BuscarServicioComponent } from './buscar-servicio/buscar-servicio.component';
 import { Daterangepicker } from 'ng2-daterangepicker';
-import { EditarServicioComponent, DialogEditarEstatus, DialogCancelarEstatus, DialogFinal } from './editar-servicio/editar-servicio.component';
+import { EditarServicioComponent, DialogEditarEstatus, DialogCancelarEstatus, DialogEditarEstatusVisita, DialogFinal, DialogValidacionNo_visitas } from './editar-servicio/editar-servicio.component';
 import { FocusDirective } from './focus.directive';
 
 //light box
@@ -79,6 +82,13 @@ import { AsignacionRefaccionesComponent } from './asignacion-refacciones/asignac
 import { CalendarioComponent } from './calendario/calendario.component';
 import { DialogVisitaHoraClienteComponent } from './dialogs/dialog-visita-hora-cliente/dialog-visita-hora-cliente.component';
 import { CalendariHomeComponent } from './calendari-home/calendari-home.component';
+import { UltimosServiciosComponent } from './ultimos-servicios/ultimos-servicios.component';
+import { ModificarPreciosComponent } from './modificar-precios/modificar-precios.component';
+import { DialogNuevoGrupoPrecioComponent } from './dialogs/dialog-nuevo-grupo-precio/dialog-nuevo-grupo-precio.component';
+import { DialogEditarGrupoPrecioComponent } from './dialogs/dialog-editar-grupo-precio/dialog-editar-grupo-precio.component';
+import { DialogEditarPrecioRefaccionComponent } from './dialogs/dialog-editar-precio-refaccion/dialog-editar-precio-refaccion.component';
+import { NuevaVisitaComponent } from './nueva-visita/nueva-visita.component';
+import { DevolucionInventarioComponent } from './devolucion-inventario/devolucion-inventario.component';
 
 registerLocaleData(localeFr);
 registerLocaleData(localeEs);
@@ -104,8 +114,10 @@ registerLocaleData(localeEs);
     DialogIbsDialog,
     DialogIbsCliente,
     DialogEditarEstatus,
+    DialogEditarEstatusVisita,
     DialogCancelarEstatus,
     DialogFinal,
+    DialogValidacionNo_visitas,
     DialogEditarRefaccion,
     DialogAsignarRefaccion,
     DialogEliminarRefaccion,
@@ -125,11 +137,19 @@ registerLocaleData(localeEs);
     AsignacionRefaccionesComponent,
     CalendarioComponent,
     DialogVisitaHoraClienteComponent,
-    CalendariHomeComponent
+    CalendariHomeComponent,
+    UltimosServiciosComponent,
+    ModificarPreciosComponent,
+    DialogNuevoGrupoPrecioComponent,
+    DialogEditarGrupoPrecioComponent,
+    DialogEditarPrecioRefaccionComponent,
+    NuevaVisitaComponent,
+    DevolucionInventarioComponent
   ],
-  entryComponents: [DialogIbsDialog, DialogIbsCliente, DialogEditarEstatus, DialogCancelarEstatus, DialogFinal, DialogEditarRefaccion, DialogAsignarRefaccion, DialogEliminarRefaccion, DialogEditarRefaccionTecnico, DialogEliminarRefaccionTecnico, DialogCantidadRefaccion, DialogTroubleshootingComponent, CalendarioComponent, DialogVisitaHoraClienteComponent],
+  entryComponents: [DialogIbsDialog, DialogIbsCliente, DialogEditarEstatus, DialogEditarEstatusVisita, DialogCancelarEstatus, DialogFinal, DialogValidacionNo_visitas, DialogEditarRefaccion, DialogAsignarRefaccion, DialogEliminarRefaccion, DialogEditarRefaccionTecnico, DialogEliminarRefaccionTecnico, DialogCantidadRefaccion, DialogTroubleshootingComponent, CalendarioComponent, DialogVisitaHoraClienteComponent, DialogNuevoGrupoPrecioComponent, DialogEditarGrupoPrecioComponent, DialogEditarPrecioRefaccionComponent],
   imports: [
     BrowserModule,
+    NgxPermissionsModule.forRoot(),
     AppRoutingModule,
     FormsModule,
     CalendarModule.forRoot(),
@@ -159,6 +179,9 @@ registerLocaleData(localeEs);
     MatIconModule,
     MatExpansionModule,
     MatChipsModule,
+    MatDatepickerModule,
+    MatGridListModule,
+    MatNativeDateModule,
     NgProgressModule.forRoot({
       spinnerPosition: 'right',
       color: '#A5000D',

@@ -1,0 +1,53 @@
+<style>
+
+  .btn-default {
+    background-color: #EEEDEB;
+    color: #847d70;
+    border-color: #ddd;
+    padding-left: 50px;
+    padding-right: 50px;
+    font-weight: bold;
+  }
+
+  .btn-default-rojo {
+    background-color: #E60000;
+    color: #fff;
+    border-color: #E60000;
+  }
+
+    .btn-default-rojo:hover {
+      background-color: #E60000;
+      color: #fff;
+      border-color: #E60000;
+    }
+</style>
+<div mat-dialog-content>
+  <div class="row">
+    <div class="form-group col-xs-12">
+      <div class="col-xs-12 col-md-6" style="text-align:left; padding:0;">
+        <span style="display: inline-block; font-size: 18px; margin: 0; line-height: 1; font-weight: bold;">
+          Cancelar visita
+        </span>
+      </div>
+      <div class="col-xs-12 col-md-6" style="text-align:right; padding:0;">
+        <i class="fa fa-times" aria-hidden="true" (click)="onNoClick()" style="font-size:large"></i>
+      </div>
+    </div>
+    <div class="col-xs-12" style="padding-left:0; padding-right:0; padding-bottom:10px">
+      <mat-divider></mat-divider>
+    </div>
+
+    <div class="col-xs-12">
+      <br />
+      <mat-radio-group id="confirmado" name="confirmado" #confirmado="ngModel" [(ngModel)]="rdconfirmado" required>
+        <mat-radio-button value="5">Cancelado por cliente</mat-radio-button><br />
+        <mat-radio-button value="1002">Cancelado por Miele</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <div class="col-xs-12" style="text-align:center;">
+      <br />
+      <button mat-button [mat-dialog-close]="data" cdkFocusInitial class="btn-default btn-default-rojo" (click)="cancelar_visita();">Confirmar</button>
+    </div>
+  </div>
+</div>

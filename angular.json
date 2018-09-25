@@ -53,7 +53,8 @@
               "node_modules/admin-lte/dist/js/app.js",
               "src/assets/js/adminLTEOptions.js",
               "src/assets/js/scripts.js",
-              "node_modules/bootstrap-select/dist/js/bootstrap-select.js"
+              "node_modules/bootstrap-select/dist/js/bootstrap-select.js",
+              "node_modules/jspdf/dist/jspdf.min.js"
             ]
           },
           "configurations": {

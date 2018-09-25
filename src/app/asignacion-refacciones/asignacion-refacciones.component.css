@@ -1,3 +1,11 @@
+label {
+  display: inline-block;
+  max-width: 100%;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #847d70;
+}
+
 .btn-default {
   background-color: #EEEDEB;
   color: #847d70;

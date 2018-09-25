@@ -1,3 +1,21 @@
+body {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+}
+
+.negritas {
+  font-weight: bold;
+}
+
+label {
+  display: inline-block;
+  max-width: 100%;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #847d70;
+}
+
 .btn-default {
   background-color: #EEEDEB;
   color: #847d70;
@@ -5,7 +23,6 @@
   padding-left: 50px;
   padding-right: 50px;
   font-weight: bold;
-  border-radius: 0;
 }
 
 .btn-default-rojo {
@@ -20,6 +37,14 @@
     border-color: #E60000;
   }
 
+.mat-slide-toggle.mat-slide-toggle-bar {
+  background-color: #00A65A;
+}
+
+.mat-slide-toggle.mat-checked .mat-slide-toggle-thumb {
+  background-color: #00A65A;
+}
+
 .alert-danger-aviso {
   background-color: #FFDB4B;
   border-color: #FFDB4B;
@@ -28,13 +53,27 @@
   border-radius: 3px;
 }
 
-.example-container {
-  display: flex;
-  flex-direction: column;
-  min-width: 300px;
+input {
+  text-transform: uppercase;
 }
 
-.mat-table {
-  overflow: auto;
-  max-height: 500px;
+::-webkit-input-placeholder { /* WebKit browsers */
+  text-transform: none;
+}
+
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+  text-transform: none;
+}
+
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+  text-transform: none;
+}
+
+:-ms-input-placeholder { /* Internet Explorer 10+ */
+  text-transform: none;
+}
+
+.cal-week-hours-view .cal-header:first-child {
+  flex: .53 !important;
+  text-align: left;
 }

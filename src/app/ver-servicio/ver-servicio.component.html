@@ -68,9 +68,6 @@
 
                   </div>
                 </div>
-                <!--<div class="col-md-12" *ngIf="result_ordenes == ''">
-                  <h4>No hay resultados</h4>
-                </div>-->
 
                 <div class="col-md-12" *ngIf="isvisible_telefono" style="padding:0;">
                   <label>Teléfono</label>
@@ -152,7 +149,7 @@
 
                   </div>
                 </div>
-                <div class="col-md-12" *ngIf="result_personas == 0 && result_direcciones == 0 && result_telefonos == 0 && result_ordenes == 0">
+                <div class="col-md-12" *ngIf="dataSource_ordenes.length == 0 && dataSource_telefonos.length == 0 && dataSource_direcciones.length == 0 && dataSource_personas.length == 0">
                   <h4>No hay resultados para la busqueda <span style="color:#A5000D; font-weight:bold;">{{text_busqueda}}</span></h4>
                 </div>
               </div>

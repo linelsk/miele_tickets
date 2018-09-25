@@ -13,9 +13,10 @@ import { CalendarEvent, CalendarEventTimesChangedEvent, DAYS_OF_WEEK } from 'ang
 import { MatTableDataSource } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Router } from '@angular/router';
-import { Clientes, direccion, datosfiscales, servicio, producto, visita } from '../models/cliente';
 import * as moment from 'moment';
 import { CalendarioComponent } from '../calendario/calendario.component';
+import { Clientes, direccion, datosfiscales, servicio, producto, visita } from '../models/cliente';
+import * as jquery from 'jquery';
 
 @Component({
   selector: 'app-nuevo-servicio',
@@ -28,7 +29,11 @@ export class NuevoServicioComponent implements OnInit {
   preventAbuse = false;
   id: number;
   public sub: any;
-  public detalle: string[] = [];
+  public servicio = new servicio();
+  localidades: string[] = [];
+  terminos_y_condiciones: boolean = false;
+  productos: boolean = true;
+  public detalle = new Clientes();
   public detalle_direccion: any[] = [];
   value_productos: Productos_Servicio[] = [];
   value_productos_servicio: any[] = [];
@@ -41,65 +46,24 @@ export class NuevoServicioComponent implements OnInit {
   email: string;
   view_editar_direccion: boolean = false;
 
-  //Valdaciones
-  valid_tipo: boolean = true;
-  valid_tipo_taller: boolean = false;
-  valid_solicitado_por: boolean = true;
-  valid_solicitado_via: boolean = true;
-  valid_autorizao: boolean = true;
-  valid_contacto: boolean = true;
-  valid_descripcion_actividades: boolean = true;
-  //valid_categoria_servicio: boolean = true;
-  valid_fecha_visita: boolean = true;
-  valid_tecnico_visita: boolean = true;
-  valid_hora_visita: boolean = true;
-  //valid_actividades_realizar: boolean = true;
-  valid_acepto_terminos: boolean = true;
-  //Valdaciones
-
-  //ddltipo_servicio: number = 0;
-  rdsolicitado: number = 1;
-  rdsolicitudvia: number = 1;
-  ddldistribuidor_autorizado: number = 0;
-  txtcontacto: string = "";
-  activarcredito: number = 0;
-  txtdescripcion_actividades: string = "";
   categoriaservicio: string[] = [];
   categoria_servicio: number = 0;
   categoria_servicio_texto: string = "";
   categoria_servicio_cantidad: number = 0;
-  txtfecha_cita: string = "";
   tiposervicio: string[] = [];
-  ddlcategoria_servicio: number = 0;
+  sub_tipo_servicio: string[] = [];
   distribuidorservicio: string[] = [];
-  mostrar_distribuidor: boolean = false;
-  validform: boolean = true;
-  productos: boolean = true;
   id_direccion: number = 0;
   id_tecnico: tecnico;
-  tecnico_id: number = 0;
-  //txtactividades_realizar: string = "";
-  //Direccion
-  txtcalle_numero: string = "";
-  txtcp: string = "";
-  txtcolonia: string = "";
-  txttelefono: string = "";
+  id_producto_enviar: string = "";
+  txttecnico_servicio: string = "";
   estados: string[] = [];
   estadosFactura: string[] = [];
-  ddlestado: number = 0;
-  ddlfactura_estado: number = 0;
   municipios: string[] = [];
   municipiosfactura: string[] = [];
   productos_cliente: any[] = [];
-  checked: boolean = false;
-  txttecnico_servicio: string = "";
-  txthora_servicio: any = "";
-  ddlmunicipio: number = 0;
   concepto: string = "";
   terminos_condiciones: boolean = false;
-  requiere_factura: boolean = false;
-  id_producto_enviar: string = "";
-  txt_tecnico: string;
   no_tecnico: number = 0;
 
   public mask = [/[0-9]/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/];
@@ -122,19 +86,20 @@ export class NuevoServicioComponent implements OnInit {
   options: any[] = [];
 
   filteredOptions: Observable<any[]>;
-
-  //chk_productos: any;
+  
   set_productos(event, row, index) {
-
     if (event.checked) {
       this.value_productos.push({
         id_producto: row.id,
         modelo: row.modelo,
         sku: row.sku,
         tipo: row.tipo,
+        id_categoria: row.id_categoria,
         hora_tecnico: row.hora_tecnico,
         hora_precio: row.hora_precio,
-        precio_visita: row.precio_visita
+        precio_visita: row.precio_visita,
+        no_tecnicos: row.no_tecnicos,
+        primera_visita: true
       });
       this.value_productos_servicio.push({
         estatus: 1,
@@ -154,21 +119,64 @@ export class NuevoServicioComponent implements OnInit {
         this.no_tecnico = 1;
       }
       else {
-        this.no_tecnico = parseInt(row.no_tecnicos);
+        if (this.no_tecnico < row.no_tecnicos) {
+          this.no_tecnico = row.no_tecnicos;
+        }        
       }
 
-      this.categoria_servicio_cantidad = (this.categoria_servicio * row.hora_precio) + row.precio_visita;
+      //if (this.value_productos.length == 1) {
+      //  this.categoria_servicio_cantidad = row.precio_visita;
+      //}
+      //else {
+      //  if (this.servicio.id_tipo_servicio.id != 1 && this.servicio.id_tipo_servicio.id != 2) {
+      //    this.categoria_servicio_cantidad = this.categoria_servicio_cantidad + 490
+      //  }        
+      //}
+
+      if (this.value_productos.length == 1 && this.servicio.id_tipo_servicio.id != 1) {
+        this.categoria_servicio_cantidad = row.precio_visita;
+      }
+      else {
+        if (this.servicio.id_tipo_servicio.id != 1) {
+          this.categoria_servicio_cantidad = this.categoria_servicio_cantidad + 490
+        }
+        if (this.servicio.id_tipo_servicio.id == 1) {
+          this.categoria_servicio_cantidad = 0
+        }
+      }
     }
     else {
       for (var i = 0; i < this.value_productos.length; i++) {
         if (this.value_productos[i].id_producto == row.id) {
+          //console.log(this.value_productos);
           this.value_productos.splice(i, 1);
           this.productos_cliente.splice(i, 1);
           this.value_productos_servicio.splice(i, 1);
+          this.categoria_servicio = this.categoria_servicio - parseFloat(row.hora_tecnico);//Agregar esta linea a nuevo cliente, nuevo servicio y reagandar 
         }
       }
-      this.categoria_servicio = this.categoria_servicio - parseInt(row.hora_tecnico);
-      this.categoria_servicio_cantidad = (this.categoria_servicio * row.hora_precio) + row.precio_visita;
+      for (var i = 0; i < this.value_productos.length; i++) {
+        if (this.value_productos[i].no_tecnicos == 2) {
+          this.no_tecnico = this.value_productos[i].no_tecnicos;
+          break;
+        }
+        else {
+          this.no_tecnico = this.value_productos[i].no_tecnicos;
+        }
+      }
+      if (this.value_productos.length == 0) {//Agregar este if a nuevo cliente, nuevo servicio y reagandar 
+        this.categoria_servicio = 0;
+        this.categoria_servicio_cantidad = 0;
+      }
+      if (this.value_productos.length == 1) {//Agregar este if a nuevo cliente, nuevo servicio y reagandar 
+        this.categoria_servicio_cantidad = row.precio_visita;
+      }
+      if (this.servicio.id_tipo_servicio.id != 1 && this.servicio.id_tipo_servicio.id != 2) {
+        if (this.value_productos.length > 1) {//Agregar este if a nuevo cliente, nuevo servicio y reagandar 
+          this.categoria_servicio_cantidad = this.categoria_servicio_cantidad + 490;
+        }
+      }
+      
     }
 
   };
@@ -177,274 +185,181 @@ export class NuevoServicioComponent implements OnInit {
     this.id_direccion = row.id;
   };
 
-  validacion_tipo() {
-    if (this.ddltipo_servicio.id != 5) {
-      this.valid_tipo = this.heroService.validar_input(this.ddltipo_servicio);
-      this.valid_tipo_taller = false;
-    }
-    else {
-      this.valid_tipo_taller = true;
-    }
-
-    return this.valid_tipo;
-  }
-
-  validacion_solicitado_por() {
-    this.valid_solicitado_por = this.heroService.validar_input(this.rdsolicitado);
-    if (!this.valid_solicitado_por) { window.scrollTo(0, 500); };
-    return this.valid_solicitado_por;
-  }
-
-  validacion_via() {
-    this.valid_solicitado_via = this.heroService.validar_input(this.rdsolicitudvia);
-    if (!this.valid_solicitado_via) { window.scrollTo(0, 500); };
-    return this.valid_solicitado_via;
-  }
-
-  validacion_ddl_autorizacion() {
-    if (this.rdsolicitado == 2) {
-      this.valid_autorizao = this.heroService.validar_input(this.ddldistribuidor_autorizado);
-    }
-    return this.valid_autorizao;
-  }
-
-  validacion_contacto() {
-    if (this.rdsolicitado == 2) {
-      this.valid_contacto = this.heroService.validar_input(this.txtcontacto);
-    }
-
-    return this.valid_contacto;
-  }
-
-  validacion_descripcion_actividades() {
-    return this.valid_descripcion_actividades = this.heroService.validar_input(this.txtdescripcion_actividades);
-  }
-
-  //validacion_categoria_servicio() {
-  //  if (this.ddltipo_servicio.id == 3 || this.ddltipo_servicio.id == 4 || this.ddltipo_servicio.id == 5) {
-  //    this.valid_categoria_servicio = true;
-  //  }
-  //  else {
-  //    this.valid_categoria_servicio = this.heroService.validar_input(this.ddlcategoria_servicio);
-  //  }
-
-  //  return this.valid_categoria_servicio;
-  //}
-
-  Validacion_fecha_visita() {
-    if (this.ddltipo_servicio.id == 5) {
-      this.valid_fecha_visita = true;
-    }
-    else {
-      this.valid_fecha_visita = this.heroService.validar_input(this.txtfecha_cita);
-    }
-
-    return this.valid_fecha_visita;
-  }
-
-  validacion_tecnico_visita() {
-    return this.valid_tecnico_visita = this.heroService.validar_input(this.txttecnico_servicio);
-  }
-
-  validacion_hora_visita() {
-    if (this.ddltipo_servicio.id == 5) {
-      this.valid_hora_visita = true;
-    }
-    else {
-      this.valid_hora_visita = this.heroService.validar_input(this.txthora_servicio);
-    }
-
-    return this.valid_hora_visita;
-  }
-
-  //validacion_actividades_realizar() {
-  //  return this.valid_actividades_realizar = this.heroService.validar_input(this.txtactividades_realizar);
-  //}
-
-  validacion_terminos_condiciones() {
-    return this.valid_acepto_terminos = this.heroService.validar_input(this.terminos_condiciones);
-  }
-
+  tecnicos_visita: any[] = [];
+  rel_tecnico_visita: any[] = [];
   guardar_servicio(obj) {
-    this.validacion_tipo();
-    this.validacion_solicitado_por();
-    this.validacion_via();
-    this.validacion_ddl_autorizacion();
-    this.validacion_contacto();
-    this.validacion_descripcion_actividades();
-    //this.validacion_categoria_servicio();
-    this.Validacion_fecha_visita();
-    this.validacion_tecnico_visita();
-    this.validacion_hora_visita();
-    //this.validacion_actividades_realizar();
-    this.validacion_terminos_condiciones();
-    console.log(this.value_productos);
 
-    if (this.validacion_tipo() && this.validacion_solicitado_por() && this.validacion_ddl_autorizacion() && this.validacion_contacto() && this.validacion_descripcion_actividades()
-      && this.Validacion_fecha_visita() && this.validacion_tecnico_visita() && this.validacion_hora_visita() &&
-      this.validacion_terminos_condiciones()) {
-
-      //console.log(this.value_productos);
-      if (this.ddltipo_servicio != undefined) {
-        this.heroService.service_general("servicios", {
-          "id_cliente": this.id,
-          "id_tipo_servicio": this.ddltipo_servicio.id,
-          "actualizado": "01/01/1900",
-          "actualizadopor": 0,
-          "creado": this.heroService.fecha_hoy(),
-          "creadopor": JSON.parse(localStorage.getItem("user")).id,
-          "id_solicitado_por": this.rdsolicitado,
-          "id_distribuidor_autorizado": this.ddldistribuidor_autorizado,
-          "contacto": this.txtcontacto,
-          "activar_credito": this.activarcredito,
-          "id_solicitud_via": this.rdsolicitudvia,
-          "descripcion_actividades": this.txtdescripcion_actividades,
-          "id_categoria_servicio": this.ddlcategoria_servicio,
-          "no_servicio": "",
-          "fecha_servicio": this.txtfecha_cita,
-          "id_estatus_servicio": 3,
-          "IBS": "",
-          "id_motivo_cierre": 0,
-          "fecha_inicio_servicio": "01/01/1900",
-          "visita": [{
-            "id_direccion": this.id_direccion,
-            "fecha_visita": this.txtfecha_cita,
-            "id_tecnico": this.tecnico_id,
-            "hora": this.txthora_servicio,
-            "actividades_realizar": "",
-            "concepto": this.concepto,
-            "cantidad": "6000",
-            "pagado": true,
-            "pago_pendiente": false,
-            "garantia": false,
-            "fecha_deposito": "01/01/1900",
-            "no_operacion": "1",
-            "comprobante": "",
-            "terminos_condiciones": this.terminos_condiciones,
-            "factura": this.requiere_factura,
-            "servicio_producto": this.value_productos,
-            "hora_fin": parseInt(localStorage.getItem("fecha_fin"))
-          }]
-        }).subscribe((value) => {
-          //console.log(value.value.response);
-          this.openIBS(value.value);
-          this.heroService.service_general("servicios/Actualizar_Folio", {
-            "id": value.value.response
-          }).subscribe((value) => {
-            //console.log(value);
-          });
-        });
-      }
-    }
-    else {
-      console.log("no");
-    }
-
-    //console.log(this.value_productos);
-
-  }
-
-  guardar_borrador() {
-    if (this.validacion_tipo() && this.validacion_solicitado_por() && this.validacion_ddl_autorizacion() && this.validacion_contacto() && this.validacion_descripcion_actividades()
-      && this.Validacion_fecha_visita() && this.validacion_tecnico_visita() && this.validacion_hora_visita() &&
-      this.validacion_terminos_condiciones()) {
-      this.heroService.service_general("servicios", {
-        "id_cliente": this.id,
-        "id_tipo_servicio": this.ddltipo_servicio.id,
-        "actualizado": "01/01/1900",
-        "actualizadopor": 0,
-        "creado": this.heroService.fecha_hoy(),
-        "creadopor": JSON.parse(localStorage.getItem("user")).id,
-        "id_solicitado_por": this.rdsolicitado,
-        "id_distribuidor_autorizado": this.ddldistribuidor_autorizado,
-        "contacto": this.txtcontacto,
-        "activar_credito": this.activarcredito,
-        "id_solicitud_via": this.rdsolicitudvia,
-        "descripcion_actividades": this.txtdescripcion_actividades,
-        "id_categoria_servicio": this.ddlcategoria_servicio,
-        "no_servicio": "",
-        "fecha_servicio": this.heroService.fecha_formato(this.txtfecha_cita),
-        "id_estatus_servicio": 2,
-        "IBS": "",
-        "id_motivo_cierre": 0,
-        "fecha_inicio_servicio": "01/01/1900",
-        "visita": [{
-          "id_direccion": this.id_direccion,
-          "fecha_visita": this.heroService.fecha_formato(this.txtfecha_cita),
-          "id_tecnico": this.tecnico_id,
-          "hora": this.txthora_servicio,
-          "actividades_realizar": "",
-          "concepto": this.concepto,
-          "cantidad": "6000",
-          "pagado": true,
-          "pago_pendiente": false,
-          "garantia": false,
-          "fecha_deposito": "01/01/1900",
-          "no_operacion": "1",
-          "comprobante": "",
-          "terminos_condiciones": this.terminos_condiciones,
-          "factura": this.requiere_factura,
-          "servicio_producto": [{
-            id_producto: 2,
-            estatus: 1
-          },
-          {
-            id_producto: 3,
-            estatus: 1
-          },
-          ]
-        }]
-      }).subscribe((value) => {
-        //console.log(value);
-        this.snackBar.open("Borrador guardado correctamente", "", {
-          duration: 5000,
-          verticalPosition: 'bottom',
-          horizontalPosition: 'right',
-          extraClasses: ['blue-snackbar']
-        });
+    //console.log(JSON.parse(localStorage.getItem("tecnicos_visita")));
+    for (var i = 0; i < JSON.parse(localStorage.getItem("tecnicos_visita")).length; i++) {
+      this.rel_tecnico_visita.push({
+        id_tecnico: JSON.parse(localStorage.getItem("tecnicos_visita"))[i].id,
+        tecnico_responsable: false
       });
     }
 
+    this.tecnicos_visita.push({
+      id_direccion: this.direccion_cliente.id,
+      fecha_visita: this.visita.fecha_visita,
+      //id_tecnico: JSON.parse(localStorage.getItem("tecnicos_visita"))[i].id,
+      hora: JSON.parse(localStorage.getItem("agenda")).event,
+      actividades_realizar: this.servicio.descripcion_actividades,
+      concepto: this.concepto,
+      cantidad: this.categoria_servicio_cantidad,
+      pagado: true,
+      pago_pendiente: this.visita.pago_pendiente,
+      garantia: false,
+      fecha_deposito: "01/01/1900",
+      no_operacion: "1",
+      comprobante: "",
+      terminos_condiciones: this.visita.terminos_condiciones,
+      factura: this.visita.factura,
+      servicio_producto: this.value_productos,
+      hora_fin: parseInt(localStorage.getItem("fecha_fin")),
+      rel_tecnico_visita: this.rel_tecnico_visita,
+      asignacion_refacciones: false,
+      pre_diagnostico: false,
+      si_acepto_tecnico_refaccion: false,
+      entrega_refacciones: false
+    });
+    if (this.visita.terminos_condiciones) {
+      this.heroService.service_general("servicios", {
+        id_cliente: this.id,
+        id_tipo_servicio: this.servicio.id_tipo_servicio.id,
+        id_sub_tipo_servicio: this.servicio.id_sub_tipo_servicio,
+        actualizado: "01/01/1900",
+        actualizadopor: 0,
+        creado: this.heroService.fecha_hoy(),
+        creadopor: JSON.parse(localStorage.getItem("user")).id,
+        id_solicitado_por: this.servicio.id_solicitado_por,
+        id_distribuidor_autorizado: this.servicio.id_distribuidor_autorizado,
+        contacto: this.servicio.contacto,
+        activar_credito: this.servicio.activar_credito,
+        id_solicitud_via: this.servicio.id_solicitud_via,
+        descripcion_actividades: this.servicio.descripcion_actividades,
+        id_categoria_servicio: this.servicio.id_categoria_servicio,
+        no_servicio: this.servicio.no_servicio,
+        fecha_servicio: this.visita.fecha_visita,
+        id_estatus_servicio: 3,
+        IBS: this.servicio.IBS,
+        id_motivo_cierre: this.servicio.id_motivo_cierre,
+        fecha_inicio_servicio: "01/01/1900",
+        visita: this.tecnicos_visita        
+      }).subscribe((value) => {
+        //console.log(value.value.response);
+        this.openIBS(value.value);
+        this.heroService.service_general("servicios/Actualizar_Folio", {
+          "id": value.value.response
+        }).subscribe((value) => {
+          //console.log(value);
+        });
+      });
+    }
+    else {
+      this.terminos_y_condiciones = true;
+
+      this.snackBar.open("Debes de aceptar terminos y condiciones", "", {
+        duration: 5000,
+        verticalPosition: 'bottom',
+        horizontalPosition: 'right',
+        extraClasses: ['blue-snackbar']
+      });
+    }
   }
 
+  set_terminos(event) {
+    if (event.checked) {
+      this.terminos_y_condiciones = false;
+    }
+    else {
+      this.terminos_y_condiciones = true;
+    }
+  }
+
+  //guardar_borrador() {
+
+  //  this.heroService.service_general("servicios", {
+  //    "id_cliente": this.id,
+  //    "id_tipo_servicio": this.ddltipo_servicio.id,
+  //    "actualizado": "01/01/1900",
+  //    "actualizadopor": 0,
+  //    "creado": this.heroService.fecha_hoy(),
+  //    "creadopor": JSON.parse(localStorage.getItem("user")).id,
+  //    "id_solicitado_por": this.rdsolicitado,
+  //    "id_distribuidor_autorizado": this.ddldistribuidor_autorizado,
+  //    "contacto": this.txtcontacto,
+  //    "activar_credito": this.activarcredito,
+  //    "id_solicitud_via": this.rdsolicitudvia,
+  //    "descripcion_actividades": this.txtdescripcion_actividades,
+  //    "id_categoria_servicio": this.ddlcategoria_servicio,
+  //    "no_servicio": "",
+  //    "fecha_servicio": this.heroService.fecha_formato(this.txtfecha_cita),
+  //    "id_estatus_servicio": 2,
+  //    "IBS": "",
+  //    "id_motivo_cierre": 0,
+  //    "fecha_inicio_servicio": "01/01/1900",
+  //    "visita": [{
+  //      "id_direccion": this.id_direccion,
+  //      "fecha_visita": this.heroService.fecha_formato(this.txtfecha_cita),
+  //      "id_tecnico": this.tecnico_id,
+  //      "hora": this.txthora_servicio,
+  //      "actividades_realizar": "",
+  //      "concepto": this.concepto,
+  //      "cantidad": "6000",
+  //      "pagado": true,
+  //      "pago_pendiente": false,
+  //      "garantia": false,
+  //      "fecha_deposito": "01/01/1900",
+  //      "no_operacion": "1",
+  //      "comprobante": "",
+  //      "terminos_condiciones": this.terminos_condiciones,
+  //      "factura": this.requiere_factura,
+  //      "servicio_producto": [{
+  //        id_producto: 2,
+  //        estatus: 1
+  //      },
+  //      {
+  //        id_producto: 3,
+  //        estatus: 1
+  //      },
+  //      ]
+  //    }]
+  //  }).subscribe((value) => {
+  //    //console.log(value);
+  //    this.snackBar.open("Borrador guardado correctamente", "", {
+  //      duration: 5000,
+  //      verticalPosition: 'bottom',
+  //      horizontalPosition: 'right',
+  //      extraClasses: ['blue-snackbar']
+  //    });
+  //  });
+
+  //}
+
   guardar_direccion(ev) {
-    //this.sub = this.route.params.subscribe(params => {
-    //  this.id = +params['id'];
-    //});
-    ////console.log(this.txtcalle_numero + "---" + this.txtcolonia + "---" + this.txtcp + "---" + this.id + "---" + this.ddlestado + "---" + this.ddlmunicipio + "---" + this.txttelefono + "---" + this.heroService.fecha_hoy() + "---" + JSON.parse(localStorage.getItem("user")).id);
-    //this.heroService.service_general("servicios/Agregar_Direccion", {
-    //  "calle_numero": this.txtcalle_numero,
-    //  "colonia": this.txtcolonia,
-    //  "cp": this.txtcp,
-    //  "estatus": true,
-    //  "id_cliente": this.id,
-    //  "id_estado": this.ddlestado,
-    //  "id_municipio": this.ddlmunicipio,
-    //  "telefono": this.txttelefono,
-    //  "actualizado": "01/01/1900",
-    //  "actualizadopor": 0,
-    //  "creado": this.heroService.fecha_hoy(),
-    //  "creadopor": JSON.parse(localStorage.getItem("user")).id
-    //}).subscribe((value) => {
-    //  //console.log(value);
-    //  this.getdireccioncliente(this.id);
-    //});
+    //console.log(this.direccion_cliente.id);
     this.sub = this.route.params.subscribe(params => {
       this.id = +params['id'];
     });
     this.heroService.service_general("Servicios/Editar_Direccion", this.direccion_cliente)
       .subscribe((value) => {
-        //console.log(this.direccion_cliente.id_cliente);
-        this.getdireccioncliente(this.id);
+        if (value.response == "OK") {
+          this.getdireccioncliente(this.id);
+          this.heroService.service_general_get("Clientes/" + this.id, {}).subscribe((value) => {
+            this.detalle = value[0];
+            console.log(this.detalle);
+          });
+        }
         this.view_editar_direccion = false;
       });
   }
 
   ngOnInit() {
+    this.servicio.id_solicitado_por = 1;
+    this.servicio.id_solicitud_via = 1;
+    this.visita.factura = false;
     this.gettiposervicio();
     this.getdistribuidor();
-    this.getestados();
-    this.getfacturaestados();
+    //this.getfacturaestados();
 
     this.filteredOptions = this.myControl.valueChanges
       .pipe(
@@ -462,12 +377,18 @@ export class NuevoServicioComponent implements OnInit {
     });
 
     this.heroService.service_general_get("Clientes/" + this.id, {}).subscribe((value) => {
-      //console.log(value);
+      console.log(value);
       this.detalle = value[0];
+      this.detalle.datos_fiscales = value[0].datos_fiscales[0];
       if (value[0].direcciones != "") {
         this.detalle_direccion = value[0].direcciones[0];
         this.direccion_cliente = value[0].direcciones[0];
-        this.getmunicipios();
+        this.direccion_cliente.telefono = value[0].telefono;
+        this.direccion_cliente.telefono_movil = value[0].telefono_movil;
+        this.direccion_cliente.Fecha_Estimada = value[0].referencias;
+        this.direccion_cliente.id_cliente = this.id;
+        this.sepomex();
+        this.sepomexdatosfiscales();
       }
       else {
         this.detalle_direccion = [{
@@ -497,13 +418,50 @@ export class NuevoServicioComponent implements OnInit {
       option.desc_distribuidor.toLowerCase().indexOf(val.toLowerCase()) === 0);
   }
 
+  sepomex() {
+    console.log(this.direccion_cliente.cp.length);
+    if (this.direccion_cliente.cp.length == 5) {
+      this.heroService.service_general("Servicios/Sepomex", { id: this.direccion_cliente.cp })
+        .subscribe((value) => {
+          this.getestados();
+          this.direccion_cliente.id_estado = value[0].id_estado;
+          this.getmunicipios();
+          this.direccion_cliente.id_municipio = value[0].id_municipio;
+          this.localidades = value[0].localidades;
+          this.direccion_cliente.colonia = value[0].localidades[0].id_localidad;
+        });
+    }
+  }
+
+  sepomexdatosfiscales() {
+    console.log(this.detalle.datos_fiscales.cp);
+    if (this.detalle.datos_fiscales.cp.length == 5) {
+      this.heroService.service_general("Servicios/Sepomex", { id: this.detalle.datos_fiscales.cp })
+        .subscribe((value) => {
+          this.getfacturaestados();
+          this.detalle.datos_fiscales.id_estado = value[0].id_estado;
+          this.getfacturamunicipios();
+          this.detalle.datos_fiscales.id_municipio = value[0].id_municipio;
+          //this.localidades = value[0].localidades;
+          this.detalle.datos_fiscales.colonia = value[0].localidades[0].localidad;
+        });
+    }
+  }
+
   //llenar_productos
   getproductos(): void {
     this.productos_cliente = [];
     this.value_productos = [];
     this.categoria_servicio = 0;
+    this.categoria_servicio_cantidad = 0;
+    this.no_tecnico = 0;
 
-    if (this.ddltipo_servicio.id != 0) {
+    this.heroService.service_general("Catalogos/SubTipoServicio", { id: this.servicio.id_tipo_servicio.id })
+      .subscribe((value) => {
+        this.sub_tipo_servicio = value;
+      });
+
+    if (this.servicio.id_tipo_servicio.id != 0) {
       this.productos = false;
     }
 
@@ -511,30 +469,31 @@ export class NuevoServicioComponent implements OnInit {
       this.id = +params['id'];
     });
 
-    //console.log(this.ddltipo_servicio);
     this.heroService.service_general("servicios/Productos_Servicio_Solicitado", {
-      "id": this.id
+      id_cliente: this.id,
+      id_tipo: this.servicio.id_tipo_servicio.id
     }).subscribe((value) => {
-      console.log(value);
+      //console.log(value);
+      this.categoria_servicio_cantidad = 0;
       for (var i = 0; i < value.length; i++) {
-        if (this.ddltipo_servicio.id == 1) {
-          if (value[i].estatus == "Entregado") {
+        if (this.servicio.id_tipo_servicio.id == 1) {
+          if (value[i].estatus.trim() == "Pending to install" || value[i].estatus.trim() == "Ready to Install") {
             this.productos_cliente.push({
               "id": value[i].id,
               "modelo": value[i].modelo,
               "sku": value[i].sku,
               "tipo_equipo": value[i].tipo_equipo,
+              "id_categoria": value[i].id_categoria,
               "garantia": value[i].garantia,
               "poliza": value[i].poliza,
               "estatus": value[i].estatus,
               "checked": true,
               "no_visitas": value[i].no_visitas,
               "hora_tecnico": value[i].hora_tecnico,
-              "hora_precio": value[i].hora_precio,
+              "hora_precio": value[i].precio_hora,
               "precio_visita": value[i].precio_visita,
-              "no_tecnicos": value[i].no_tecnicos
+              "no_tecnicos": value[i].no_tecnico
             });
-            this.categoria_servicio = this.categoria_servicio + parseFloat(value[i].hora_tecnico);
           }
           else {
             this.productos_cliente.push({
@@ -542,37 +501,39 @@ export class NuevoServicioComponent implements OnInit {
               "modelo": value[i].modelo,
               "sku": value[i].sku,
               "tipo_equipo": value[i].tipo_equipo,
+              "id_categoria": value[i].id_categoria,
               "garantia": value[i].garantia,
               "poliza": value[i].poliza,
               "estatus": value[i].estatus,
               "checked": false,
               "no_visitas": value[i].no_visitas,
               "hora_tecnico": value[i].hora_tecnico,
-              "hora_precio": value[i].hora_precio,
+              "hora_precio": value[i].precio_hora,
               "precio_visita": value[i].precio_visita,
-              "no_tecnicos": value[i].no_tecnicos
+              "no_tecnicos": value[i].no_tecnico
             });
           }
         }
 
-        if (this.ddltipo_servicio.id == 2 || this.ddltipo_servicio.id == 3) {
-          if (value[i].estatus == "Instalado") {
+        if (this.servicio.id_tipo_servicio.id == 2 || this.servicio.id_tipo_servicio.id == 3) {
+         // console.log(value[i].estatus + "==" + "Installed");
+          if (value[i].estatus.trim() == "Installed" || value[i].estatus.trim() == "Completed") {
             this.productos_cliente.push({
               "id": value[i].id,
               "modelo": value[i].modelo,
               "sku": value[i].sku,
               "tipo_equipo": value[i].tipo_equipo,
+              "id_categoria": value[i].id_categoria,
               "garantia": value[i].garantia,
               "poliza": value[i].poliza,
               "estatus": value[i].estatus,
               "checked": true,
               "no_visitas": value[i].no_visitas,
               "hora_tecnico": value[i].hora_tecnico,
-              "hora_precio": value[i].hora_precio,
+              "hora_precio": value[i].precio_hora,
               "precio_visita": value[i].precio_visita,
-              "no_tecnicos": value[i].no_tecnicos
+              "no_tecnicos": value[i].no_tecnico
             });
-            this.categoria_servicio = this.categoria_servicio + parseFloat(value[i].hora_tecnico);
           }
           else {
             this.productos_cliente.push({
@@ -580,35 +541,37 @@ export class NuevoServicioComponent implements OnInit {
               "modelo": value[i].modelo,
               "sku": value[i].sku,
               "tipo_equipo": value[i].tipo_equipo,
+              "id_categoria": value[i].id_categoria,
               "garantia": value[i].garantia,
               "poliza": value[i].poliza,
               "estatus": value[i].estatus,
               "checked": false,
               "no_visitas": value[i].no_visitas,
               "hora_tecnico": value[i].hora_tecnico,
-              "hora_precio": value[i].hora_precio,
+              "hora_precio": value[i].precio_hora,
               "precio_visita": value[i].precio_visita,
-              "no_tecnicos": value[i].no_tecnicos
+              "no_tecnicos": value[i].no_tecnico
             });
           }
         }
 
-        if (this.ddltipo_servicio.id == 4) {
-          if (value[i].estatus == "Liberado") {
+        if (this.servicio.id_tipo_servicio.id == 5) {
+          if (value[i].estatus.trim() == "Delivered") {
             this.productos_cliente.push({
               "id": value[i].id,
               "modelo": value[i].modelo,
               "sku": value[i].sku,
               "tipo_equipo": value[i].tipo_equipo,
+              "id_categoria": value[i].id_categoria,
               "garantia": value[i].garantia,
               "poliza": value[i].poliza,
               "estatus": value[i].estatus,
               "checked": true,
               "no_visitas": value[i].no_visitas,
               "hora_tecnico": value[i].hora_tecnico,
-              "hora_precio": value[i].hora_precio,
+              "hora_precio": value[i].precio_hora,
               "precio_visita": value[i].precio_visita,
-              "no_tecnicos": value[i].no_tecnicos
+              "no_tecnicos": value[i].no_tecnico
             });
           }
           else {
@@ -617,52 +580,16 @@ export class NuevoServicioComponent implements OnInit {
               "modelo": value[i].modelo,
               "sku": value[i].sku,
               "tipo_equipo": value[i].tipo_equipo,
+              "id_categoria": value[i].id_categoria,
               "garantia": value[i].garantia,
               "poliza": value[i].poliza,
               "estatus": value[i].estatus,
               "checked": false,
               "no_visitas": value[i].no_visitas,
               "hora_tecnico": value[i].hora_tecnico,
-              "hora_precio": value[i].hora_precio,
+              "hora_precio": value[i].precio_hora,
               "precio_visita": value[i].precio_visita,
-              "no_tecnicos": value[i].no_tecnicos
-            });
-          }
-        }
-
-        if (this.ddltipo_servicio.id == 5) {
-          if (value[i].estatus == "En diagnostico") {
-            this.productos_cliente.push({
-              "id": value[i].id,
-              "modelo": value[i].modelo,
-              "sku": value[i].sku,
-              "tipo_equipo": value[i].tipo_equipo,
-              "garantia": value[i].garantia,
-              "poliza": value[i].poliza,
-              "estatus": value[i].estatus,
-              "checked": true,
-              "no_visitas": value[i].no_visitas,
-              "hora_tecnico": value[i].hora_tecnico,
-              "hora_precio": value[i].hora_precio,
-              "precio_visita": value[i].precio_visita,
-              "no_tecnicos": value[i].no_tecnicos
-            });
-          }
-          else {
-            this.productos_cliente.push({
-              "id": value[i].id,
-              "modelo": value[i].modelo,
-              "sku": value[i].sku,
-              "tipo_equipo": value[i].tipo_equipo,
-              "garantia": value[i].garantia,
-              "poliza": value[i].poliza,
-              "estatus": value[i].estatus,
-              "checked": false,
-              "no_visitas": value[i].no_visitas,
-              "hora_tecnico": value[i].hora_tecnico,
-              "hora_precio": value[i].hora_precio,
-              "precio_visita": value[i].precio_visita,
-              "no_tecnicos": value[i].no_tecnicos
+              "no_tecnicos": value[i].no_tecnico
             });
           }
         }
@@ -675,46 +602,62 @@ export class NuevoServicioComponent implements OnInit {
             modelo: this.productos_cliente[i].modelo,
             sku: this.productos_cliente[i].sku,
             tipo: this.productos_cliente[i].tipo_equipo,
+            id_categoria: this.productos_cliente[i].id_categoria,
             hora_tecnico: this.productos_cliente[i].hora_tecnico,
             hora_precio: this.productos_cliente[i].hora_precio,
-            precio_visita: this.productos_cliente[i].precio_visita
+            precio_visita: this.productos_cliente[i].precio_visita,
+            no_tecnicos: this.productos_cliente[i].no_tecnico,
+            primera_visita: true
           });
+
+          this.categoria_servicio = this.categoria_servicio + parseFloat(this.productos_cliente[i].hora_tecnico);
+          if (this.productos_cliente[i].no_tecnico == null) {
+            this.no_tecnico = 1;
+          }
+          else {
+            if (this.no_tecnico < this.productos_cliente[i].no_tecnico) {
+              this.no_tecnico = this.productos_cliente[i].no_tecnico;
+            }
+          }
         }
       }
-
-      if (value[0].no_tecnicos == null) {
-        this.no_tecnico = 1;
+      if (this.value_productos.length != 0) {
+        if (this.productos_cliente.length == 1 && this.servicio.id_tipo_servicio.id != 1) {
+          this.categoria_servicio_cantidad = this.productos_cliente[0].precio_visita;
+        }
+        else {
+          if (this.servicio.id_tipo_servicio.id != 1) {
+            //console.log(this.productos_cliente);
+            this.categoria_servicio_cantidad = this.productos_cliente[0].precio_visita + 490
+          }
+          if (this.servicio.id_tipo_servicio.id == 1) {
+            this.categoria_servicio_cantidad = 0
+          }
+        }
       }
-      else {
-        this.no_tecnico = parseInt(value[0].no_tecnicos);
-      }
-
-      this.categoria_servicio_cantidad = (this.categoria_servicio * parseInt(this.value_productos[0].hora_precio)) + this.value_productos[0].precio_visita;
-
-      console.log(this.value_productos);
+     
       this.dataSource.data = this.productos_cliente;
-      //console.log(this.dataSource.data[0].checked);
 
     });
 
-    if (this.ddltipo_servicio.id == 1) {
+    if (this.servicio.id_tipo_servicio.id == 1) {
       console.log("Instalación");
 
       this.concepto = "Instalación";
     }
-    if (this.ddltipo_servicio.id == 2) {
+    if (this.servicio.id_tipo_servicio.id == 2) {
       console.log("Matenimiento");
       this.concepto = "Matenimiento";
     }
-    if (this.ddltipo_servicio.id == 3) {
+    if (this.servicio.id_tipo_servicio.id == 3) {
       console.log("Reparación");
       this.concepto = "Reparación";
     }
-    if (this.ddltipo_servicio.id == 4) {
+    if (this.servicio.id_tipo_servicio.id == 4) {
       console.log("Entrega");
       this.concepto = "Entrega";
     }
-    if (this.ddltipo_servicio.id == 5) {
+    if (this.servicio.id_tipo_servicio.id == 5) {
       console.log("Diagnostico en taller");
       this.concepto = "Diagnostico en taller";
     }
@@ -778,32 +721,18 @@ export class NuevoServicioComponent implements OnInit {
   getfacturaestados(): void {
     this.heroService.service_general("Catalogos/Estados", {})
       .subscribe((value) => {
+        console.log(value);
         this.estadosFactura = value;
       });
   }
 
   getfacturamunicipios(): void {
     this.heroService.service_general("Catalogos/Municipio", {
-      "id": this.ddlfactura_estado
+      "id": this.detalle.datos_fiscales.id_estado
     })
       .subscribe((value) => {
         this.municipiosfactura = value;
       });
-  }
-
-  ver_distribuidor(id) {
-    //console.log(id);
-    this.rdsolicitado = id;
-    switch (id) {
-      case 1:
-        this.mostrar_distribuidor = false;
-        this.ddldistribuidor_autorizado = 0;
-        break;
-      case 2:
-        this.mostrar_distribuidor = true;
-        break;
-      default:
-    }
   }
 
   openIBS(obj): void {
@@ -820,52 +749,61 @@ export class NuevoServicioComponent implements OnInit {
   }
 
   tecnicos: any[] = [];
-  openAgenda(obj): void {
+  openAgenda(obj): void {    
 
-    if (this.ddltipo_servicio != undefined) {
-      this.tecnicos = [];
-      this.id_producto_enviar = "";
+    if (this.servicio.id_tipo_servicio != undefined) {
+      if (this.value_productos.length != 0) {
+        this.tecnicos = [];
+        this.id_producto_enviar = "";
 
-      for (var i = 0; i < this.value_productos.length; i++) {
-        this.id_producto_enviar += this.value_productos[i].id_producto + ",";
-      }
-      console.log(this.id_producto_enviar);
-      this.heroService.service_general("servicios/TecnicoAgenda", { id: this.ddltipo_servicio.id, productos: this.id_producto_enviar }).subscribe((value) => {
-        console.log(value);
-        for (var i = 0; i < value.length; i++) {
-          this.tecnicos.push({
-            id: value[i].id,
-            tecnico: value[i].nombre + " " + value[i].paterno + " " + value[i].materno,
-            tecnico_color: value[i].tecnico_color
-          });
+        for (var i = 0; i < this.value_productos.length; i++) {
+          this.id_producto_enviar += this.value_productos[i].id_categoria + ",";
         }
-
-        let dialogRef = this.dialog.open(CalendarioComponent, {
-          width: '100%',
-          height: '95%',
-          disableClose: true,
-          data: { tecnicos: this.tecnicos, tipo_servicio: this.ddltipo_servicio.id, horas_tecnico: this.categoria_servicio, no_tecnico: this.no_tecnico, id_producto_enviar: this.id_producto_enviar }
-        });
-        dialogRef.afterClosed().subscribe(result => {
-          console.log(result);
-          if (result == undefined) {
-            this.txttecnico_servicio = "";
-            this.txtfecha_cita = "";
-            this.txthora_servicio = "";
-            localStorage.setItem("agenda", "");
+        //console.log(this.id_producto_enviar);
+        this.heroService.service_general("servicios/TecnicoAgenda", { id: this.servicio.id_tipo_servicio.id, productos: this.id_producto_enviar }).subscribe((value) => {
+          console.log(value);
+          for (var i = 0; i < value.length; i++) {
+            this.tecnicos.push({
+              id: value[i].id,
+              tecnico: value[i].nombre + " " + value[i].paterno + " " + value[i].materno,
+              tecnico_color: value[i].tecnico_color
+            });
           }
-          else {
-            if (localStorage.getItem("agenda") != "") {
-              console.log(JSON.parse(localStorage.getItem("agenda")).tecnico[0]);
-              this.tecnico_id = JSON.parse(localStorage.getItem("agenda")).tecnico[0].id;
-              this.txttecnico_servicio = JSON.parse(localStorage.getItem("agenda")).tecnico[0].tecnico;
-              this.txtfecha_cita = JSON.parse(localStorage.getItem("agenda")).fecha;
-              this.txthora_servicio = JSON.parse(localStorage.getItem("agenda")).hora_inicio;
+          let dialogRef = this.dialog.open(CalendarioComponent, {
+            width: '100%',
+            height: '95%',
+            disableClose: true,
+            data: { tecnicos: this.tecnicos, tipo_servicio: this.servicio.id_tipo_servicio, horas_tecnico: this.categoria_servicio, no_tecnico: this.no_tecnico, id_producto_enviar: this.id_producto_enviar }
+          });
+          dialogRef.afterClosed().subscribe(result => {
+            console.log(localStorage.getItem("agenda"));
+            if (result == undefined) {
+              this.txttecnico_servicio = "";
+              this.visita.fecha_visita = "";
+              this.visita.hora = "";
+              localStorage.setItem("agenda", "");
             }
-          }
+            else {
+              if (localStorage.getItem("agenda") != "") {
+                console.log(JSON.parse(localStorage.getItem("agenda")).tecnico[0]);
+                this.visita.id_tecnico = JSON.parse(localStorage.getItem("agenda")).tecnico[0].id;
+                this.txttecnico_servicio = JSON.parse(localStorage.getItem("agenda")).tecnico[0].tecnico;
+                this.visita.fecha_visita = JSON.parse(localStorage.getItem("agenda")).fecha;
+                this.visita.hora = JSON.parse(localStorage.getItem("agenda")).event + ":00 hrs";
+              }
+            }
 
+          });
+        })
+      }
+      else {
+        this.snackBar.open("Para poder agendar es necesario elegir uno o mas productos", "", {
+          duration: 5000,
+          verticalPosition: 'bottom',
+          horizontalPosition: 'right',
+          extraClasses: ['blue-snackbar']
         });
-      })
+      }
     }
     else {
       this.snackBar.open("Para poder agendar es necesario elegir un tipo de servicio", "", {
@@ -878,8 +816,30 @@ export class NuevoServicioComponent implements OnInit {
   }
 
   view_direccion(row) {
-    console.log(row);
+    //console.log(row);
     this.view_editar_direccion = true;
+  }
+
+  view_direccion_regresar() {
+    //console.log(row);
+    this.view_editar_direccion = false;
+  }
+
+  validaciones(event) {
+
+    for (var i = 0; i < event.length; i++) {
+      console.log(event[i].name);
+      if (!event[i].valid) {
+        $("#" + event[i].name).focus();
+        break;
+      }
+    }
+    this.snackBar.open("Algunos campos necesitan ser revisados", "", {
+      duration: 5000,
+      verticalPosition: 'bottom',
+      horizontalPosition: 'right',
+      extraClasses: ['blue-snackbar']
+    });
   }
 
 }
@@ -913,391 +873,6 @@ export class DialogIbsDialog {
     });
   }
 }
-
-
-//@Component({
-//  selector: 'dialog-vista-hora',
-//  templateUrl: './dialog-visita-hora.html',
-//})
-//export class DialogVisitaHora {
-
-//  ddlhora_inicio: any = "09";
-//  ddlhora_fin: any = "11";
-
-//  constructor(
-//    public dialogRef: MatDialogRef<DialogVisitaHora>,
-//    @Inject(MAT_DIALOG_DATA) public data: any) { }
-
-//  ngOnInit() {
-//    console.log(this.data.event);
-//    console.log(this.data.horas_tecnico);
-//    this.ddlhora_inicio = this.data.event;
-//    this.ddlhora_fin = ((this.data.event * 1) + ((this.data.horas_tecnico * 1))).toString();
-
-//    if (this.ddlhora_fin == "10") {
-//      this.ddlhora_fin = "11";
-//    }
-
-//    if (this.ddlhora_fin == "12") {
-//      this.ddlhora_fin = "13";
-//    }
-
-//    if (this.ddlhora_fin == "15") {
-//      this.ddlhora_fin = "16";
-//    }
-
-//    if (this.ddlhora_fin == "17") {
-//      this.ddlhora_fin = "18";
-//    }
-//    localStorage.setItem("fecha_fin", this.ddlhora_fin);
-//  }
-
-//  onNoClick(): void {
-//    this.dialogRef.close();
-//  }
-
-//  set_hora_fin(obj) {
-//    localStorage.setItem("fecha_fin", obj);
-//  }
-
-//}
-
-//@Component({
-//  selector: 'dialog-agenda',
-//  changeDetection: ChangeDetectionStrategy.OnPush,
-//  templateUrl: './dialog-agenda.html',
-//})
-//export class DialogAgenda {
-
-//  constructor(
-//    public dialogRef: MatDialogRef<DialogAgenda>,
-//    @Inject(MAT_DIALOG_DATA) public data: any,
-//    private heroService: DatosService, public dialog: MatDialog, public snackBar: MatSnackBar) { }
-
-//  view = 'week';
-//  viewDate: Date = new Date();
-//  refresh: Subject<any> = new Subject();
-//  events: CalendarEvent[] = [];
-//  tecnicos: any[] = [];
-
-//  locale: string = 'es';
-
-//  weekStartsOn: number = DAYS_OF_WEEK.MONDAY;
-
-//  weekendDays: number[] = [DAYS_OF_WEEK.MONDAY];
-
-//  eventClicked(event) {
-//    console.log("ok");
-//    console.log(event);
-//  }
-
-//  rdtecnico: any = 0;
-//  tecnico: any = 0;
-//  ddlhora_fin: any = 0;
-//  hexadecimal = new Array("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F")
-//  color_aleatorio = "#";
-//  numPosibilidades: any;
-//  aleat: any;
-//  tecnico_actual: any = 0;
-
-//  set_tecnico(obj) {
-
-//    this.tecnico_actual = obj;
-//  }
-
-//  hourSegmentClicked(event) {
-//    var fecha1 = moment(event.date);
-//    var fecha2 = moment();
-
-//    if (moment(event.date).format("MM/DD/YYYY") < moment().format("MM/DD/YYYY")) {
-//      this.snackBar.open("La visita no puede en una fecha anterior al día de hoy", "", {
-//        duration: 5000,
-//        verticalPosition: 'bottom',
-//        horizontalPosition: 'right',
-//        extraClasses: ['blue-snackbar']
-//      });
-//    }
-//    else {
-//      if (this.tecnico_actual == 0) {
-//        this.snackBar.open("Es necesario elegir un técnico", "", {
-//          duration: 5000,
-//          verticalPosition: 'bottom',
-//          horizontalPosition: 'right',
-//          extraClasses: ['blue-snackbar']
-//        });
-//      }
-//      else {
-//        if (moment(event.date).format("HH") != "09" && moment(event.date).format("HH") != "11" && moment(event.date).format("HH") != "14" && moment(event.date).format("HH") != "16" && moment(event.date).format("HH") != "13") {
-//          this.snackBar.open("La visita no puede se programada en este horario:" + moment(event.date).format("HH:mm"), "", {
-//            duration: 5000,
-//            verticalPosition: 'bottom',
-//            horizontalPosition: 'right',
-//            extraClasses: ['blue-snackbar']
-//          });
-//        }
-//        else {
-//          if (moment(event.date).format("HH") == "13") {
-//            this.snackBar.open("Es hora de la comida:" + moment(event.date).format("HH:mm"), "", {
-//              duration: 5000,
-//              verticalPosition: 'bottom',
-//              horizontalPosition: 'right',
-//              extraClasses: ['blue-snackbar']
-//            });
-//          }
-//          else {
-//            if (moment(event.date).diff(moment(), 'days') >= 2) {
-//              console.log(moment(event.date).diff(moment(), 'days'), ' dias de diferencia');
-//              let dialogRef = this.dialog.open(DialogVisitaHora, {
-//                width: '450px',
-//                disableClose: true,
-//                data: {
-//                  tecnico: this.tecnico_actual, tipo_servicio: this.data.tipo_servicio, event: moment(event.date).format("HH"), fecha: moment(event.date).format("MM/DD/YYYY"), hora_inicio: moment(event.date).format('LT'), horas_tecnico: this.data.horas_tecnico, propuesto: false
-//                }
-//              });
-
-//              dialogRef.afterClosed().subscribe(result => {
-//                console.log(result);
-//                if (result != undefined) {
-//                  localStorage.setItem("agenda", JSON.stringify((result)));
-//                  this.events.push(
-//                    {
-//                      start: addHours(startOfDay(new Date(result.fecha)), result.event),
-//                      end: addHours(startOfDay(new Date(result.fecha)), parseInt(localStorage.getItem("fecha_fin"))),
-//                      title: result.tipo_servicio.desc_tipo_servicio + "-" + result.tecnico.tecnico,
-//                      color: {
-//                        primary: '#FFC300',
-//                        secondary: '#FFC300  '
-//                      },
-//                      //draggable: true,
-//                      //resizable: {
-//                      //  beforeStart: true,
-//                      //  afterEnd: true
-//                      //}
-//                    }
-//                  );
-//                  this.refresh.next();
-//                }
-//                else {
-//                  localStorage.setItem("agenda", "");
-//                }
-//              });
-
-//            }
-//            else {
-//              this.snackBar.open("La visita solo puede ser programada con 48 hrs. de anticipación", "", {
-//                duration: 5000,
-//                verticalPosition: 'bottom',
-//                horizontalPosition: 'right',
-//                extraClasses: ['blue-snackbar']
-//              });
-//            }
-//          }
-//        }
-//      }
-//    }
-//  }
-
-//  eventTimesChanged({
-//    event,
-//    newStart,
-//    newEnd
-//                      }: CalendarEventTimesChangedEvent): void {
-//    event.start = newStart;
-//    event.end = newEnd;
-//    this.refresh.next();
-//  }
-
-//  aleatorio(inferior, superior) {
-//    this.numPosibilidades = superior - inferior
-//    this.aleat = Math.random() * this.numPosibilidades
-//    this.aleat = Math.floor(this.aleat)
-//    return parseInt(inferior) + this.aleat
-//  }
-
-
-//  filtro_tecnico(event, options) {
-
-//    if (event.source.checked) {
-//      this.heroService.service_general("servicios/Tecnico_id", { "id": options.id }).subscribe((value) => {
-//        console.log(value.value.item);
-//        if (value.value.item != "") {
-//          this.events = [];
-//          for (var i = 0; i < value.value.item.length; i++) {
-//            this.events.push(
-//              {
-//                start: addHours(startOfDay(new Date(value.value.item[i].fecha_visita)), value.value.item[i].hora_inicio),
-//                end: addHours(startOfDay(new Date(value.value.item[i].fecha_visita)), value.value.item[i].hora_fin),
-//                title: value.value.item[i].desc_tipo_servicio + "-" + value.value.item[i].tecnico,
-//                color: {
-//                  primary: value.value.item[i].tecnico_color,
-//                  secondary: value.value.item[i].tecnico_color
-//                },
-//                actions: []
-//              });
-//          }
-
-//          this.events.push(
-//            {
-//              start: addHours(startOfDay(new Date(value.value.item[0].fecha_propuesta)), value.value.item[0].hora_propuesta),
-//              end: addHours(startOfDay(new Date(value.value.item[0].fecha_propuesta)), (value.value.item[0].hora_propuesta * 1) + (this.data.horas_tecnico * 1)),
-//              title: value.value.item[0].desc_tipo_servicio + "-" + value.value.item[0].tecnico,
-//              color: {
-//                primary: '#FFC300',
-//                secondary: '#FFC300'
-//              },
-//              actions: []
-//            });
-
-//          let dialogRef = this.dialog.open(DialogVisitaHora, {
-//            width: '450px',
-//            disableClose: true,
-//            data: {
-//              tecnico: this.tecnico_actual, tipo_servicio: this.data.tipo_servicio, event: value.value.item[0].hora_propuesta, fecha: moment(value.value.item[0].fecha_propuesta).format("MM/DD/YYYY"), hora_inicio: moment("01-01-1900 " + value.value.item[0].hora_propuesta + ":00:00").format('LT'), horas_tecnico: this.data.horas_tecnico, propuesto: true
-//            }
-//          });
-
-//          dialogRef.afterClosed().subscribe(result => {
-//            console.log(result);
-//            if (result == undefined) {
-//              this.events = [];
-//              for (var i = 0; i < value.value.item.length; i++) {
-//                this.events.push(
-//                  {
-//                    start: addHours(startOfDay(new Date(value.value.item[i].fecha_visita)), value.value.item[i].hora_inicio),
-//                    end: addHours(startOfDay(new Date(value.value.item[i].fecha_visita)), value.value.item[i].hora_fin),
-//                    title: value.value.item[i].desc_tipo_servicio + "-" + value.value.item[i].tecnico,
-//                    color: {
-//                      primary: value.value.item[i].tecnico_color,
-//                      secondary: value.value.item[i].tecnico_color
-//                    },
-//                    actions: []
-//                  });
-//              }
-//              this.refresh.next();
-//            }
-//            else {
-//              localStorage.setItem("agenda", JSON.stringify((result)));
-//            }
-
-//          });
-
-//          this.refresh.next();
-//        }
-//        else {
-//          let dialogRef = this.dialog.open(DialogVisitaHora, {
-//            width: '450px',
-//            disableClose: true,
-//            data: {
-//              tecnico: this.tecnico_actual, tipo_servicio: this.data.tipo_servicio, event: "09", fecha: moment().add(2).format("MM/DD/YYYY"), hora_inicio: moment("01-01-1900 " + "09" + ":00:00").format('LT'), horas_tecnico: this.data.horas_tecnico, propuesto: true
-//            }
-//          });
-
-//          dialogRef.afterClosed().subscribe(result => {
-//            console.log(this.data);
-//            if (result == undefined) {
-//              this.events = [];
-//              for (var i = 0; i < value.value.item.length; i++) {
-//                this.events.push(
-//                  {
-//                    start: addHours(startOfDay(moment().add(2).toDate()), parseInt("09")),
-//                    end: addHours(startOfDay(moment().add(2).toDate()), parseInt("09") + (this.data.horas_tecnico * 1)),
-//                    title: this.data.tipo_servicio.desc_tipo_servicio + "-" + this.tecnico_actual,
-//                    color: {
-//                      primary: value.value.item[i].tecnico_color,
-//                      secondary: value.value.item[i].tecnico_color
-//                    },
-//                    actions: []
-//                  });
-//              }
-//              this.refresh.next();
-//            }
-//            else {
-//              localStorage.setItem("agenda", JSON.stringify((result)));
-//            }
-
-//          });
-
-//          this.refresh.next();
-//        }
-//      });
-//    }
-//    else {
-
-//    }
-
-//  }
-
-//  ver_todos() {
-//    this.events = [];
-//    this.heroService.service_general("servicios/TecnicoCalendario", { "id": this.data.tipo_servicio.id }).subscribe((value) => {
-
-//      for (var i = 0; i < value.length; i++) {
-//        this.events.push(
-//          {
-//            start: addHours(startOfDay(new Date(value[i].fecha_visita)), value[i].hora_inicio),
-//            end: addHours(startOfDay(new Date(value[i].fecha_visita)), value[i].hora_fin),
-//            title: value[i].desc_tipo_servicio + "-" + value[i].tecnico,
-//            color: {
-//              primary: value[i].tecnico_color,
-//              secondary: value[i].tecnico_color
-//            },
-//            actions: [],
-//            draggable: true,
-//            resizable: {
-//              beforeStart: true,
-//              afterEnd: true
-//            }
-//          });
-//      }
-
-//      //console.log(this.events);
-//      this.refresh.next();
-//    });
-//  }
-
-//  color() {
-//    for (var i = 0; i < 6; i++) {
-//      let aleatorio;
-//      let posarray = this.aleatorio(0, this.hexadecimal.length)
-//      this.color_aleatorio += this.hexadecimal[posarray]
-//    };
-//    return this.color_aleatorio
-//  }
-
-
-//  ngOnInit() {
-
-//    this.heroService.service_general("servicios/TecnicoCalendario", { "id": this.data.tipo_servicio.id }).subscribe((value) => {
-
-//      for (var i = 0; i < value.length; i++) {
-//        this.events.push(
-//          {
-//            start: addHours(startOfDay(new Date(value[i].fecha_visita)), value[i].hora_inicio),
-//            end: addHours(startOfDay(new Date(value[i].fecha_visita)), value[i].hora_fin),
-//            title: value[i].desc_tipo_servicio + "-" + value[i].tecnico,
-//            color: {
-//              primary: value[i].tecnico_color,
-//              secondary: value[i].tecnico_color
-//            },
-//            actions: [],
-//            draggable: true,
-//            resizable: {
-//              beforeStart: true,
-//              afterEnd: true
-//            }
-//          });
-//      }
-
-//      //console.log(this.events);
-//      this.refresh.next();
-//    });
-//  }
-
-//  onNoClick(): void {
-//    this.dialogRef.close();
-//  }
-
-//}
 
 @Component({
   selector: 'snack-bar-component-example-snack',
@@ -1341,7 +916,10 @@ export class Productos_Servicio {
   modelo: string;
   sku: string;
   tipo: string;
+  id_categoria: number;
   hora_tecnico: number;
   hora_precio: string;
   precio_visita: number;
+  no_tecnicos: number;
+  primera_visita: boolean = true;
 }

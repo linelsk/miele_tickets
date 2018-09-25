@@ -3,64 +3,75 @@
   <br class="visible-xs" />
   <section class="content">
     <div class="row">
-      <form #cambiarForm="ngForm">
-        <div class="col-md-6">
-          <div class="box">
-            <div class="box-header with-border">
-              <h3 class="box-title negritas">Datos del cliente</h3>
-            </div>
-            <!-- /.box-header -->
-            <div class="box-body">
-              <div class="col-xs-12">
-                <div class="col-xs-12" style="margin-bottom:14px"></div>
-                <div class="form-group col-xs-12 col-md-6">
-                  <label *ngIf="cliente.nombre_comercial !=''">Nombre comercial</label>
-                  <label *ngIf="cliente.nombre !=''">Nombre</label><br />
-                  <span *ngIf="cliente.nombre_comercial !=''">{{cliente.nombre_comercial}}</span>
-                  <span *ngIf="cliente.nombre !=''">{{cliente.nombre}}</span><br /><br />
-                  <label>Teléfono fijo</label><br />
-                  <span>{{cliente.telefono}}</span><br /><br />
-                  <label>Email</label><br />
-                  <span>{{cliente.email}}</span>
-                </div>
-                <div class="form-group col-xs-12 col-md-6">
-                  <label *ngIf="cliente.nombre_comercial !=''">Nombre de contacto</label>
-                  <label *ngIf="cliente.nombre !=''">Apellidos</label><br />
-                  <span *ngIf="cliente.nombre_comercial !=''">{{cliente.nombre_contacto}}</span>
-                  <span *ngIf="cliente.nombre !=''">{{cliente.paterno}} {{cliente.materno}}</span><br /><br />
-                  <label>Teléfono celular</label><br />
-                  <span>{{cliente.telefono_movil}}</span><br /><br />
-                </div>
-                <div class="col-xs-12" style="margin-bottom:12px"></div>
+      <div class="col-md-6" style="height:300px">
+        <div class="box">
+          <div class="box-header with-border">
+            <h3 class="box-title negritas">Datos del cliente</h3>
+          </div>
+          <!-- /.box-header -->
+          <div class="box-body">
+            <div class="col-xs-12">
+              <div class="col-xs-12" style="margin-bottom:14px"></div>
+              <div class="form-group col-xs-12 col-md-6">
+                <label *ngIf="cliente.nombre_comercial !=''">Nombre comercial</label>
+                <label *ngIf="cliente.nombre !=''">Nombre</label><br />
+                <span *ngIf="cliente.nombre_comercial !=''">{{cliente.nombre_comercial}}</span>
+                <span *ngIf="cliente.nombre !=''">{{cliente.nombre}}</span><br /><br />
+                <label>Teléfono fijo</label><br />
+                <span>{{cliente.telefono}}</span><br /><br />
+                <label>Email</label><br />
+                <span>{{cliente.email}}</span>
               </div>
+              <div class="form-group col-xs-12 col-md-6">
+                <label *ngIf="cliente.nombre_comercial !=''">Nombre de contacto</label>
+                <label *ngIf="cliente.nombre !=''">Apellidos</label><br />
+                <span *ngIf="cliente.nombre_comercial !=''">{{cliente.nombre_contacto}}</span>
+                <span *ngIf="cliente.nombre !=''">{{cliente.paterno}} {{cliente.materno}}</span><br /><br />
+                <label>Teléfono celular</label><br />
+                <span>{{cliente.telefono_movil}}</span><br /><br *ngIf="mostrar_no_cliente" />
+
+                <label *ngIf="mostrar_no_cliente">No. de cliente <button class="pull-center btn-xs btn-default-rojo" (click)="editar_no_cliente(cliente.folio)" *ngxPermissionsOnly="['Contact Center'];">Editar</button></label><br />
+                <span *ngIf="mostrar_no_cliente">{{cliente.folio | slice:0:25}}</span>
+
+                <mat-form-field class="full-width" *ngIf="!mostrar_no_cliente">
+                  <input matInput type="text" placeholder="Editar número de cliente" id="folio" name="folio" #folio="ngModel" [(ngModel)]="cliente.folio">
+                  <button mat-button matSuffix mat-icon-button aria-label="Clear" (click)="editar_cliente()">
+                    <mat-icon style="line-height:inherit"><i class="fa fa-pencil" aria-hidden="true" style="line-height:inherit"></i></mat-icon>
+                  </button>
+                </mat-form-field>
+              </div>
+              <div class="col-xs-12" style="margin-bottom:12px"></div>
             </div>
           </div>
-          <!-- /.box -->
         </div>
-      </form>
-      <div class="col-md-6">
+        <!-- /.box -->
+      </div>
+      <div class="col-md-6" *ngxPermissionsOnly="['Contact Center'];">
         <div class="box">
           <!-- /.box-header -->
           <div class="box-body">
             <div class="col-xs-12">
               <div class="col-xs-12" style="margin-bottom:10px"></div>
               <div class="form-group col-xs-12 col-md-6">
-                <button [routerLink]="['/nuevoservicio', cliente.id]" type="submit" class="btn btn-default btn-default-rojo col-md-12" style="padding: 40px 30px 40px 30px;">
+                <button *ngIf="!ir_servicio" type="submit" (click)="validar_servicio();" class="btn btn-default btn-default-rojo col-md-12" style="padding: 40px 30px 40px 30px;">
+                  <span style="font-size:20px">Nuevo servicio</span>
+                </button>
+                <button *ngIf="ir_servicio" [routerLink]="['/nuevoservicio', cliente.id]" type="submit" class="btn btn-default btn-default-rojo col-md-12" style="padding: 40px 30px 40px 30px;">
                   <span style="font-size:20px">Nuevo servicio</span>
                 </button>
               </div>
               <div class="form-group col-xs-12 col-md-6">
-                <button type="submit" class="btn btn-default btn-default-rojo col-md-12" style="padding: 40px 30px 40px 30px;" >
+                <button type="submit" class="btn btn-default btn-default-rojo col-md-12" style="padding: 40px 30px 40px 30px;">
                   <span style="font-size:20px">Venta</span>
                 </button>
               </div>
               <div class="form-group col-xs-12 col-md-6">
-                <button type="submit" class="btn btn-default btn-default-rojo col-md-12" style="padding: 40px 30px 40px 30px;" >
+                <button type="submit" class="btn btn-default btn-default-rojo col-md-12" style="padding: 40px 30px 40px 30px;">
                   <span style="font-size:20px">Quejas</span>
                 </button>
               </div>
               <div class="form-group col-xs-12 col-md-6">
-                <button type="submit" class="btn btn-default btn-default-rojo col-md-12" style="padding: 40px 30px 40px 30px;" >
+                <button type="submit" class="btn btn-default btn-default-rojo col-md-12" style="padding: 40px 30px 40px 30px;">
                   <span style="font-size:20px">Encuesta</span>
                 </button>
               </div>
@@ -85,7 +96,7 @@
                 <label>Estado</label><br />
                 <span>{{direccion.estado}}</span><br /><br />
                 <label>Colonia</label><br />
-                <span>{{direccion.colonia}}</span>
+                <span>{{direccion.desc_localidad}}</span>
               </div>
               <div class="form-group col-xs-12 col-md-6">
                 <label>CP</label><br />
@@ -93,7 +104,7 @@
                 <label>Delegación / municipio</label><br />
                 <span>{{direccion.municipio}}</span><br /><br />
                 <label>Referencias</label><br />
-                <span>{{cliente.refrerencias}}</span><br /><br />
+                <span>{{cliente.refrerencias | slice:0:50 }}<span *ngIf="cliente.refrerencias.length > 20">...</span></span><br /><br />
               </div>
             </div>
           </div>
@@ -173,8 +184,8 @@
 
                           <!-- Name Column -->
                           <ng-container matColumnDef="SKU">
-                            <mat-header-cell *matHeaderCellDef> SKU </mat-header-cell>
-                            <mat-cell *matCellDef="let element"> {{element.sku}} </mat-cell>
+                            <mat-header-cell *matHeaderCellDef> Nombre </mat-header-cell>
+                            <mat-cell *matCellDef="let element"> {{element.nombre}} </mat-cell>
                           </ng-container>
 
                           <!-- Symbol Column -->
@@ -190,12 +201,12 @@
 
                           <ng-container matColumnDef="Estatus">
                             <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
-                            <mat-cell *matCellDef="let element"><a style="color:inherit; cursor:pointer" title="{{element.estatus}}">{{element.estatus | slice:0:20 }}<span *ngIf="element.estatus.length > 20">...</span></a> </mat-cell>
+                            <mat-cell *matCellDef="let element"><a style="color:inherit; cursor:pointer" title="{{element.estatus}}">{{element.estatus}}</a> </mat-cell>
                           </ng-container>
 
                           <ng-container matColumnDef="Imagen">
                             <mat-header-cell *matHeaderCellDef style=" text-align:center">Troubleshooting</mat-header-cell>
-                            <mat-cell *matCellDef="let element" style=" text-align:center"><a style="color:inherit; cursor:pointer" (click)="troubleshooting(element)"><i class="fa fa-file-text-o" aria-hidden="true"></i></a> </mat-cell>
+                            <mat-cell *matCellDef="let element" style=" text-align:center"><a style="color:inherit; cursor:pointer" (click)="troubleshooting(element)" *ngxPermissionsOnly="['Contact Center'];"><i class="fa fa-file-text-o" aria-hidden="true"></i></a> </mat-cell>
                           </ng-container>
 
                           <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
@@ -316,7 +327,7 @@
 
                       <div class="form-group col-xs-12 col-md-4">
                         <div style="margin-bottom:25px"></div>
-                        <button type="button" class="pull-center btn btn-default btn-default-rojo" [disabled]="preventAbuse">
+                        <button type="button" class="pull-center btn btn-default btn-default-rojo" [disabled]="preventAbuse" *ngxPermissionsOnly="['Contact Center'];">
                           {{ preventAbuse ? 'Agregando...' : 'Agregar nuevo producto' }}
                         </button>
                       </div>
@@ -374,8 +385,19 @@
 
                 <div class="form-group col-xs-12 col-md-4">
                   <mat-form-field class="full-width">
-                    <input matInput id="colonia" type="text" name="colonia" #colonia="ngModel" [(ngModel)]="direccion.colonia" placeholder="Cólonia">
+                    <mat-select placeholder="Colonia" id="colonia" name="colonia" #colonia="ngModel" [(ngModel)]="direccion.colonia" required>
+                      <mat-option *ngFor="let value of localidades; trackBy: index;" [value]="value.id_localidad">
+                        {{value.localidad | uppercase}}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="colonia.dirty || colonia.pristine">
+                      Colonia es <strong>requerido</strong>
+                    </mat-error>
                   </mat-form-field>
+
+                  <!--<mat-form-field class="full-width">
+                    <input matInput id="colonia" type="text" name="colonia" #colonia="ngModel" [(ngModel)]="direccion.colonia" placeholder="Cólonia">
+                  </mat-form-field>-->
                 </div>
 
                 <div class="form-group col-xs-12 col-md-4" style="padding-right:0;">
@@ -384,7 +406,7 @@
                   </mat-form-field>
                 </div>
 
-                <div class="col-xs-12 text-right" style="padding:0;">
+                <div class="col-xs-12 text-right" style="padding:0;" *ngxPermissionsOnly="['Contact Center'];">
                   <button type="submit" class="pull-center btn btn-default btn-default-rojo" (click)="editar_direccion(direccion.id_direccion);">Guardar</button>
                 </div>
               </form>

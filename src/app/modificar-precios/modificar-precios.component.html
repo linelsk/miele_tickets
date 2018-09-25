@@ -1,0 +1,177 @@
+<div class="content-wrapper">
+  <br class="visible-xs" />
+  <br class="visible-xs" />
+  <form #verservicioForm="ngForm">
+    <section class="content">
+      <div class="row">
+        <form #cambiarForm="ngForm">
+          <div class="col-md-12">
+            <div class="box">
+              <div class="box-header with-border">
+                <h3 class="box-title negritas">Editar lista de precios</h3>
+                <div class="box-tools pull-right">
+                  <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                    <i class="fa fa-minus"></i>
+                  </button>
+                </div>
+              </div>
+              <!-- /.box-header -->
+              <div class="box-body">
+                <div class="input-group col-xs-12">
+                  <div class="col-md-12">
+                    <mat-form-field class="full-width">
+                      <input matInput type="text" id="busqueda_precio" name="busqueda_precio" [(ngModel)]="txt_busqueda_precio" #busqueda="ngModel" placeholder="Buscar por: Grupo de refacción"
+                             [errorStateMatcher]="matcher">
+                      <mat-error *ngIf="busqueda.hasError('required')">
+                        Es necesario ingresar alguna <strong>busqueda</strong>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <span class="input-group-btn" style="padding-right:10px;">
+                    <button type="submit" class="pull-center btn btn-default btn-default-rojo" (click)="buscar_grupo_precio()" [disabled]="preventAbuse" style="margin-right:5px;">
+                      {{ preventAbuse ? 'Buscando...' : 'Buscar' }}
+                    </button>
+                    &nbsp;&nbsp;&nbsp;
+                    <button type="submit" class="pull-center btn btn-default btn-default" (click)="nuevo_grupo()" [disabled]="preventAbuse" style="margin-right:5px;">
+                      Nuevo grupo
+                    </button>
+                  </span>
+                </div>
+                <br />
+
+                <div class="col-xs-12">
+                  <div class="example-container mat-elevation-z2">
+                    <mat-table #table [dataSource]="dataSource_precio">
+
+                      <!-- Cantidad Column -->
+                      <ng-container matColumnDef="grupo_precio">
+                        <mat-header-cell *matHeaderCellDef> Grupo de precio </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                          <a style="cursor:pointer; color:inherit">{{element.grupo_precio}}</a>
+                        </mat-cell>
+                      </ng-container>
+
+                      <ng-container matColumnDef="precio">
+                        <mat-header-cell *matHeaderCellDef> Precio sin IVA</mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                          <a style="cursor:pointer; color:inherit">${{element.precio_sin_iva}}</a>
+                        </mat-cell>
+                      </ng-container>
+
+                      <ng-container matColumnDef="boton">
+                        <mat-header-cell *matHeaderCellDef> </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                          <button type="button" class="pull-center btn btn-sm btn-default btn-default-rojo" (click)="editar_grupo(element)" [disabled]="preventAbuse" style="margin-right:5px;">
+                            Editar
+                          </button>
+                        </mat-cell>
+                      </ng-container>
+
+                      <mat-header-row *matHeaderRowDef="displayedColumns_precio"></mat-header-row>
+                      <mat-row *matRowDef="let row; columns: displayedColumns_precio;"></mat-row>
+                    </mat-table>
+
+                    <mat-paginator #paginator_precio
+                                   [pageSize]="5"
+                                   [pageSizeOptions]="[5, 10]">
+                    </mat-paginator>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- /.box -->
+          </div>
+
+          <div class="col-md-12">
+            <div class="box">
+              <div class="box-header with-border">
+                <h3 class="box-title negritas">Refacciones</h3>
+                <div class="box-tools pull-right">
+                  <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                    <i class="fa fa-minus"></i>
+                  </button>
+                </div>
+              </div>
+              <!-- /.box-header -->
+              <div class="box-body">
+                <form #buscarForm="ngForm">
+                  <div class="box-body">
+                    <div class="input-group col-xs-12">
+                      <div class="col-md-12">
+                        <mat-form-field class="full-width">
+                          <input matInput type="text" id="busqueda" name="busqueda" [(ngModel)]="text_busqueda" #busqueda="ngModel" placeholder="Buscar por: Número de refacion, nombre"
+                                 [errorStateMatcher]="matcher">
+                          <mat-error *ngIf="busqueda.hasError('required')">
+                            Es necesario ingresar alguna <strong>busqueda</strong>
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                      <span class="input-group-btn" style="padding-right:10px;">
+                        <button type="submit" class="pull-center btn btn-default btn-default-rojo" (click)="buscar()" [disabled]="preventAbuse" style="margin-right:5px;">
+                          {{ preventAbuse ? 'Buscando...' : 'Buscar' }}
+                        </button>
+                      </span>
+                    </div>
+                    <br />
+
+                    <div class="col-xs-12">
+                      <div class="example-container mat-elevation-z2">
+                        <mat-table #table [dataSource]="dataSource">
+
+                          <!-- Descripción Column -->
+                          <ng-container matColumnDef="nombre">
+                            <mat-header-cell *matHeaderCellDef> No. de refacción - Descripción </mat-header-cell>
+                            <mat-cell *matCellDef="let element">
+                              <a style="cursor:pointer; color:inherit">{{element.descripcion}}</a>
+                            </mat-cell>
+                          </ng-container>
+
+                          <!-- Cantidad Column -->
+                          <ng-container matColumnDef="cantidad">
+                            <mat-header-cell *matHeaderCellDef> Grupo de precio </mat-header-cell>
+                            <mat-cell *matCellDef="let element">
+                              <a style="cursor:pointer; color:inherit">{{element.grupo_precio}}</a>
+                            </mat-cell>
+                          </ng-container>
+
+                          <ng-container matColumnDef="precio">
+                            <mat-header-cell *matHeaderCellDef> Precio sin IVA</mat-header-cell>
+                            <mat-cell *matCellDef="let element">
+                              <a style="cursor:pointer; color:inherit">${{element.precio_sin_iva}}</a>
+                            </mat-cell>
+                          </ng-container>
+
+                          <ng-container matColumnDef="boton">
+                            <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                            <mat-cell *matCellDef="let element">
+                              <button type="button" class="pull-center btn btn-sm btn-default btn-default-rojo" (click)="editar_precio_refaccion(element)" [disabled]="preventAbuse" style="margin-right:5px;">
+                                Editar
+                              </button>
+                            </mat-cell>
+                          </ng-container>
+
+                          <mat-header-row *matHeaderRowDef="displayedColumns_buscar"></mat-header-row>
+                          <mat-row *matRowDef="let row; columns: displayedColumns_buscar;"></mat-row>
+                        </mat-table>
+
+                        <mat-paginator #paginator
+                                       [pageSize]="5"
+                                       [pageSizeOptions]="[5, 10]">
+                        </mat-paginator>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <!-- /.box -->
+            </div>
+          </div>
+
+        </form>
+        <!-- /.col -->
+      </div>
+    </section>
+    <!-- /.content -->
+  </form>
+  <!-- /.content -->
+</div>

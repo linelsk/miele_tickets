@@ -15,12 +15,12 @@
                 Status:
                 <span style="color:#E60000">
                   {{servicio_detalle.estatus_servicio}}
-                  <button class="pull-center btn-xs btn-default-rojo" *ngIf="servicio_detalle.id_estatus == 3" (click)="openEstatus(1)">Confirmar visita</button>
-                  <button class="pull-center btn-xs btn-default-rojo" *ngIf="servicio_detalle.id_estatus == 15" (click)="openFinal(1)">Final Approval</button>
+                  <span *ngxPermissionsOnly="['Contact Center'];"><button class="pull-center btn-xs btn-default-rojo" *ngIf="servicio_detalle.id_estatus == 3" (click)="openEstatus(1)">Confirmar visita</button></span> 
+                  <span *ngxPermissionsOnly="['Contact Center'];"><button class="pull-center btn-xs btn-default-rojo" *ngIf="servicio_detalle.id_estatus == 15" (click)="openFinal(1)">Final Approval</button></span>
                 </span>
               </h2>
             </div>
-            <div class="col-xs-6 text-right" style="padding:0; top: 65%; right:15px; position:absolute">
+            <div class="col-xs-6 text-right" style="padding:0; top: 65%; right:15px; position:absolute" *ngxPermissionsOnly="['Contact Center'];">
               <button class="pull-center btn btn-default btn-default-rojo">Ver historial</button>
               <button class="pull-center btn btn-default btn-default-rojo" (click)="openCancelar(1)">Cancelar servicio</button>
             </div>
@@ -96,15 +96,19 @@
                 <div class="col-xs-12">
                   <div class="col-xs-12" style="margin-bottom:13px"></div>
                   <div class="col-xs-12" style="padding:0;">
-                    <div class="form-group col-xs-12 col-md-4">
+                    <div class="form-group col-xs-12 col-md-3">
                       <label>Tipo de servicio solicitado</label><br />
                       <span>{{servicio_detalle.tipo_servicio}}</span>
                     </div>
-                    <div class="form-group col-xs-12 col-md-4">
+                    <div class="form-group col-xs-12 col-md-3">
+                      <label>Sub - tipo de servicio solicitado</label><br />
+                      <span>{{servicio_detalle.sub_tipo_servicio}}</span>
+                    </div>
+                    <div class="form-group col-xs-12 col-md-3">
                       <label>Solicitado por</label><br />
                       <span>{{servicio_detalle.solicitado_por}}</span>
                     </div>
-                    <div class="form-group col-xs-12 col-md-4">
+                    <div class="form-group col-xs-12 col-md-3">
                       <label>Solicitud vía</label><br />
                       <span>{{servicio_detalle.solicitud_via}}</span>
                     </div>
@@ -113,7 +117,7 @@
                   <div class="col-xs-12" style="padding:0;">
                     <div class="form-group col-xs-12 col-md-4">
                       <label>Número IBS</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                      <button class="pull-center btn-xs btn-default-rojo" (click)="editar_ibs(servicio_detalle.ibs)" [hidden]="mostrar_distribuidor">Editar IBS</button><br />
+                      <button class="pull-center btn-xs btn-default-rojo" (click)="editar_ibs(servicio_detalle.ibs)" [hidden]="mostrar_distribuidor" *ngxPermissionsOnly="['Contact Center'];">Editar IBS</button><br />
                       <span [hidden]="mostrar_distribuidor">{{servicio_detalle.ibs}}</span>
 
                       <div [hidden]="!mostrar_distribuidor">
@@ -134,7 +138,7 @@
                       <label>Distribuidor autorizado</label><br />
                       <span>{{servicio_detalle.distribuidor_autorizado}}</span>
                     </div>
-                    <div class="form-group col-xs-12 col-md-4">
+                    <div class="form-group col-xs-12 col-md-4" *ngIf="servicio_detalle.distribuidor_autorizado">
                       <label>Contacto</label><br />
                       <span>{{servicio_detalle.contacto}}</span>
                     </div>
@@ -213,13 +217,9 @@
                   </div>
                   <div class="col-xs-12">
                     <div class="col-xs-12" style="padding:0;">
-                      <div class="form-group col-xs-12 col-md-4">
+                      <div class="form-group col-xs-12 col-md-12">
                         <label>Reporte del cliente</label><br />
                         <span>{{servicio_detalle.actividades_realizar}}</span>
-                      </div>
-                      <div class="form-group col-xs-12 col-md-4">
-                        <label>Categoría del servicio</label><br />
-                        <span>{{servicio_detalle.categoria_servicio}}</span>
                       </div>
                     </div>
 
@@ -255,11 +255,12 @@
                   </div>
                 </div>
               </div>
+
               <!-- /.box -->
             </div>
           </div>
 
-          <div class="col-md-12">
+          <div class="col-md-12" *ngIf="servicio_detalle.estatus_servicio != 'Troubleshooting Resolved'">
             <div class="box">
               <div class="box-header with-border">
                 <h3 class="box-title negritas">Visitas</h3>
@@ -271,8 +272,8 @@
               </div>
               <!-- /.box-header -->
               <div class="box-body">
-                <div class="col-xs-12 text-right" style="padding:15px;">
-                  <button class="pull-center btn btn-default btn-default-rojo" (click)="openAgendaVisita();">Nueva visita</button>
+                <div class="col-xs-12 text-right" style="padding:15px;" *ngxPermissionsOnly="['Contact Center'];">
+                  <button class="pull-center btn btn-default btn-default-rojo" (click)="validar_visitas();">Nueva visita</button>
                 </div>
                 <div class="col-xs-12">
                   <mat-accordion>
@@ -286,18 +287,14 @@
                         <mat-divider></mat-divider>
                       </div>
 
-                      <div class="col-xs-12 " style="padding-left:0; padding-right:0">
+                      <div class="col-xs-12 " style="padding-left:0; padding-right:0" *ngxPermissionsOnly="['Contact Center'];">
                         <div class="form-group col-xs-12 col-md-12" style="text-align:right">
                           <br />
                           <button class="pull-center btn btn-default btn-default-rojo" (click)="openAgenda(i);">Reagendar visita</button>
-                          <button class="pull-center btn btn-default btn-default-rojo">Cancelar visita</button>
+                          <button class="pull-center btn btn-default btn-default-rojo" (click)="cancelarVisita(value.id);">Cancelar visita</button>
+                          <button class="pull-center btn btn-default btn-default-rojo" (click)="generar_pdf(value);">Descargar PDF</button>
                         </div>
                       </div>
-
-                      <div class="col-xs-12" style="padding-left:0; padding-right:0">
-                        <mat-divider></mat-divider>
-                      </div>
-
                       <div class="col-xs-12" style="padding-left:0; padding-right:0">
                         <br />
                         <div class="form-group col-xs-12 col-md-4" style="padding-left:0;">
@@ -306,12 +303,17 @@
                         </div>
                         <div class="form-group col-xs-12 col-md-4">
                           <label>Técnico</label><br />
-                          <span>{{value.tecnico}}</span>
+                          <span *ngFor="let tecnico of value.tecnico; let i = index">{{tecnico.nombre}}<br /></span>
                         </div>
                         <div class="form-group col-xs-12 col-md-4">
                           <label>Hora</label><br />
-                          <span>{{value.hora}}</span>
+                          <span>{{value.hora}}:00 hrs</span>
                         </div>
+                      </div>
+
+                      <div class="col-xs-12" style="padding-left:0; padding-right:0; margin-bottom:15px;">
+                        <label>Tiempo transcurrido durante la visita</label><br />
+                        <span>{{tiempo_vista}}</span>
                       </div>
 
                       <div class="col-xs-12" style="padding-left:0; padding-right:0" *ngIf="value.factura">
@@ -321,116 +323,201 @@
                         </div>
                       </div>
 
-                      <div *ngIf="value.reporte[0].productos ==''">
-                        <div class="col-xs-12" style="padding-left:0; padding-right:0">
+                      <div *ngIf="value.checklist.length == 0">
+                        <div class="col-xs-12" style="padding-left:0; padding-right:0" *ngIf="value.reporte[0].productos ==''">
                           <div class="form-group col-xs-12" style="padding-left:0;">
                             <label>Productos</label><br />
                           </div>
                         </div>
 
-                        <div class="example-container mat-elevation-z4">
-                          <mat-table #table [dataSource]="dataSource_visita">
-
-                            <!-- Folio Column -->
-                            <ng-container matColumnDef="#Servicio">
-                              <mat-header-cell *matHeaderCellDef> #Servicio </mat-header-cell>
-                              <mat-cell *matCellDef="let element"> {{element.id_servicio}} </mat-cell>
-                            </ng-container>
-
-                            <!-- Position Column -->
-                            <ng-container matColumnDef="Modelo">
-                              <mat-header-cell *matHeaderCellDef> Modelo </mat-header-cell>
-                              <mat-cell *matCellDef="let element"> {{element.modelo}} </mat-cell>
-                            </ng-container>
-
-                            <!-- Name Column -->
-                            <ng-container matColumnDef="SKU">
-                              <mat-header-cell *matHeaderCellDef> SKU </mat-header-cell>
-                              <mat-cell *matCellDef="let element"> {{element.sku}} </mat-cell>
-                            </ng-container>
-
-                            <!-- Weight Column -->
-                            <ng-container matColumnDef="Tipo">
-                              <mat-header-cell *matHeaderCellDef> Tipo de equipo </mat-header-cell>
-                              <mat-cell *matCellDef="let element"><span *ngIf="element.categoria != 'null'"> {{element.categoria | slice:0:20 }}<span *ngIf="element.categoria.length > 20">...</span> </span></mat-cell>
-                            </ng-container>
-
-                            <!-- Symbol Column -->
-                            <ng-container matColumnDef="Garantia">
-                              <mat-header-cell *matHeaderCellDef> Garantía </mat-header-cell>
-                              <mat-cell *matCellDef="let element"> {{element.garantia}} </mat-cell>
-                            </ng-container>
-
-                            <ng-container matColumnDef="Poliza">
-                              <mat-header-cell *matHeaderCellDef> Póliza </mat-header-cell>
-                              <mat-cell *matCellDef="let element"> {{element.poliza}} </mat-cell>
-                            </ng-container>
-
-                            <ng-container matColumnDef="Estatus">
-                              <mat-header-cell *matHeaderCellDef> Estatus </mat-header-cell>
-                              <mat-cell *matCellDef="let element">{{element.estatus_servicio}} </mat-cell>
-                            </ng-container>
-
-                            <mat-header-row *matHeaderRowDef="displayedColumns_visita"></mat-header-row>
-                            <mat-row *matRowDef="let row; columns: displayedColumns_visita;">
-                            </mat-row>
-                          </mat-table>
+                        <div class="col-md-12" style="padding: 10px 10px 10px 10px; -webkit-box-shadow: -1px 5px 6px 2px rgba(168,166,168,0.39);
+                                                              -moz-box-shadow: -1px 5px 6px 2px rgba(168,166,168,0.39);
+                                                              box-shadow: -1px 5px 6px 2px rgba(168,166,168,0.39);" *ngIf="value.reporte[0].productos ==''">
+                          <div class="col-md-12" style="padding:0">
+                            <div class="col-md-2" style="padding:0">
+                              <div class="col-md-12">
+                                <label>Modelo</label><br />
+                              </div>
+                            </div>
+                            <div class="col-md-2" style="padding:0">
+                              <div class="col-md-12">
+                                <label>SKU</label><br />
+                              </div>
+                            </div>
+                            <div class="col-md-2" style="padding:0">
+                              <div class="col-md-12">
+                                <label>Tipo</label><br />
+                              </div>
+                            </div>
+                            <div class="col-md-2" style="padding:0">
+                              <div class="col-md-12">
+                                <label>Garantia</label><br />
+                              </div>
+                            </div>
+                            <div class="col-md-2" style="padding:0">
+                              <div class="col-md-12">
+                                <label>Póliza</label><br />
+                              </div>
+                            </div>
+                            <div class="col-md-2" style="padding:0">
+                              <div class="col-md-12">
+                                <label>Estatus</label><br />
+                              </div>
+                            </div>
+                            <div class="col-md-12" style="padding:10px 10px 10px 10px"><mat-divider></mat-divider></div>
+                          </div>
+                          <div class="col-md-12" style="padding:0" *ngFor="let productos of value.productos; let i = index">
+                            <div class="col-md-2" style="padding:0">
+                              <div class="col-md-12">
+                                {{productos.modelo}}
+                              </div>
+                            </div>
+                            <div class="col-md-2" style="padding:0">
+                              <div class="col-md-12">
+                                {{productos.sku}}
+                              </div>
+                            </div>
+                            <div class="col-md-2" style="padding:0">
+                              <div class="col-md-12">
+                                {{productos.categoria}}
+                              </div>
+                            </div>
+                            <div class="col-md-2" style="padding:0">
+                              <div class="col-md-12">
+                                {{productos.garantia}}
+                              </div>
+                            </div>
+                            <div class="col-md-2" style="padding:0">
+                              <div class="col-md-12">
+                                {{productos.poliza}}
+                              </div>
+                            </div>
+                            <div class="col-md-2" style="padding:0">
+                              <div class="col-md-12">
+                                {{productos.estatus_servicio}}
+                              </div>
+                            </div>
+                            <div class="col-md-12" style="padding:10px 10px 10px 10px"><mat-divider></mat-divider></div>
+                          </div>
                         </div>
+
                         <br />
                       </div>
 
-                      <div *ngIf="value.reporte[0].productos !=''">
-                        <label>Reporte de visita</label><br />
-                        <mat-divider></mat-divider>
-                        <div class="col-xs-12" style="padding-left:0; padding-right:0" *ngFor="let report of value.reporte[0].productos; let i = index" [attr.data-index]="i">
-                          <br />
-                          <div class="form-group col-xs-12 col-md-6">
-                            <label>Producto</label><br />
-                            <span> <i class="fa fa-cog" aria-hidden="true"></i> {{report.nombre_prodcuto}}</span>
-                          </div>
-                          <div class="form-group col-xs-12 col-md-6">
-                            <label>Estatus</label><br />
-                            <span> <i class="fa fa-server" aria-hidden="true"></i> {{report.estatus}}</span>
-                          </div>
-                          <div class="form-group col-xs-12 col-md-12">
-                            <label>Actividades realizadas</label><br />
-                            <span> <i class="fa fa-briefcase" aria-hidden="true"></i> {{report.actividades}}</span>
-                          </div>
-                          <div class="form-group col-xs-12 col-md-12">
-                            <label>Fallas reportadas</label><br />
-                            <span> <i class="fa fa-dot-circle-o" aria-hidden="true"></i> {{report.fallas}}</span>
-                          </div>
-                          <!--<mat-divider></mat-divider>-->
-                          <div class="form-group col-xs-12 col-md-12" style="padding:0;">
-                            <div class="col-md-6">
-                              <label>Refacciones utilizadas</label>
-                            </div>
-                            <div class="col-md-6">
-                              <label>Unidades utilizadas</label>
-                            </div>
-                            <div style="list-style:none;" *ngFor="let repuestos of value.reporte[0].productos[i].piezas_repuesto;">
-                              <div class="col-md-6">
-                                <i class="fa fa-check-square-o" aria-hidden="true"></i> {{repuestos.refaccion}}<br />
-                              </div>
-                              <div class="col-md-6">
-                                <i class="fa fa-minus-square-o" aria-hidden="true"></i> {{repuestos.cantidad}}<br />
-                              </div>
-                            </div>
-                            <div class="col-md-12">
+
+                      <br /><br />
+                      <div class="col-md-12" style="padding:0;">
+                        <mat-tab-group>
+                          <mat-tab label="Reporte de visita" *ngIf="value.reporte[0].productos !=''">
+                            <div class="col-xs-12" style="padding-left:0; padding-right:0" *ngFor="let report of value.reporte[0].productos; let i = index" [attr.data-index]="i">
                               <br />
-                              <label>Imagenes de la reparación</label><br />
-                              <div class="col-md-3" *ngFor="let imagenes of value.reporte[0].productos[i].imagenes_reparacion; let i = index">
-                                <a class="thumbnail fancybox slide">
-                                  <img class="img-responsive" src="{{image_url}}{{imagenes.url}}" (click)="open(i, imagenes.url)" />
-                                </a>
+
+                              <div class="col-md-12">
+                                <div class="form-group col-xs-12">
+                                  <label>Producto</label><br />
+                                  <span> <i class="fa fa-cog" aria-hidden="true"></i> {{report.nombre_prodcuto}}, No. serie: {{report.no_serie}}</span>
+                                </div>
+                                <div class="form-group col-xs-12">
+                                  <label>Estatus</label><br />
+                                  <span> <i class="fa fa-server" aria-hidden="true"></i> {{report.estatus_servicio}}</span>
+                                </div>
+                                <div class="form-group col-xs-12">
+                                  <label>Actividades realizadas</label><br />
+                                  <span> <i class="fa fa-briefcase" aria-hidden="true"></i> {{report.actividades}}</span>
+                                </div>
+                                <div class="form-group col-xs-12">
+                                  <label>Fallas reportadas</label><br />
+                                  <span> <i class="fa fa-dot-circle-o" aria-hidden="true"></i> {{report.fallas}}</span>
+                                </div>
+                                <div class="form-group col-xs-12" style="padding:0;">
+                                  <div class="col-md-6">
+                                    <label>Refacciones utilizadas</label>
+                                  </div>
+                                  <div class="col-md-6">
+                                    <label>Unidades utilizadas</label>
+                                  </div>
+                                  <div style="list-style:none;" *ngFor="let value of value.reporte[0].productos[i].piezas_tecnico;">
+                                    <div class="col-md-6">
+                                      <i class="fa fa-check-square-o" aria-hidden="true"></i> {{value.refaccion}}<br />
+                                    </div>
+                                    <div class="col-md-6">
+                                      <i class="fa fa-minus-square-o" aria-hidden="true"></i> {{value.cantidad}}<br />
+                                    </div>
+                                  </div>
+                                  <div class="form-group col-xs-12 col-md-12" style="padding:0;">
+                                    <div class="col-md-6">
+                                      <label>Refacciones solicitadas</label>
+                                    </div>
+                                    <div class="col-md-6">
+                                      <label>Unidades utilizadas</label>
+                                    </div>
+                                    <div style="list-style:none;" *ngFor="let repuestos of value.reporte[0].productos[i].piezas_repuesto;">
+                                      <div class="col-md-6">
+                                        <i class="fa fa-check-square-o" aria-hidden="true"></i> {{repuestos.refaccion}}<br />
+                                      </div>
+                                      <div class="col-md-6">
+                                        <i class="fa fa-minus-square-o" aria-hidden="true"></i> {{repuestos.cantidad}}<br />
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-md-12">
+                                    <br />
+                                    <label>Imagenes de la reparación</label><br />
+                                    <div class="col-md-3" *ngFor="let imagenes of value.reporte[0].productos[i].imagenes_reparacion; let i = index">
+                                      <a class="thumbnail fancybox slide">
+                                        <img class="img-responsive" src="{{image_url}}{{imagenes.url}}" (click)="open(i, imagenes.url)" />
+                                      </a>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="col-xs-12" style="padding:0;">
+                                <mat-divider></mat-divider>
                               </div>
                             </div>
-                          </div>
-                          <div class="col-xs-12" style="padding:0;">
-                            <mat-divider></mat-divider>
-                          </div>
-                        </div>
+                          </mat-tab>
+                          <mat-tab label="Reporte de checklist" *ngIf="value.checklist.length != 0">
+                            <div class="col-xs-12" style="padding-left:0; padding-right:0" *ngFor="let checklist of value.checklist; let i = index" [attr.data-index]="i">
+                              <br />
+
+                              <div class="col-md-12">
+                                <div class="form-group col-xs-12">
+                                  <label>Producto</label><br />
+                                  <span> <i class="fa fa-cog" aria-hidden="true"></i> {{checklist.nombre}}</span>
+                                </div>
+                                <div class="form-group col-xs-12">
+                                  <label>Estatus</label><br />
+                                  <span> <i class="fa fa-server" aria-hidden="true"></i> {{checklist.estatus_prodcuto_checklist}}</span>
+                                </div>
+                                <div class="form-group col-xs-12" *ngFor="let preguntas of checklist.preguntas; let i = index">
+                                  <label>{{preguntas.pregunta_en}}</label><br />
+                                  <span *ngIf="preguntas.respuesta"> <i class="fa fa-check" aria-hidden="true"></i> SI</span>
+                                  <span *ngIf="!preguntas.respuesta"> <i class="fa fa-times" aria-hidden="true"></i> NO</span><br />
+                                  <label>Comentarios</label><br />
+                                  <span>{{preguntas.comentario}}</span>
+                                </div>
+                              </div>
+
+                              <div class="col-xs-12" style="padding:0;">
+                                <mat-divider></mat-divider>
+                              </div>
+
+                              <div class="col-md-12">
+                                <br />
+                                <label>Imagenes de checklist</label><br />
+                                <div class="col-md-3" *ngFor="let imagenes of checklist.imagenes_checklist; let i = index">
+                                  <a class="thumbnail fancybox slide">
+                                    <img class="img-responsive" src="{{image_url}}{{imagenes.url}}" (click)="open(i, imagenes.url)" />
+                                  </a>
+                                </div>
+                              </div>
+                            </div>
+                          </mat-tab>
+
+                        </mat-tab-group>
                       </div>
+
                       <mat-icon></mat-icon>
                       <!--<mat-checkbox>Requiere factura</mat-checkbox>-->
                     </mat-expansion-panel>
@@ -441,9 +528,156 @@
             </div>
           </div>
 
-          <!--<div class="col-xs-12 text-center">
-            <button class="pull-center btn btn-default btn-default-rojo" (click)="guadar_estatus();">Guardar cambios</button>
-          </div>-->
+          <div *ngxPermissionsOnly="['Technical Mangement'];">
+            <div class="col-md-12" *ngIf="!estatus_prediagnostico && servicio_detalle.estatus_servicio != 'Troubleshooting Resolved'">
+              <div class="box">
+                <div class="box-header with-border">
+                  <h3 class="box-title negritas">Pre diagnóstico</h3>
+                  <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                      <i class="fa fa-minus"></i>
+                    </button>
+                  </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                  <div class="col-xs-12">
+                    <mat-form-field class="full-width">
+                      <mat-chip-list #chipList>
+                        <mat-chip *ngFor="let fruit of fruits"
+                                  [selectable]="selectable"
+                                  [removable]="removable"
+                                  (removed)="remove(fruit)">
+                          {{fruit}}
+                          <mat-icon matChipRemove *ngIf="removable"><i class="fa fa-times" aria-hidden="true"></i></mat-icon>
+                        </mat-chip>
+                        <input placeholder="Refacciones"
+                               #fruitInput
+                               [formControl]="fruitCtrl"
+                               [matAutocomplete]="auto"
+                               [matChipInputFor]="chipList"
+                               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                               [matChipInputAddOnBlur]="addOnBlur"
+                               (matChipInputTokenEnd)="add($event)">
+                      </mat-chip-list>
+                      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+                        <mat-option *ngFor="let fruit of filteredFruits | async" [value]="fruit">
+                          {{fruit.descripcion}}
+                        </mat-option>
+                      </mat-autocomplete>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-12">
+                    <mat-form-field class="full-width">
+                      <textarea matInput placeholder="Observaciones" id="observaciones" name="observaciones" [(ngModel)]="prediagnostico.observaciones" #observaciones="ngModel" required></textarea>
+                      <mat-error *ngIf="observaciones.dirty || observaciones.pristine">
+                        Referencia es <strong>requerido</strong>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-xs-12 text-center" style="padding:15px;">
+                    <button class="pull-center btn btn-default btn-default-rojo" (click)="guardar_prediagnostico();">Guardar Pre diagnóstico</button>
+                  </div>
+                </div>
+                <!-- /.box -->
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-12" *ngIf="estatus_prediagnostico  && servicio_detalle.estatus_servicio != 'Troubleshooting Resolved'">
+            <div class="box">
+              <div class="box-header with-border">
+                <h3 class="box-title negritas">Solicitud de asignación refacciones</h3>
+                <div class="box-tools pull-right">
+                  <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                    <i class="fa fa-minus"></i>
+                  </button>
+                </div>
+              </div>
+              <!-- /.box-header -->
+              <div class="box-body">
+                <div class="col-xs-12 col-md-3" *ngIf="detalle_visita[0].asignacion_refacciones">
+                  <label>Refacciones pre diagnóstico</label>
+                  <div class="col-md-12" *ngFor="let value of refacciones_asignadas.refacciones; let i = index" style="padding:0;">
+                    <i class="fa fa-check-square" aria-hidden="true" *ngIf="value.estatus==true"></i>
+                    <i class="fa fa-square-o" aria-hidden="true" *ngIf="value.estatus==false"></i>
+                    <strong>{{value.no_material}}</strong> - {{value.descripcion}}
+                  </div>
+                </div>
+
+                <div class="col-xs-12 col-md-2" *ngIf="detalle_visita[0].asignacion_refacciones">
+                  <label>Garantía</label>
+                  <div class="col-md-12" *ngFor="let value of refacciones_asignadas.refacciones; let i = index" style="padding:0;">
+                    <i class="fa fa-check-square" aria-hidden="true" *ngIf="value.garantia==true"></i>
+                    <i class="fa fa-square-o" aria-hidden="true" *ngIf="value.garantia==false"></i>
+                  </div>
+                </div>
+
+                <div class="col-xs-12 col-md-3" *ngIf="!detalle_visita[0].asignacion_refacciones">
+                  <label>Refacciones pre diagnóstico</label>
+                  <div class="col-md-12" *ngFor="let value of refacciones_asignadas.refacciones; let i = index" style="padding:0;">
+                    <mat-checkbox (change)="validar_refaccion($event, value);"><strong>{{value.no_material}}</strong> - {{value.descripcion}}</mat-checkbox>
+                  </div>
+                </div>
+
+                <div class="col-xs-12 col-md-2" *ngIf="!detalle_visita[0].asignacion_refacciones">
+                  <label>Garantía</label>
+                  <div class="col-md-12" *ngFor="let value of refacciones_asignadas.refacciones; let i = index" style="padding:0;">
+                    <mat-checkbox (change)="garantia($event, value);"><span style="color:transparent">rr</span></mat-checkbox>
+                  </div>
+                </div>
+
+                <div class="col-xs-12 col-md-3" *ngIf="!detalle_visita[0].asignacion_refacciones">
+                  <label>Seleccionar técnico principal</label>
+                  <div class="col-md-12" style="padding:0;">
+                    <mat-checkbox (change)="validar_tecnico($event, 1, asignacion_tecnico1.id);" id="tecnico1" name="tecnico1" [(ngModel)]="_tecnico1" #tecnico1="ngModel"><strong>{{asignacion_tecnico1.tecnico}}</strong></mat-checkbox><br />
+                    <mat-checkbox (change)="validar_tecnico($event, 2, asignacion_tecnico2.id);" *ngIf="asignacion_tecnico2.length != 0" id="tecnico2" name="tecnico2" [(ngModel)]="_tecnico2" #tecnico2="ngModel"><strong>{{asignacion_tecnico2.tecnico}} </strong></mat-checkbox>
+                  </div>
+                </div>
+                <div class="col-xs-12 col-md-3" *ngIf="detalle_visita[0].asignacion_refacciones" style="margin-bottom:15px;">
+                  <label>Seleccionar técnico principal</label>
+                  <div class="col-md-12" style="padding:0;">
+                    <i class="fa fa-check-square" aria-hidden="true" *ngIf="asignacion_tecnico1.tecnico_responsable==true"></i>
+                    <i class="fa fa-square-o" aria-hidden="true" *ngIf="asignacion_tecnico1.tecnico_responsable==false"></i>
+                    <strong>{{asignacion_tecnico1.tecnico}}</strong>
+                    <br />
+                    <i class="fa fa-check-square" aria-hidden="true" *ngIf="asignacion_tecnico2.tecnico_responsable==true"></i>
+                    <i class="fa fa-square-o" aria-hidden="true" *ngIf="asignacion_tecnico2.tecnico_responsable==false"></i>
+                    <strong>{{asignacion_tecnico2.tecnico}}</strong>
+                    <!--<mat-checkbox (change)="validar_tecnico($event, value)"><strong>{{value.tecnico}}</strong></mat-checkbox>-->
+                  </div>
+                </div>
+
+                <div class="col-xs-12 col-md-4" *ngIf="!detalle_visita[0].asignacion_refacciones">
+                  <label>Fecha de entrega derefacciones</label><br />
+                  <
+                  <mat-form-field>
+                    <input matInput [matDatepicker]="picker" id="fecha_refacciones" name="fecha_refacciones" [(ngModel)]="fecha_refacciones_entrega" #fecha_refacciones="ngModel" placeholder="Fecha de entrega">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-xs-12 col-md-4" *ngIf="detalle_visita[0].asignacion_refacciones">
+                  <label>Fecha de entrega de refacciones</label><br />
+                  <i class="fa fa-calendar" aria-hidden="true"></i>
+                  <label>{{refacciones_asignadas.fecha_entrega_refaccion}}</label>
+                </div>
+                <div class="col-md-12" style="margin: 15px 0 15px 0"></div>
+                <div class="col-md-12" style="padding:0 0 15px 0;">
+                  <mat-divider></mat-divider>
+                </div>
+                <div class="col-xs-12 col-md-12">
+                  <label>Observaciones</label><br />
+                  <span>{{refacciones_asignadas.observaciones}}</span>
+                </div>
+                <div class="col-xs-12 text-center" style="padding:15px;" *ngIf="!detalle_visita[0].asignacion_refacciones">
+                  <button class="pull-center btn btn-default btn-default-rojo" (click)="asignar_refacciones();">Asignar refacciones</button>
+                </div>
+              </div>
+              <!-- /.box -->
+            </div>
+          </div>
         </form>
         <!-- /.col -->
       </div>

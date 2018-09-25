@@ -17,19 +17,20 @@ export class Clientes {
   creado: any;
   creadopor: number;
 
-  //direccion: direccion;
+  datos_fiscales = new datosfiscales();
 }
 
 export class direccion {
-  id_direccion: number;
+  id: number;
   id_cliente: number;
   calle_numero: string;
   cp: string;
   id_estado: number;
+  id_localidad: number;
   estado: string;
   id_municipio: number;
   municipio: string;
-  colonia: string;
+  colonia: number;
   telefono: string;
   telefono_movil: string;
   estatus: boolean;
@@ -63,6 +64,7 @@ export class datosfiscales {
 export class servicio {
   id_cliente: number;
   id_tipo_servicio: Tipo_Servicio;
+  id_sub_tipo_servicio: number;
   id_solicitado_por: number;
   id_distribuidor_autorizado: number;
   contacto: string;
@@ -75,6 +77,7 @@ export class servicio {
   IBS: string;
   id_motivo_cierre: number; 
   activar_credito: boolean;
+  tipo_servicio: string;
   creado: any;
   creadopor: number;
 }
@@ -88,7 +91,7 @@ export class visita {
   actividades_realizar: string;
   concepto: string;
   pagado: boolean;
-  pago_pendiente: boolean;
+  pago_pendiente: boolean = false;
   garantia: boolean;
   fecha_deposito: string;
   fecha_inicio_visita: any;
@@ -97,6 +100,10 @@ export class visita {
   terminos_condiciones: boolean;
   factura: boolean;
   estatus: number;
+  asignacion_refacciones: boolean = false;
+  pre_diagnostico: boolean = false;
+  si_acepto_tecnico_refaccion: boolean = false;
+  entrega_refacciones: boolean = false;
 }
 
 export class Tipo_Servicio {

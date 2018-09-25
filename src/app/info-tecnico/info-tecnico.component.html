@@ -151,10 +151,26 @@
                     <h3 class="box-title">Refacciones asignadas a: <strong style="color:#A5000D">{{tecnico.name}} {{tecnico.paterno}} {{tecnico.materno}}</strong></h3>
                   </div>
                 </div>
+                <div class="input-group col-xs-12">
+                  <div class="col-md-12" style="padding-left:0">
+                    <mat-form-field class="full-width">
+                      <input matInput type="text" id="busqueda" name="busqueda" [(ngModel)]="text_busqueda" #busqueda="ngModel" placeholder="Buscar por: Número de refacción, descripción">
+                    </mat-form-field>
+                  </div>
+                  <span class="input-group-btn">
+                    <button type="button" class="pull-center btn btn-default btn-default-rojo" (click)="buscar()" [disabled]="preventAbuse" style="margin-right:5px;">
+                      {{ preventAbuse ? 'Buscando...' : 'Buscar' }}
+                    </button>
+
+                    <button type="submit" class="pull-center btn btn-default btn-default" (click)="limpiartabla();" [disabled]="preventAbuse">
+                      {{ preventAbuse ? 'limpiando...' : 'Ver todo' }}
+                    </button>
+                  </span>
+                </div>
                 <div class="col-xs-4" style="text-align:right; padding-right:0;">
-                  <button type="submit" (click)="asignar_refacciones($event)" class="pull-center btn btn-default btn-default-rojo">
-                    Asignar refacciones
-                  </button>
+                  <!--<button type="submit" (click)="asignar_refacciones($event)" class="pull-center btn btn-default btn-default-rojo">
+      Asignar refacciones
+    </button>-->
                 </div>
               </div>
               <div class="col-xs-12" style="padding:0;">

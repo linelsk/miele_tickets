@@ -1,3 +1,101 @@
-<p>
-  asignacion-refacciones works!
-</p>
+<div class="content-wrapper">
+  <br class="visible-xs" />
+  <br class="visible-xs" />
+
+  <form #verservicioForm="ngForm">
+    <section class="content">
+      <div class="row">
+        <form #cambiarForm="ngForm">
+
+          <div class="col-md-12">
+            <div class="box">
+              <div class="box-header with-border">
+                <h3 class="box-title negritas">Entrega de refacciones</h3>
+                <div class="box-tools pull-right">
+                  <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                    <i class="fa fa-minus"></i>
+                  </button>
+                </div>
+              </div>
+              <!-- /.box-header -->
+              <div class="box-body">
+                <div class="col-xs-12" *ngIf="detalle_visita.length > 0">
+                  <mat-accordion *ngFor="let value of detalle_visita; let i = index">
+                    <mat-expansion-panel [attr.data-index]="i" style="padding:15px 0px 15px 0px">
+                      <mat-expansion-panel-header>
+                        <mat-panel-title>
+                          <!--<h4>{{value.tecnico}} - No. de servicio: {{value.id_servicio}}</h4>-->
+                          <div class="col-xs-12 col-md-4" style="padding:0;">
+                            <label class="small" style="margin-bottom:0;">Técnicos</label><br />
+                            <span class="small" *ngFor="let tecnico of value.tecnicos; let j = index">
+                              {{tecnico.tecnico}}
+                              <i class="fa fa-wrench" aria-hidden="true" *ngIf="tecnico.tecnico_responsable==true"></i>
+                              <br />
+                            </span>
+                          </div>
+                          <div class="col-xs-12 col-md-4" style="padding:0;">
+                            <label class="small" style="margin-bottom:0;">Número de servicio</label><br />
+                            <span class="small">{{value.id_servicio}}</span>
+                          </div>
+                          <div class="col-xs-12 col-md-4" style="padding:0;">
+                            <label class="small" style="margin-bottom:0;">Fecha</label><br />
+                            <span class="small">{{value.fecha_servcio}}</span>
+                          </div>
+                        </mat-panel-title>
+                      </mat-expansion-panel-header>
+                      <div class="col-xs-12" style="padding-left:0; padding-right:0">
+                        <mat-divider></mat-divider>
+                      </div>
+                      <br />
+                      <div>
+                        <div class="form-group col-xs-12 col-md-12" style="padding-left:0;">
+                          <label>Observaciones</label><br />
+                          <span>{{value.observaciones}}</span>
+                        </div>
+                        <div class="col-xs-12" style="padding-left:0; padding-right:0">
+                          <mat-divider></mat-divider>
+                        </div>
+                        <div class="form-group col-xs-12" style="padding-left:0;">
+                          <label>Refacciones pre diagnóstico</label><br />
+                          <div class="col-xs-12" *ngFor="let refaccion of value.refacciones; let i = index"  style="vertical-align:middle">
+                            <div class="col-md-2">
+                              <span class="col-md-12" style="padding-top:10%">
+                                <i class="fa fa-check-square" aria-hidden="true" *ngIf="refaccion.estatus==true"></i>
+                                <i class="fa fa-square-o" aria-hidden="true" *ngIf="refaccion.estatus==false"></i>
+                                {{refaccion.no_material}}
+                              </span>                             
+                            </div>
+
+                            <div class="col-md-2">
+                              <span class="col-md-12"  style="padding-top:10%">{{refaccion.material}}</span>
+                            </div>
+                            
+                            <div class="col-md-2 text-left">
+                              <mat-form-field class="full-width">
+                                <input type="number" matInput id="txt-{{i}}-{{refaccion.no_material}}" name="txt-{{i}}-{{refaccion.no_material}}" placeholder="Cantidad" >
+                              </mat-form-field>
+                            </div>
+                            <mat-divider></mat-divider>
+                          </div>
+                        </div>
+                        <div class="col-xs-12 text-center">
+                          <button class="pull-center btn btn-default btn-default-rojo" (click)="entregar_refacciones(value.id, value);">Entregar refacciones</button>
+                        </div>
+                      </div>
+                      <mat-icon></mat-icon>
+                      <!--<mat-checkbox>Requiere factura</mat-checkbox>-->
+                    </mat-expansion-panel>
+                  </mat-accordion>
+                </div>
+              </div>
+              <!-- /.box -->
+            </div>
+          </div>
+
+        </form>
+        <!-- /.col -->
+      </div>
+    </section>
+    <!-- /.content -->
+  </form>
+</div>

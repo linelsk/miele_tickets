@@ -2,9 +2,12 @@
   "ExpandedNodes": [
     "",
     "\\app",
-    "\\app\\info-tecnico",
-    "\\assets"
+    "\\app\\editar-servicio",
+    "\\app\\nuevo-cliente",
+    "\\app\\nuevo-servicio",
+    "\\app\\starter\\starter-left-side",
+    "\\app\\ver-servicio"
   ],
-  "SelectedNode": "\\app\\info-tecnico\\info-tecnico.component.html",
+  "SelectedNode": "\\app\\editar-servicio\\editar-servicio.component.ts",
   "PreviewInSolutionExplorer": false
 }

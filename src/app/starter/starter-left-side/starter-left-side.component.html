@@ -30,7 +30,7 @@
           <li class="active" style="padding-left:30px;"><a routerLink="dashboard1"><i class="fa fa-circle-o"></i> DT </a></li>
         </ul>
       </li>
-      <li class="treeview">
+      <li class="treeview" *ngxPermissionsOnly="['Service Director', 'Contact Center', 'Technical Mangement', 'Field Service', 'Admin Warehouse', 'Finanzas Miele'];">
         <a href="#" style="font-size:large;">
           <i class="fa fa-ticket"></i>
           <span>Órdenes de servcio</span>
@@ -40,29 +40,30 @@
         </a>
         <ul class="treeview-menu">
           <li style="padding-left:30px;"><a routerLink="/buscacarservicio"><i class="fa fa-circle-o"></i> Ver Servicios</a></li>
-          <li style="padding-left:30px;"><a routerLink="/verservicio"><i class="fa fa-circle-o"></i> Nuevo Servicio</a></li>
+          <li *ngxPermissionsExcept="['Service Director', 'Technical Mangement', 'Field Service', 'Admin Warehouse', 'Finanzas Miele'];" style="padding-left:30px;"><a routerLink="/verservicio"><i class="fa fa-circle-o"></i> Nuevo Servicio</a></li>
         </ul>
       </li>
-      <li>
+      <li *ngxPermissionsOnly="['Service Director', 'Technical Mangement', 'Field Service', 'Admin Warehouse', 'Finanzas Miele'];">
         <a routerLink="/vercalendario" style="font-size:large; letter-spacing: 1px;">
           <i class="fa fa-calendar"></i> <span>Calendario</span>
         </a>
       </li>
-      <li class="treeview">
+      <li class="treeview"  *ngxPermissionsOnly="['Admin Warehouse', 'Finanzas Miele'];">
         <a href="#" style="font-size:large; letter-spacing: 1px;">
           <i class="fa fa-cog"></i>
-          <span>Refaccciones</span>
+          <span>Refacciones</span>
           <span class="pull-right-container">
             <i class="fa fa-angle-left pull-right"></i>
           </span>
         </a>
         <ul class="treeview-menu">
-          <li style="padding-left:30px;"><a routerLink="/ver_refacciones"><i class="fa fa-circle-o"></i> Ver refacciones</a></li>
-          <li style="padding-left:30px;"><a routerLink="/nueva_refaccion"><i class="fa fa-circle-o"></i> Nueva refacción</a></li>
-          <li style="padding-left:30px;"><a routerLink="/asignacion_refaccion"><i class="fa fa-circle-o"></i> Solicitud Asignación</a></li>
+          <!--<li style="padding-left:30px;"><a routerLink="/ver_refacciones"><i class="fa fa-circle-o"></i> Ver refacciones</a></li>-->
+          <li style="padding-left:30px;" *ngxPermissionsExcept="['Finanzas Miele'];"><a routerLink="/nueva_refaccion"><i class="fa fa-circle-o"></i> Nueva refacción</a></li>
+          <li style="padding-left:30px;" *ngxPermissionsExcept="['Finanzas Miele'];"><a routerLink="/asignacion_refaccion"><i class="fa fa-circle-o"></i> Entrega de refacciones</a></li>          
+          <li style="padding-left:30px;"><a routerLink="/devolucion"><i class="fa fa-circle-o"></i> Devolución de Inventario</a></li>
         </ul>
       </li>
-      <li class="treeview">
+      <li class="treeview" *ngxPermissionsOnly="['Service Director', 'Technical Mangement', 'Field Service', 'Admin Warehouse', 'Finanzas Miele', 'Contact Center'];">
         <a href="#" style="font-size:large; letter-spacing: 1px;">
           <i class="fa fa-bars"></i>
           <span>Clientes</span>
@@ -74,7 +75,7 @@
           <li style="padding-left:30px;"><a routerLink="/buscar_cliente"><i class="fa fa-circle-o"></i> Ver Clientes</a></li>
         </ul>
       </li>
-      <li class="treeview">
+      <li class="treeview" *ngxPermissionsOnly="['Contact Center'];">
         <a href="#" style="font-size:large; letter-spacing: 1px;">
           <i class="fa fa-question-circle-o"></i>
           <span>Encuestas</span>
@@ -86,7 +87,7 @@
           <li style="padding-left:30px;"><a href="pages/layout/top-nav.html"><i class="fa fa-circle-o"></i> Ver Clientes</a></li>
         </ul>
       </li>
-      <li class="treeview">
+      <li class="treeview" *ngxPermissionsOnly="['Service Director', 'Technical Mangement'];">
         <a href="#" style="font-size:large; letter-spacing: 1px;">
           <i class="fa fa-users"></i>
           <span>Técnicos</span>
@@ -99,7 +100,25 @@
           <li><a routerLink="/addtecnico"><span style="padding-left:30px;"><i class="fa fa-circle-o"></i> Nuevo Técnico</span> </a></li>
         </ul>
       </li>
-
+      <li *ngxPermissionsOnly="['Technical Mangement', 'Field Service'];">
+        <a routerLink="/ultimosservicios" style="font-size:large; letter-spacing: 1px;">
+          <i class="fa fa-address-book-o" aria-hidden="true"></i> <span>Ultimos servicios</span>
+        </a>
+      </li>
+      <li class="treeview" *ngxPermissionsOnly="['Service Director'];" >
+        <a href="#" style="font-size:large; letter-spacing: 1px;">
+          <i class="fa fa-users"></i>
+          <span>Administración</span>
+          <span class="pull-right-container">
+            <i class="fa fa-angle-left pull-right"></i>
+          </span>
+        </a>
+        <ul class="treeview-menu">
+          <li style="padding-left:30px;"><a routerLink="/modificarprecios"><i class="fa fa-circle-o"></i> Modificar precios</a></li>
+          <li style="padding-left:30px;"><a><i class="fa fa-circle-o"></i> Checklist</a></li>
+          <li style="padding-left:30px;"><a routerLink="/addtecnico"><i class="fa fa-lock" aria-hidden="true"></i> Nuevo Técnico</a></li>
+        </ul>
+      </li>
     </ul>
     <!-- /.sidebar-menu -->
     <!--<div style="height:1000px">

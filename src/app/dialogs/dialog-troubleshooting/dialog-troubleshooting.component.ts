@@ -44,7 +44,28 @@ export class DialogTroubleshootingComponent implements OnInit {
 
   }
 
+  tecnicos_visita: any[] = [];
   guardar_troubleshooting() {
+
+    this.tecnicos_visita.push({
+      id_direccion: 0,
+      fecha_visita: "01/01/1900",
+      id_tecnico: 0,
+      hora: 0,
+      actividades_realizar: "",
+      concepto: "",
+      cantidad: "",
+      pagado: false,
+      pago_pendiente: false,
+      garantia: false,
+      fecha_deposito: "01/01/1900",
+      no_operacion: "1",
+      comprobante: "",
+      terminos_condiciones: true,
+      factura: false,
+      servicio_producto: [],
+      hora_fin: 0
+    });
 
     this.heroService.service_general("servicios", {
       "id_cliente": this.data.id_cliente,
