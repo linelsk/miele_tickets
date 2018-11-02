@@ -20,13 +20,19 @@ import { MatAutocompleteSelectedEvent, MatChipInputEvent } from '@angular/materi
 import { Router } from '@angular/router';
 import * as jquery from 'jquery';
 import * as jsPDF from 'jspdf'
+import * as moment from 'moment';
+import { } from '@types/googlemaps';
 
+declare var MarkerClusterer: any;
 @Component({
   selector: 'app-editar-servicio',
   templateUrl: './editar-servicio.component.html',
   styleUrls: ['./editar-servicio.component.css']
 })
 export class EditarServicioComponent implements OnInit {
+
+  @ViewChild('gmap') gmapElement: any;
+  map: google.maps.Map;
 
   bodyClasses = 'skin-blue sidebar-mini';
   body: HTMLBodyElement = document.getElementsByTagName('body')[0];
@@ -117,8 +123,41 @@ export class EditarServicioComponent implements OnInit {
 
   estatus_prediagnostico: boolean;
   refacciones_asignadas: any[] = [];
+  asignacion_refacciones: any;
+  //asignacion_refacciones_validar: any;
   tiempo_vista: any;
+
+  google_maps(lat_in, lon_in) {
+    //console.log(lat_in + " " + lon_in);
+    //var map = new google.maps.Map(document.getElementById('gmap'), {
+    //  center: { lat: 19.36730338792858, lng: -99.26228728557646 },
+    //  zoom: 14,
+    //  mapTypeId: google.maps.MapTypeId.ROADMAP
+    //});
+    //console.log(this.gmapElement);
+    //var _map = new google.maps.Map(document.getElementById('gmap'));
+    //console.log(_map);
+    var mapProp = {
+      center: new google.maps.LatLng(lat_in, lon_in),
+      zoom: 14,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+      //mapTypeId: google.maps.MapTypeId.HYBRID
+      // mapTypeId: google.maps.MapTypeId.SATELLITE
+      // mapTypeId: google.maps.MapTypeId.TERRAIN
+    };
+
+    this.map = new google.maps.Map(this.gmapElement.nativeElement, mapProp);
+    var marker = new google.maps.Marker({ position: mapProp.center });
+    marker.setMap(this.map);
+
+    //var infowindow = new google.maps.InfoWindow({
+    //  content: "Hey, We are here"
+    //});
+    //infowindow.open(this.map, marker);
+  }
+
   ngOnInit() {
+
     this.heroService.verificarsesion();
     // add the the body classes
     this.body.classList.add('skin-blue');
@@ -128,10 +167,13 @@ export class EditarServicioComponent implements OnInit {
       this.id = +params['id'];
     });
 
-
     this.heroService.service_general_get("servicios/" + this.id, {}).subscribe((value) => {
-      //console.log(value[0].visitas);
-      //console.log(value[0].visitas[0].hora_inicio);
+      //console.log(value[0].id_tipo_servicio);
+      this.asignacion_refacciones = value[0].visitas[0].asignacion_refacciones;
+      //this.asignacion_refacciones_validar = value[0].visitas[0].asignacion_refacciones;
+      this.detalle_visita = value[0].visitas;
+
+      console.log(value[0].visitas);
       if (value[0].visitas.length != 0) {
         let hora1: any = (value[0].visitas[0].hora_fin).split(":"),
           hora2: any = (value[0].visitas[0].hora_inicio).split(":"),
@@ -165,20 +207,22 @@ export class EditarServicioComponent implements OnInit {
             this.asignacion_tecnico2 = [];
           }
 
-        });
+          });
+        //setTimeout(() => {
+        //  this.google_maps(value[0].visitas[0].latitud_inicio, value[0].visitas[0].longitud_inicio);
+        //}, 400);
       }
 
       this.servicio = value[0];
       this.servicio_detalle = value[0];
       this.dataSource.data = value[0].productos;
       this.value_productos = value[0].productos;
-      //this.dataSource_visita.data = value[0].productos;
-      this.detalle_visita = value[0].visitas;
+      //this.dataSource_visita.data = value[0].productos;   
       this.dllestatusservicio = value[0].id_estatus;
       this.servicio_reporte = value[0].visitas;
       //console.log(this.estatus_prediagnostico);
       this.heroService.service_general_get("Clientes/" + value[0].id_cliente, {}).subscribe((result) => {
-        console.log(result[0]);
+        //console.log(result[0]);
         this.detalle = result[0];
         this.detalle_direccion = result[0].direcciones[0];
       });
@@ -199,6 +243,12 @@ export class EditarServicioComponent implements OnInit {
       }, 400);
     });
 
+  }
+
+  ver_mapa(lat, lon) {
+
+    console.log(lat + "---" + lon);
+    this.google_maps(lat, lon);
   }
 
   open(index: number, obj: any): void {
@@ -648,24 +698,56 @@ export class EditarServicioComponent implements OnInit {
       observaciones: this.prediagnostico.observaciones,
       refacciones: this.materiales
     }).subscribe((value) => {
-      this.snackBar.open("Prediagnostico guardado correctamente", "", {
-        duration: 5000,
-        verticalPosition: 'bottom',
-        horizontalPosition: 'right',
-        extraClasses: ['blue-snackbar']
-      });
-      this.router.navigate(['/ultimosservicios/']);
+      if (value.response = "OK") {
+        this.sub = this.route.params.subscribe(params => {
+          this.id = +params['id'];
+        });
+        this.heroService.service_notificacion({
+          descripcion: 'El servicio número ' + this.id + ' tiene prediagnostico concluido y puede realizar la solucitud de asignacion de técnico responsable y refacciones',
+          estatus_leido: false,
+          evento: 'Prediagnostico concluido ',
+          rol_notificado: 10010,
+          creado: this.heroService.fecha_hoy(),
+          creadopor: JSON.parse(localStorage.getItem("user")).id
+        }).subscribe((notificacion) => { });
+        this.snackBar.open("Prediagnostico guardado correctamente", "", {
+          duration: 5000,
+          verticalPosition: 'bottom',
+          horizontalPosition: 'right',
+          extraClasses: ['blue-snackbar']
+        });
+        this.router.navigate(['/ultimosservicios/']);
+      }
     });
   }
 
-  materiales_asignacion_envio: any = [];
-  tecnicos_asignacion_envio: any = [];
-  garantia_asignacion_envio: any = [];
-  fecha_refacciones_entrega: any = "";
-  asignar_refacciones() {
+  materiales_asignacion_envio: any = "";
+  tecnicos_asignacion_envio: any = "";
+  garantia_asignacion_envio: any = "";
+  fecha_refacciones_entrega: any = "01/01/1900";
+  asignar_refacciones(obj) {
     //console.log(this.materiales_asignacion.length);
-    if (this.materiales_asignacion.length == 0) {
-      this.snackBar.open("Debes elegir por lo menos una refacción", "", {
+    //if (this.refacciones_asignadas[0].refacciones.le)
+    //if (this.materiales_asignacion.length == 0) {
+    //  this.snackBar.open("Debes elegir por lo menos una refacción", "", {
+    //    duration: 5000,
+    //    verticalPosition: 'bottom',
+    //    horizontalPosition: 'right',
+    //    extraClasses: ['blue-snackbar']
+    //  });
+    //}
+    //else {
+
+    //}
+
+    //console.log(new Date(this.fecha_refacciones_entrega));
+    //console.log(moment(obj[0].fecha_visita));
+    //if (new Date(this.fecha_refacciones_entrega) < new Date(obj[0].fecha_visita)) {
+    //  console.log(new Date(this.fecha_refacciones_entrega));
+    //}
+
+    if (this.tecnico_asignacion.length == 0) {
+      this.snackBar.open("Debes elegir por lo menos a un técnico", "", {
         duration: 5000,
         verticalPosition: 'bottom',
         horizontalPosition: 'right',
@@ -673,45 +755,38 @@ export class EditarServicioComponent implements OnInit {
       });
     }
     else {
-      if (this.tecnico_asignacion.length == 0) {
-        this.snackBar.open("Debes elegir por lo menos a un técnico", "", {
+
+      for (var i = 0; i < this.materiales_asignacion.length; i++) {
+        this.materiales_asignacion_envio += this.materiales_asignacion[i].id_material + ",";
+      }
+
+      for (var i = 0; i < this.tecnico_asignacion.length; i++) {
+        this.tecnicos_asignacion_envio += this.tecnico_asignacion[i].id_tecnico + ",";
+      }
+
+      for (var i = 0; i < this.garantia_asignacion.length; i++) {
+        this.garantia_asignacion_envio += this.garantia_asignacion[i].id_material + ",";
+      }
+
+      //console.log(this.materiales_asignacion_envio);
+      //console.log(this.tecnicos_asignacion_envio);
+      //console.log(this.garantia_asignacion_envio);
+      this.heroService.service_general("Refacciones/Asignar_Refacciones_Tecnico", {
+        id: this.prediagnostico.id_visita,
+        asignacion_refacciones: true,
+        no_operacion: this.materiales_asignacion_envio,
+        comprobante: this.tecnico_asignacion,
+        fecha_entrega_refaccion: this.fecha_refacciones_entrega,
+        concepto: this.garantia_asignacion_envio
+      }).subscribe((value) => {
+        this.snackBar.open("Solicitud de asignación de refacciones guardado correctamente", "", {
           duration: 5000,
           verticalPosition: 'bottom',
           horizontalPosition: 'right',
           extraClasses: ['blue-snackbar']
         });
-      }
-      else {
-
-        for (var i = 0; i < this.materiales_asignacion.length; i++) {
-          this.materiales_asignacion_envio += this.materiales_asignacion[i].id_material + ",";
-        }
-
-        for (var i = 0; i < this.tecnico_asignacion.length; i++) {
-          this.tecnicos_asignacion_envio += this.tecnico_asignacion[i].id_tecnico + ",";
-        }
-
-        for (var i = 0; i < this.garantia_asignacion.length; i++) {
-          this.garantia_asignacion_envio += this.garantia_asignacion[i].id_material + ",";
-        }
-
-        this.heroService.service_general("Refacciones/Asignar_Refacciones_Tecnico", {
-          id: this.prediagnostico.id_visita,
-          asignacion_refacciones: true,
-          no_operacion: this.materiales_asignacion_envio,
-          comprobante: this.tecnico_asignacion,
-          fecha_entrega_refaccion: this.fecha_refacciones_entrega,
-          concepto: this.garantia_asignacion_envio
-        }).subscribe((value) => {
-          this.snackBar.open("Solicitud de asignación de refacciones guardado correctamente", "", {
-            duration: 5000,
-            verticalPosition: 'bottom',
-            horizontalPosition: 'right',
-            extraClasses: ['blue-snackbar']
-          });
-          this.router.navigate(['/ultimosservicios/']);
-        });
-      }
+        this.router.navigate(['/ultimosservicios/']);
+      });
     }
   }
 
@@ -785,12 +860,13 @@ export class EditarServicioComponent implements OnInit {
   }
 
   validar_visitas() {
+    console.log(this.detalle);
     this.sub = this.route.params.subscribe(params => {
       this.id = +params['id'];
     });
     if (this.servicio.id_tipo_servicio == 1) {
       if (this.servicio.visitas[0].productos.length == 1) {
-
+        //console.log("OKKK");
         let dialogRef = this.dialog.open(DialogValidacionNo_visitas, {
           width: '350px',
           disableClose: true,
@@ -798,14 +874,18 @@ export class EditarServicioComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe(result => {
-         
+          if (result != undefined) {
+            this.router.navigate(['/nuevavisita/' + this.servicio.id_cliente + '/' + this.id]);
+          }
         });
       }
       if (this.servicio.visitas[0].productos.length > 1) {
+        //console.log("OKKK_2");
         this.heroService.service_general("Servicios/No_visitas", {
           id_servicio: this.id
         }).subscribe((value) => {
-          if (value[0].no_visitas < 2) {
+          //console.log(value[0].no_visitas);
+          if (value[0].no_visitas >= 3) {
 
             let dialogRef = this.dialog.open(DialogValidacionNo_visitas, {
               width: '350px',
@@ -814,19 +894,21 @@ export class EditarServicioComponent implements OnInit {
             });
 
             dialogRef.afterClosed().subscribe(result => {
-
+              if (result != undefined) {
+                this.router.navigate(['/nuevavisita/' + this.servicio.id_cliente + '/' + this.id]);
+              }
             });
 
           }
           else {
-            this.router.navigate(['/nuevavisita/' + this.detalle + '/' + this.id]);
+            this.router.navigate(['/nuevavisita/' + this.servicio.id_cliente + '/' + this.id]);
           }
         });
       }
     }
     else {
-      this.router.navigate(['/nuevavisita/' + this.detalle + '/' + this.id]);
-    }    
+      this.router.navigate(['/nuevavisita/' + this.servicio.id_cliente + '/' + this.id]);
+    }
   }
 
   generar_pdf(value) {
@@ -972,17 +1054,35 @@ export class DialogCancelarEstatus {
         "id": this.data.id,
         "numero": this.rdconfirmado
       }).subscribe((value) => {
-        this.snackBar.open("Servico cancelado correctamente", "", {
-          duration: 5000,
-          verticalPosition: 'bottom',
-          horizontalPosition: 'right',
-          extraClasses: ['blue-snackbar']
-        });
+        if (value.response == "OK") {
+          this.heroService.service_notificacion({
+            descripcion: 'El servicio número ' + this.data.id + ' fue cancelado, puedes realizar una llamada de seguimiento',
+            estatus_leido: false,
+            evento: 'Servicio cancelado ',
+            rol_notificado: 10008,
+            creado: this.heroService.fecha_hoy(),
+            creadopor: JSON.parse(localStorage.getItem("user")).id
+          }).subscribe((notificacion) => { });
+          this.heroService.service_notificacion({
+            descripcion: "El servicio número " + this.data.id + " fue cancelado, ahora puedes auditar la cancelación",
+            estatus_leido: false,
+            evento: 'Servicio cancelado ',
+            rol_notificado: 10010,
+            creado: this.heroService.fecha_hoy(),
+            creadopor: JSON.parse(localStorage.getItem("user")).id
+          }).subscribe((notificacion) => { });
+          this.snackBar.open("Servico cancelado correctamente", "", {
+            duration: 5000,
+            verticalPosition: 'bottom',
+            horizontalPosition: 'right',
+            extraClasses: ['blue-snackbar']
+          });
 
-        this.heroService.service_general_get("servicios/" + this.data.id, {}).subscribe((value) => {
-          localStorage.setItem("servicio_detalle", JSON.stringify((value[0])));
-          localStorage.setItem("detalle_visita", JSON.stringify((value[0].visitas)));
-        });
+          this.heroService.service_general_get("servicios/" + this.data.id, {}).subscribe((value) => {
+            localStorage.setItem("servicio_detalle", JSON.stringify((value[0])));
+            localStorage.setItem("detalle_visita", JSON.stringify((value[0].visitas)));
+          });
+        }
       });
     }
   }
@@ -1007,39 +1107,14 @@ export class DialogValidacionNo_visitas {
   onNoClick(): void {
     this.dialogRef.close();
   }
-
-  rdconfirmado: any = 0;
-
-  editar_estatus() {
-    //(this.rdconfirmado);
-
-    if (this.data != undefined) {
-      this.heroService.service_general("servicios/Actualizar_estatus_cancelado", {
-        "id": this.data.id,
-        "numero": this.rdconfirmado
-      }).subscribe((value) => {
-        this.snackBar.open("Servico cancelado correctamente", "", {
-          duration: 5000,
-          verticalPosition: 'bottom',
-          horizontalPosition: 'right',
-          extraClasses: ['blue-snackbar']
-        });
-
-        this.heroService.service_general_get("servicios/" + this.data.id, {}).subscribe((value) => {
-          localStorage.setItem("servicio_detalle", JSON.stringify((value[0])));
-          localStorage.setItem("detalle_visita", JSON.stringify((value[0].visitas)));
-        });
-      });
-    }
-  }
 }
 
-@Component({
-  selector: 'snack-bar-component-example-snack',
-  templateUrl: 'snack-bar-component-example-snack.html',
-  styles: [`.example-pizza-party { color: hotpink; }`],
-})
-export class PizzaPartyComponent { }
+//@Component({
+//  selector: 'snack-bar-component-example-snack',
+//  templateUrl: 'snack-bar-component-example-snack.html',
+//  styles: [`.example-pizza-party { color: hotpink; }`],
+//})
+//export class PizzaPartyComponent { }
 
 export class Productos_Servicio {
   id_producto: number;

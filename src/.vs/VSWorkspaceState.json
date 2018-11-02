@@ -2,12 +2,8 @@
   "ExpandedNodes": [
     "",
     "\\app",
-    "\\app\\editar-servicio",
-    "\\app\\nuevo-cliente",
-    "\\app\\nuevo-servicio",
-    "\\app\\starter\\starter-left-side",
-    "\\app\\ver-servicio"
+    "\\app\\models"
   ],
-  "SelectedNode": "\\app\\editar-servicio\\editar-servicio.component.ts",
+  "SelectedNode": "\\styles.css",
   "PreviewInSolutionExplorer": false
 }

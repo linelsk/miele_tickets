@@ -15,15 +15,15 @@ import * as moment from 'moment';
 import { NgxPermissionsService } from 'ngx-permissions';
 
 const httpOptions = {
- //headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  //headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
 
 @Injectable()
 export class DatosService {
-  
-  //private heroesUrl = 'http://104.130.1.18/miele/api/';  // URL to web api
-  private heroesUrl = 'http://localhost:50570/api/';  // URL to web api
-  public imageUrl = 'http://104.130.1.18/';  // URL images
+
+  private heroesUrl = 'http://23.253.173.64/api/';  // URL to web api
+  //private heroesUrl = 'http://localhost:50570/api/';  // URL to web api
+  public imageUrl = 'http://23.253.173.64/';  // URL images
 
   constructor(private http: HttpClient, private https: Http, private permissionsService: NgxPermissionsService) { }
 
@@ -59,10 +59,17 @@ export class DatosService {
     return this.http.post(this.heroesUrl + url, {});
   }
 
-  service_general(url, parametros): Observable<any> {    
+  service_notificacion(parametros) {
     let headers = new Headers({
       'Content-Type': 'application/json'
-    });   
+    });
+    return this.http.post(this.heroesUrl + 'Notificaciones', parametros);
+  }
+
+  service_general(url, parametros): Observable<any> {
+    let headers = new Headers({
+      'Content-Type': 'application/json'
+    });
     return this.http.post(this.heroesUrl + url, parametros);
   }
 
@@ -71,6 +78,15 @@ export class DatosService {
       'Content-Type': 'application/json'
     });
     return this.http.get(this.heroesUrl + url, parametros);
+  }
+
+  getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
   }
 
   registro(
@@ -118,14 +134,15 @@ export class DatosService {
       "creadopor": localStorage.getItem("id"),
       "actualizado": "01/01/1900",
       "actualizadopor": 0,
-      "id_rol": 1,
+      "id_rol": 2,
       "id_app": 1,
       "tecnicos": [{
         "noalmacen": noalmacen,
         "id_tipo_tecnico": id_tipo_tecnico,
         "tecnicos_actividad": id_actividad,
         "tecnicos_cobertura": id_cobertura,
-        "tecnicos_producto": id_producto
+        "tecnicos_producto": id_producto,
+        "color": this.getRandomColor()
       }]
     });
   }
@@ -215,6 +232,6 @@ export class DatosService {
     }
     return _input;
   }
-  
+
 }
 

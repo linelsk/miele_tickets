@@ -54,4 +54,15 @@ html, body {
   text-transform: uppercase
 }
 
+.navbar-nav > .notifications-menu > .dropdown-menu > li .menu > li > a:hover, .navbar-nav > .messages-menu > .dropdown-menu > li .menu > li > a:hover, .navbar-nav > .tasks-menu > .dropdown-menu > li .menu > li > a:hover {
+  background: #D6D5D3;
+  text-decoration: none;
+}
 
+.li_no_leido {
+  background-color: #EDF2FA;
+}
+
+.li_leido {
+  background-color: #EEEDEB;
+}

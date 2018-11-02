@@ -165,7 +165,8 @@ export class InfoTecnicoComponent implements OnInit {
       noalmacen: this.text_busqueda
     })
       .subscribe((result) => {
-        this.dataSource.data = result;
+        console.log(result);
+        this.dataSource.data = result.item;
       });
   }
 

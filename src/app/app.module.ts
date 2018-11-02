@@ -64,7 +64,7 @@ import { ConfiguracionComponent } from './configuracion/configuracion.component'
 import { VerServicioComponent } from './ver-servicio/ver-servicio.component';
 import { NuevoClienteComponent, DialogIbsCliente } from './nuevo-cliente/nuevo-cliente.component';
 import { ServicioDetalleComponent } from './servicio-detalle/servicio-detalle.component';
-import { NuevoServicioComponent, DialogIbsDialog } from './nuevo-servicio/nuevo-servicio.component';
+import { NuevoServicioComponent, DialogIbsDialog, DialogConfirmacion } from './nuevo-servicio/nuevo-servicio.component';
 import { BuscarServicioComponent } from './buscar-servicio/buscar-servicio.component';
 import { Daterangepicker } from 'ng2-daterangepicker';
 import { EditarServicioComponent, DialogEditarEstatus, DialogCancelarEstatus, DialogEditarEstatusVisita, DialogFinal, DialogValidacionNo_visitas } from './editar-servicio/editar-servicio.component';
@@ -89,6 +89,7 @@ import { DialogEditarGrupoPrecioComponent } from './dialogs/dialog-editar-grupo-
 import { DialogEditarPrecioRefaccionComponent } from './dialogs/dialog-editar-precio-refaccion/dialog-editar-precio-refaccion.component';
 import { NuevaVisitaComponent } from './nueva-visita/nueva-visita.component';
 import { DevolucionInventarioComponent } from './devolucion-inventario/devolucion-inventario.component';
+import { ListaNotificacionesComponent } from './lista-notificaciones/lista-notificaciones.component';
 
 registerLocaleData(localeFr);
 registerLocaleData(localeEs);
@@ -112,6 +113,7 @@ registerLocaleData(localeEs);
     ServicioDetalleComponent,
     NuevoServicioComponent,
     DialogIbsDialog,
+    DialogConfirmacion,
     DialogIbsCliente,
     DialogEditarEstatus,
     DialogEditarEstatusVisita,
@@ -144,9 +146,10 @@ registerLocaleData(localeEs);
     DialogEditarGrupoPrecioComponent,
     DialogEditarPrecioRefaccionComponent,
     NuevaVisitaComponent,
-    DevolucionInventarioComponent
+    DevolucionInventarioComponent,
+    ListaNotificacionesComponent
   ],
-  entryComponents: [DialogIbsDialog, DialogIbsCliente, DialogEditarEstatus, DialogEditarEstatusVisita, DialogCancelarEstatus, DialogFinal, DialogValidacionNo_visitas, DialogEditarRefaccion, DialogAsignarRefaccion, DialogEliminarRefaccion, DialogEditarRefaccionTecnico, DialogEliminarRefaccionTecnico, DialogCantidadRefaccion, DialogTroubleshootingComponent, CalendarioComponent, DialogVisitaHoraClienteComponent, DialogNuevoGrupoPrecioComponent, DialogEditarGrupoPrecioComponent, DialogEditarPrecioRefaccionComponent],
+  entryComponents: [DialogIbsDialog, DialogConfirmacion, DialogIbsCliente, DialogEditarEstatus, DialogEditarEstatusVisita, DialogCancelarEstatus, DialogFinal, DialogValidacionNo_visitas, DialogEditarRefaccion, DialogAsignarRefaccion, DialogEliminarRefaccion, DialogEditarRefaccionTecnico, DialogEliminarRefaccionTecnico, DialogCantidadRefaccion, DialogTroubleshootingComponent, CalendarioComponent, DialogVisitaHoraClienteComponent, DialogNuevoGrupoPrecioComponent, DialogEditarGrupoPrecioComponent, DialogEditarPrecioRefaccionComponent],
   imports: [
     BrowserModule,
     NgxPermissionsModule.forRoot(),

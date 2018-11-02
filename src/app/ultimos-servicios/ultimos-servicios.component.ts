@@ -110,26 +110,48 @@ export class UltimosServiciosComponent implements OnInit {
 
   buscar() {
     this.preventAbuse = true;
-    this.heroService.service_general("servicios/Busqueda_Servicio_Ultimos", {
-      "desc_busqueda": this.text_busqueda,
-      "fecha_servicio_inicio": this.FechaCreacioninirango,
-      "fecha_servicio_fin": this.FechaCreacionfinrango,
-      "fecha_creacion_inicio": this.FechaServicioinirango,
-      "fecha_creacion_fin": this.FechaServiciofinrango,
-      "tecnico": this.txttecnico
-    }).subscribe((value) => {
-      setTimeout(() => {
-        console.log(value);
-        if (value.item == "No hay resultado para la busqueda") {
+    if (localStorage.getItem("rol") == "Technical Mangement") {
+      this.heroService.service_general("servicios/Busqueda_Servicio_Ultimos", {
+        "desc_busqueda": this.text_busqueda,
+        "fecha_servicio_inicio": this.FechaCreacioninirango,
+        "fecha_servicio_fin": this.FechaCreacionfinrango,
+        "fecha_creacion_inicio": this.FechaServicioinirango,
+        "fecha_creacion_fin": this.FechaServiciofinrango,
+        "tecnico": this.txttecnico
+      }).subscribe((value) => {
+        setTimeout(() => {
+          if (value.item == "No hay resultado para la busqueda") {
 
-          this.dataSource.data = [];
-        }
-        else {
-          this.dataSource.data = value;
-        }
-        this.preventAbuse = false;
-      }, 400);
-    });
+            this.dataSource.data = [];
+          }
+          else {
+            this.dataSource.data = value;
+          }
+          this.preventAbuse = false;
+        }, 400);
+      });
+    }
+    else {
+      this.heroService.service_general("servicios/Busqueda_Servicio_ultimos_field_services", {
+        "desc_busqueda": this.text_busqueda,
+        "fecha_servicio_inicio": this.FechaCreacioninirango,
+        "fecha_servicio_fin": this.FechaCreacionfinrango,
+        "fecha_creacion_inicio": this.FechaServicioinirango,
+        "fecha_creacion_fin": this.FechaServiciofinrango,
+        "tecnico": this.txttecnico
+      }).subscribe((value) => {
+        setTimeout(() => {
+          if (value.item == "No hay resultado para la busqueda") {
+
+            this.dataSource.data = [];
+          }
+          else {
+            this.dataSource.data = value;
+          }
+          this.preventAbuse = false;
+        }, 400);
+      });
+    }
   }
 
   limpiartabla() {

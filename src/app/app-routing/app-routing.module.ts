@@ -25,6 +25,7 @@ import { ModificarPreciosComponent } from '../modificar-precios/modificar-precio
 import { NuevaVisitaComponent } from '../nueva-visita/nueva-visita.component';
 import { DevolucionInventarioComponent } from '../devolucion-inventario/devolucion-inventario.component';
 import { NgxPermissionsGuard } from 'ngx-permissions';
+import { ListaNotificacionesComponent } from '../lista-notificaciones/lista-notificaciones.component';
 
 const routes: Routes = [
   //{ path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -93,7 +94,7 @@ const routes: Routes = [
     canActivate: [NgxPermissionsGuard],
     data: {
       permissions: {
-        only: ['Contact Center'],
+        only: ['Contact Center', 'Technical Mangement', 'Field Service', 'Service Director'],
         redirectTo: '/main'
       }
     }
@@ -107,6 +108,7 @@ const routes: Routes = [
   { path: 'vercalendario', component: CalendariHomeComponent },
   { path: 'ultimosservicios', component: UltimosServiciosComponent },
   { path: 'modificarprecios', component: ModificarPreciosComponent },
+  { path: 'notificaciones', component: ListaNotificacionesComponent },
   {
     path: 'nuevavisita/:id_cliente/:id',
     component: NuevaVisitaComponent,

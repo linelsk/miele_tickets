@@ -15,7 +15,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.token = this.heroService.getToken();
-    this.heroService.getrol();
+    this.heroService.getrol();    
   }
 
   //ngDoCheck() {

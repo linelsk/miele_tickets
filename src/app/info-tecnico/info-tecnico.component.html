@@ -32,7 +32,7 @@
                   <label>Actividad</label><br />
                   <mat-checkbox *ngFor='let value of tiposervicio; trackBy: index;' style="padding-right:10px" [checked]="value.check"
                                 value="value.id"
-                                (change)="check_actividad($event, value)">
+                                (change)="check_actividad($event, value)" color="primary">
                     {{value.desc_tipo_servicio}}
                   </mat-checkbox>
                   <div class="alert alert-danger" *ngIf="validar">
@@ -105,10 +105,9 @@
 
               <div class="form-group col-md-12 col-xs-12 text-left">
                 <label>Productos</label><br />
-                <div *ngFor='let value of values; trackBy: index;' class="col-md-4">
+                <div *ngFor='let value of values; trackBy: index;' class="col-md-4" color="primary">
                   <mat-slide-toggle class="example-margin"
                                     name="{{ value.descripcion }}"
-                                    [color]="color"
                                     [checked]="value.check"
                                     [disabled]="disabled"
                                     (change)="check_producto($event, value)">
@@ -169,8 +168,8 @@
                 </div>
                 <div class="col-xs-4" style="text-align:right; padding-right:0;">
                   <!--<button type="submit" (click)="asignar_refacciones($event)" class="pull-center btn btn-default btn-default-rojo">
-      Asignar refacciones
-    </button>-->
+                    Asignar refacciones
+                  </button>-->
                 </div>
               </div>
               <div class="col-xs-12" style="padding:0;">

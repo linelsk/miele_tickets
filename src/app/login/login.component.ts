@@ -44,7 +44,7 @@ export class LoginComponent implements OnInit {
     if (this.email != undefined && this.password != undefined) {
       this.heroService.login(this.email, this.password)
         .subscribe((value) => {
-          //console.log(value);
+          console.log(value.user);
           switch (value.token) {
             case "usuarios no existe":
               this.snackBar.open("Usuario y/o contraseña incorrecta", "", {
@@ -75,6 +75,7 @@ export class LoginComponent implements OnInit {
                   localStorage.setItem("paterno", value.user.paterno);
                   localStorage.setItem("id", value.user.id);
                   localStorage.setItem("rol", value.user.rol);
+                  localStorage.setItem("id_rol", value.user.id_rol);
                   window.location.href = "main";
                 }
                 else {

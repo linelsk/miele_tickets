@@ -15,6 +15,7 @@ import * as moment from 'moment';
 import { elementAt } from 'rxjs/operators/elementAt';
 import { locale } from 'moment';
 import { DialogVisitaHoraClienteComponent } from '../dialogs/dialog-visita-hora-cliente/dialog-visita-hora-cliente.component';
+import * as jquery from 'jquery';
 
 @Component({
   selector: 'app-calendario',
@@ -54,7 +55,7 @@ export class CalendarioComponent implements OnInit {
   //color_tecnico: any[] = [];
   tecnico_actual: any[] = [];
   tecnicos_id: string = "";
-  excludeDays: number[] = [0, 6];
+  excludeDays: number[] = [0];
 
   set_tecnico(obj) {
     //(obj);
@@ -231,17 +232,26 @@ export class CalendarioComponent implements OnInit {
   }
 
   filtro_tecnico(event, options) {
-
+    console.log(options);
     if (event.source.checked) {
       this.tecnico_actual.push(options);
       //(this.tecnico_actual);
+      //console.log($("#chk-1").val());
+      if (this.data.no_tecnico != this.tecnico_actual.length) {
+        this.snackBar.open("Este servicio es solo para " + this.data.no_tecnico + " técnico", "", {
+          duration: 5000,
+          verticalPosition: 'bottom',
+          horizontalPosition: 'right',
+          extraClasses: ['blue-snackbar']
+        });
+      }
 
       for (var i = 0; i < this.tecnico_actual.length; i++) {
         this.tecnicos_id += this.tecnico_actual[i].id + ",";
       }
 
       this.heroService.service_general("servicios/Tecnico_id", { "id": this.tecnicos_id }).subscribe((value) => {
-        console.log(value);
+        //console.log(value);
         if (value.value.item != "") {
           this.events = [];
           for (var i = 0; i < value.value.item.length; i++) {
@@ -257,18 +267,6 @@ export class CalendarioComponent implements OnInit {
                 actions: []
               });
           }
-
-          //this.events.push(
-          //  {
-          //    start: addHours(startOfDay(new Date(value.value.item[0].fecha_propuesta)), value.value.item[0].hora_propuesta),
-          //    end: addHours(startOfDay(new Date(value.value.item[0].fecha_propuesta)), (value.value.item[0].hora_propuesta * 1) + (this.data.horas_tecnico * 1)),
-          //    title: value.value.item[0].desc_tipo_servicio + "-" + value.value.item[0].tecnico,
-          //    color: {
-          //      primary: '#FFC300',
-          //      secondary: '#FFC300'
-          //    },
-          //    actions: []
-          //  });
 
           this.refresh.next();
         }
@@ -306,17 +304,6 @@ export class CalendarioComponent implements OnInit {
                 actions: []
               });
           }
-          //this.events.push(
-          //  {
-          //    start: addHours(startOfDay(new Date(value.value.item[0].fecha_propuesta)), value.value.item[0].hora_propuesta),
-          //    end: addHours(startOfDay(new Date(value.value.item[0].fecha_propuesta)), (value.value.item[0].hora_propuesta * 1) + (this.data.horas_tecnico * 1)),
-          //    title: value.value.item[0].desc_tipo_servicio + "-" + value.value.item[0].tecnico,
-          //    color: {
-          //      primary: '#FFC300',
-          //      secondary: '#FFC300'
-          //    },
-          //    actions: []
-          //  });
 
           this.refresh.next();
         }

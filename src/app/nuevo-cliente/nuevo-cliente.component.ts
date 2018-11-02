@@ -286,6 +286,7 @@ export class NuevoClienteComponent implements OnInit {
       }
     }
     else {
+      console.log(row);
       for (var i = 0; i < this.value_productos.length; i++) {
         if (this.value_productos[i].id_producto == row.id) {
           this.value_productos.splice(i, 1);
@@ -310,9 +311,11 @@ export class NuevoClienteComponent implements OnInit {
       if (this.value_productos.length == 1) {//Agregar este if a nuevo cliente, nuevo servicio y reagandar 
         this.categoria_servicio_cantidad = row.precio_visita;
       }
-      if (this.servicio.id_tipo_servicio.id != 1 && this.servicio.id_tipo_servicio.id != 2) {
-        if (this.value_productos.length > 1) {//Agregar este if a nuevo cliente, nuevo servicio y reagandar 
-          this.categoria_servicio_cantidad = this.categoria_servicio_cantidad + 490;
+      if (this.servicio.id_tipo_servicio.id != 1) {
+        console.log("HHJKK");
+        if (this.value_productos.length > 1) {//Agregar este if a nuevo cliente, nuevo servicio y reagandar
+          console.log("9999");
+          this.categoria_servicio_cantidad = this.categoria_servicio_cantidad - 490;
         }
       }
     }
@@ -345,9 +348,9 @@ export class NuevoClienteComponent implements OnInit {
     if (this.value_productos.length == 1) {//Agregar este if a nuevo cliente, nuevo servicio y reagandar 
       this.categoria_servicio_cantidad = 890;
     }
-    if (this.servicio.id_tipo_servicio.id != 1 && this.servicio.id_tipo_servicio.id != 2) {
+    if (this.servicio.id_tipo_servicio.id != 1) {
       if (this.value_productos.length > 1) {//Agregar este if a nuevo cliente, nuevo servicio y reagandar 
-        this.categoria_servicio_cantidad = this.categoria_servicio_cantidad + 490;
+        this.categoria_servicio_cantidad = this.categoria_servicio_cantidad - 490;
       }
     }
   };
@@ -703,9 +706,18 @@ export class NuevoClienteComponent implements OnInit {
           visita: this.tecnicos_visita
         }]
       }).subscribe((data) => {
-        console.log(data.value.ordenes[0].id_direccion[0].id);
+        //console.log(data.value.ordenes[0].id_direccion[0].id);
         this.openIBS(data.value.ordenes[0].id);
-
+        this.heroService.service_notificacion({
+          descripcion: 'El servicio número ' + data.value.ordenes[0].id + ' esta listo para comenzar un prediagnostico',
+          estatus_leido: false,
+          evento: 'Servicio Pre Scheduled',
+          rol_notificado: 10009,
+          creado: this.heroService.fecha_hoy(),
+          creadopor: JSON.parse(localStorage.getItem("user")).id
+        }).subscribe((notificacion) => {
+          //(notificacion);
+        });
         this.heroService.service_general("servicios/Actualizar_Folio", {
           "id": data.value.ordenes[0].id
         }).subscribe((value) => {

@@ -21,19 +21,19 @@
       </li>
       <li class="active treeview">
         <a href="#" style="font-size:large; letter-spacing: 1px;">
-          <i class="fa fa-home"></i> <span>Home</span>
+          <i class="fa fa-home"></i> Home
           <span class="pull-right-container">
             <i class="fa fa-angle-left pull-right"></i>
           </span>
         </a>
         <ul class="treeview-menu">
-          <li class="active" style="padding-left:30px;"><a routerLink="dashboard1"><i class="fa fa-circle-o"></i> DT </a></li>
+          <li class="active" style="padding-left:30px;"><a routerLink="dashboard1"><i class="fa fa-circle-o"></i> Dashboard </a></li>
         </ul>
       </li>
       <li class="treeview" *ngxPermissionsOnly="['Service Director', 'Contact Center', 'Technical Mangement', 'Field Service', 'Admin Warehouse', 'Finanzas Miele'];">
         <a href="#" style="font-size:large;">
           <i class="fa fa-ticket"></i>
-          <span>Órdenes de servcio</span>
+          Órdenes de servcio
           <span class="pull-right-container">
             <i class="fa fa-angle-left pull-right"></i>
           </span>
@@ -43,15 +43,15 @@
           <li *ngxPermissionsExcept="['Service Director', 'Technical Mangement', 'Field Service', 'Admin Warehouse', 'Finanzas Miele'];" style="padding-left:30px;"><a routerLink="/verservicio"><i class="fa fa-circle-o"></i> Nuevo Servicio</a></li>
         </ul>
       </li>
-      <li *ngxPermissionsOnly="['Service Director', 'Technical Mangement', 'Field Service', 'Admin Warehouse', 'Finanzas Miele'];">
+      <li>
         <a routerLink="/vercalendario" style="font-size:large; letter-spacing: 1px;">
-          <i class="fa fa-calendar"></i> <span>Calendario</span>
+          <i class="fa fa-calendar"></i> Calendario
         </a>
       </li>
       <li class="treeview"  *ngxPermissionsOnly="['Admin Warehouse', 'Finanzas Miele'];">
         <a href="#" style="font-size:large; letter-spacing: 1px;">
           <i class="fa fa-cog"></i>
-          <span>Refacciones</span>
+          Refacciones
           <span class="pull-right-container">
             <i class="fa fa-angle-left pull-right"></i>
           </span>
@@ -66,7 +66,7 @@
       <li class="treeview" *ngxPermissionsOnly="['Service Director', 'Technical Mangement', 'Field Service', 'Admin Warehouse', 'Finanzas Miele', 'Contact Center'];">
         <a href="#" style="font-size:large; letter-spacing: 1px;">
           <i class="fa fa-bars"></i>
-          <span>Clientes</span>
+          Clientes
           <span class="pull-right-container">
             <i class="fa fa-angle-left pull-right"></i>
           </span>
@@ -78,7 +78,7 @@
       <li class="treeview" *ngxPermissionsOnly="['Contact Center'];">
         <a href="#" style="font-size:large; letter-spacing: 1px;">
           <i class="fa fa-question-circle-o"></i>
-          <span>Encuestas</span>
+          Encuestas
           <span class="pull-right-container">
             <i class="fa fa-angle-left pull-right"></i>
           </span>
@@ -90,19 +90,19 @@
       <li class="treeview" *ngxPermissionsOnly="['Service Director', 'Technical Mangement'];">
         <a href="#" style="font-size:large; letter-spacing: 1px;">
           <i class="fa fa-users"></i>
-          <span>Técnicos</span>
+          Técnicos
           <span class="pull-right-container">
             <i class="fa fa-angle-left pull-right"></i>
           </span>
         </a>
         <ul class="treeview-menu">
-          <li><a routerLink="/buscar_tecnico"><span style="padding-left:30px;"><i class="fa fa-circle-o"></i> Ver Técnicos</span></a></li>
-          <li><a routerLink="/addtecnico"><span style="padding-left:30px;"><i class="fa fa-circle-o"></i> Nuevo Técnico</span> </a></li>
+          <li><a routerLink="/buscar_tecnico"><span style="padding-left:30px;"><i class="fa fa-circle-o"></i> </span>Ver Técnicos</a></li>
+          <li><a routerLink="/addtecnico"><span style="padding-left:30px;"><i class="fa fa-circle-o"></i> </span>Nuevo Técnico </a></li>
         </ul>
       </li>
       <li *ngxPermissionsOnly="['Technical Mangement', 'Field Service'];">
         <a routerLink="/ultimosservicios" style="font-size:large; letter-spacing: 1px;">
-          <i class="fa fa-address-book-o" aria-hidden="true"></i> <span>Ultimos servicios</span>
+          <i class="fa fa-address-book-o" aria-hidden="true"></i> Tareas pendientes
         </a>
       </li>
       <li class="treeview" *ngxPermissionsOnly="['Service Director'];" >

@@ -18,3 +18,27 @@
   background-color: #A5000D;
   border-color: #A5000D;
 }
+
+input {
+  text-transform: uppercase;
+}
+
+textarea {
+  text-transform: uppercase;
+}
+
+select {
+  text-transform: uppercase;
+}
+
+span {
+  text-transform: uppercase;
+}
+
+label {
+  text-transform: uppercase;
+}
+
+btn.label {
+  text-transform: uppercase;
+}

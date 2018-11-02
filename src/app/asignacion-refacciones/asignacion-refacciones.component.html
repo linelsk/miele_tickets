@@ -38,7 +38,7 @@
                             <span class="small">{{value.id_servicio}}</span>
                           </div>
                           <div class="col-xs-12 col-md-4" style="padding:0;">
-                            <label class="small" style="margin-bottom:0;">Fecha</label><br />
+                            <label class="small" style="margin-bottom:0;">Fecha (dd/mm/aa)</label><br />
                             <span class="small">{{value.fecha_servcio}}</span>
                           </div>
                         </mat-panel-title>
@@ -57,22 +57,27 @@
                         </div>
                         <div class="form-group col-xs-12" style="padding-left:0;">
                           <label>Refacciones pre diagnóstico</label><br />
-                          <div class="col-xs-12" *ngFor="let refaccion of value.refacciones; let i = index"  style="vertical-align:middle">
+                          <div class="col-xs-12" *ngFor="let refaccion of value.refacciones; let i = index" style="vertical-align:middle">
                             <div class="col-md-2">
                               <span class="col-md-12" style="padding-top:10%">
                                 <i class="fa fa-check-square" aria-hidden="true" *ngIf="refaccion.estatus==true"></i>
                                 <i class="fa fa-square-o" aria-hidden="true" *ngIf="refaccion.estatus==false"></i>
                                 {{refaccion.no_material}}
-                              </span>                             
+                              </span>
                             </div>
 
                             <div class="col-md-2">
-                              <span class="col-md-12"  style="padding-top:10%">{{refaccion.material}}</span>
+                              <span class="col-md-12" style="padding-top:10%">{{refaccion.material}}</span>
                             </div>
-                            
+
                             <div class="col-md-2 text-left">
                               <mat-form-field class="full-width">
-                                <input type="number" matInput id="txt-{{i}}-{{refaccion.no_material}}" name="txt-{{i}}-{{refaccion.no_material}}" placeholder="Cantidad" >
+                                <input type="number" matInput id="txt-{{i}}-{{refaccion.no_material}}" name="txt-{{i}}-{{refaccion.no_material}}" placeholder="Cantidad">
+                              </mat-form-field>
+                            </div>
+                            <div class="col-md-2 text-left">
+                              <mat-form-field class="full-width">
+                                <input type="text" matInput id="txt_ir-{{i}}-{{refaccion.no_material}}" name="txt_ir-{{i}}-{{refaccion.no_material}}" placeholder="Número IR">
                               </mat-form-field>
                             </div>
                             <mat-divider></mat-divider>

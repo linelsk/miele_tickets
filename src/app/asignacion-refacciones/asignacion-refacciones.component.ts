@@ -37,15 +37,14 @@ export class AsignacionRefaccionesComponent implements OnInit {
   no_materiales_validacion: any = [];
   aprobado: boolean = false;
   entregar_refacciones(id, value) {
-    this._mensaje = "";
+    
+    this._mensaje = ""; 
     this.aprobado = false;
-    for (var j = 0; j < value.refacciones.length; j++) {
+    for (var j = 0; j < value.refacciones.length; j++) {     
       this.heroService.service_general("Refacciones/Validar_Refaccion_Entrega", {
         no_material: value.refacciones[j].no_material,
-        cantidad: $("#txt-" + j + "-" + value.refacciones[j].no_material).val()
+        cantidad: $("#txt-" + j + "-" + value.refacciones[j].no_material).val()        
       }).subscribe((result_cantidad) => {
-        //this.no_materiales_validacion = result_cantidad;
-        //console.log(result_cantidad.cantidad);
         if (result_cantidad.cantidad != "OK") {
           this._mensaje += result_cantidad.cantidad + ", ";
           this.snackBar.open("La refacciones " + '"' + this._mensaje + '"' + " no tienen suficiente stock en almacen", "", {
@@ -64,7 +63,8 @@ export class AsignacionRefaccionesComponent implements OnInit {
               for (var j = 0; j < value.refacciones.length; j++) {
                 this.heroService.service_general("Refacciones/Entregar_Refacciones_Cantidad", {
                   id: value.refacciones[j].id,
-                  cantidad: $("#txt-" + j + "-" + value.refacciones[j].no_material).val()
+                  cantidad: $("#txt-" + j + "-" + value.refacciones[j].no_material).val(),
+                  numero_ir: $("#txt_ir-" + j + "-" + value.refacciones[j].no_material).val()
                 }).subscribe((h) => {
                   this.heroService.service_general("Refacciones/Prediagnostico_Tecnico_Refacciones_Entrega", {}).subscribe((value) => {
                     //console.log(value);

@@ -89,7 +89,7 @@
 
                       <!-- Position Column -->
                       <ng-container matColumnDef="folio">
-                        <mat-header-cell *matHeaderCellDef> Folio. </mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef> FOLIO </mat-header-cell>
                         <mat-cell *matCellDef="let element">
                           <a style="cursor:pointer; color:inherit" [routerLink]="['/editarservicio', element.id_servicio]">{{element.numero_servicio}}</a>
                         </mat-cell>
@@ -105,25 +105,25 @@
 
                       <!-- Weight Column -->
                       <ng-container matColumnDef="cliente">
-                        <mat-header-cell *matHeaderCellDef> Cliente </mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef> CLIENTE </mat-header-cell>
                         <mat-cell *matCellDef="let element">
-                          <a style="cursor:pointer; color:inherit" [routerLink]="['/editarservicio', element.id_servicio]">{{element.cliente}}</a>
+                          <a style="cursor:pointer; color:inherit" [routerLink]="['/editarservicio', element.id_servicio]"><span>{{element.cliente}}</span></a>
                         </mat-cell>
                       </ng-container>
 
                       <!-- Symbol Column -->
                       <ng-container matColumnDef="estatus">
-                        <mat-header-cell *matHeaderCellDef> Estatus </mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef> ESTATUS </mat-header-cell>
                         <mat-cell *matCellDef="let element">
-                          <a style="cursor:pointer; color:inherit" [routerLink]="['/editarservicio', element.id_servicio]">{{element.estatus_servicio}}</a>
+                          <a style="cursor:pointer; color:inherit" [routerLink]="['/editarservicio', element.id_servicio]"><span>{{element.estatus_servicio}}</span></a>
                         </mat-cell>
                       </ng-container>
 
                       <!-- Symbol Column -->
                       <ng-container matColumnDef="fecha">
-                        <mat-header-cell *matHeaderCellDef> Fecha de Servicio </mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef> FECHA DE SERVICIO </mat-header-cell>
                         <mat-cell *matCellDef="let element">
-                          <a style="cursor:pointer; color:inherit" [routerLink]="['/editarservicio', element.id_servicio]">{{element.fecha_servicio}}</a>
+                          <a style="cursor:pointer; color:inherit" [routerLink]="['/editarservicio', element.id_servicio]"><span>{{element.fecha_servicio}}</span></a>
                         </mat-cell>
                       </ng-container>
 

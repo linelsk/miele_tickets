@@ -46,17 +46,20 @@ export class CalendariHomeComponent implements OnInit {
           {
             start: addHours(startOfDay(new Date(value[i].fecha_visita)), value[i].hora_inicio),
             end: addHours(startOfDay(new Date(value[i].fecha_visita)), value[i].hora_fin),
-            title: value[i].desc_tipo_servicio + "-" + value[i].tecnico,
+            title: value[i].desc_tipo_servicio + "-" + value[i].tecnico + " / <strong> No. de servicio: </strong>" + value[i].no_servicio + " / <strong> Estatus de visista: </strong>" + value[i].desc_estatus_visita + " - <strong> Cliente: </strong>" + value[i].cliente + " " + "<strong>" + (value[i].pagado ? "Pagado" : "Pago pendiente") + "</strong>",
             color: {
               primary: value[i].tecnico_color,
               secondary: value[i].tecnico_color
             },
-            actions: [],
-            //draggable: true,
-            //resizable: {
-            //  beforeStart: true,
-            //  afterEnd: true
-            //}
+            actions: [
+              //{
+              //  label: '<i class="fa fa-fw fa-times"></i>',
+              //  onClick: ({ event }: { event: CalendarEvent }): void => {
+              //    this.events = this.events.filter(iEvent => iEvent !== event);
+              //    console.log('Event deleted', event);
+              //  }
+              //}
+            ]
           });
       }
 
@@ -78,7 +81,23 @@ export class CalendariHomeComponent implements OnInit {
 
   eventClicked(event) {
     //("ok");
-    //(event);
+    (event);
+  }
+
+  activeDayIsOpen: boolean;
+
+  dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
+    if (isSameMonth(date, this.viewDate)) {
+      if (
+        (isSameDay(this.viewDate, date) && this.activeDayIsOpen === true) ||
+        events.length === 0
+      ) {
+        this.activeDayIsOpen = false;
+      } else {
+        this.activeDayIsOpen = true;
+        this.viewDate = date;
+      }
+    }
   }
 
   tecnico: any = 0;
@@ -90,7 +109,7 @@ export class CalendariHomeComponent implements OnInit {
   //color_tecnico: any[] = [];
   tecnico_actual: any[] = [];
   tecnicos_id: string = "";
-  excludeDays: number[] = [0, 6];
+  excludeDays: number[] = [0];
 
   hourSegmentClicked(event) {
     var fecha1 = moment(event.date);

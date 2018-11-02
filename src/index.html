@@ -96,7 +96,102 @@
         -moz-transform: rotate(360deg);
       }
     }
+
+    button.close {
+      padding: 1px;
+      cursor: pointer;
+      display: block !important;
+      background: transparent;
+      border: 0;
+      -webkit-appearance: none;
+    }
+
   </style>
+  <script src="https://banamex.dialectpayments.com/checkout/version/48/checkout.js"
+              data-error="errorCallback"
+              data-cancel="cancelCallback">
+    //data-complete="completeCallback"
+  </script>
+
+  <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
+  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBF-AEeoIsOV8elnHA3zQ5h5lgFMp5TaF4&libraries=places"></script>
+
+  <script type="text/javascript">
+    function errorCallback(error) {
+      console.log(JSON.stringify(error));
+    }
+    function cancelCallback() {
+      console.log('Payment cancelled');
+    }
+
+    function completeCallback(resultIndicator, sessionVersion) {
+      console.log(resultIndicator);
+    }
+
+    function guid() {
+      function s4() {
+        return Math.floor((1 + Math.random()) * 0x10000)
+          .toString(16)
+          .substring(1);
+      }
+      return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+    }
+
+    function procesarpago(cantidad, servicio) {
+
+      var _cantidad = cantidad.substring(1, cantidad.length);
+      //console.log(_cantidad);
+      Checkout.configure({
+        merchant: 'TEST1031554HPP',
+        order: {
+          amount: function () {
+            //Dynamic calculation of amount
+            return _cantidad;
+          },
+          currency: 'MXN',
+          description: 'Pago Servicio número: ' + servicio,
+          id: guid()
+        },
+        //session: {
+        //  id: "SESSION0002275962344N2076422M81"
+        //},
+        interaction: {
+          merchant: {
+            name: 'Total a pagar',
+            address: {
+              line1: 'Arquímedes #43 Col. Polanco Chapultepec 11560, México, D.F.'
+            }
+          }
+        }
+      });
+    }
+
+    function procesarpagoamex(cantidad, servicio) {
+
+      var _cantidad = cantidad.substring(1, cantidad.length);
+      //console.log(_cantidad);
+      Checkout.configure({
+        merchant: 'TEST9352568548',
+        order: {
+          amount: function () {
+            //Dynamic calculation of amount
+            return _cantidad;
+          },
+          currency: 'MXN',
+          description: 'Pago Servicio número: ' + servicio,
+          id: guid()
+        },
+        interaction: {
+          merchant: {
+            name: 'Total a pagar',
+            address: {
+              line1: 'Arquímedes #43 Col. Polanco Chapultepec 11560, México, D.F.'
+            }
+          }
+        }
+      });
+    }
+  </script>
 </head>
 <body hold-transition style="background-color:#E2E1DD">
   <app-root>

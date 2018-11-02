@@ -39,6 +39,8 @@ export class ServicioDetalleComponent implements OnInit {
 
   displayedColumns = ['#Servicio', 'Modelo', 'SKU', 'Garantia', 'Poliza', 'Estatus', 'Imagen'];
   dataSource = new MatTableDataSource();
+  displayedColumnsHistorial = ['#Servicio', 'Fecha', 'Estatus'];
+  dataSource_Historial = new MatTableDataSource();
 
   ngOnInit() {
     this.heroService.verificarsesion();
@@ -55,7 +57,7 @@ export class ServicioDetalleComponent implements OnInit {
 
     this.heroService.service_general_get("Clientes/" + this.id, {}).subscribe((value) => {
       this.cliente = value[0];
-      console.log(value[0].datos_fiscales[0]);
+      console.log(value[0]);
 
       if (value[0].datos_fiscales[0] != undefined) {
         this.datosfiscales = value[0].datos_fiscales[0]
@@ -99,7 +101,7 @@ export class ServicioDetalleComponent implements OnInit {
       }
 
     });
-    
+
     this.heroService.service_general("Servicios/Productos_Servicio_Detalle", {
       "id_cliente": this.id
     }).subscribe((value) => {
@@ -118,6 +120,19 @@ export class ServicioDetalleComponent implements OnInit {
       }
       else {
         this.dataSource.data = [];
+      }
+    });
+
+    this.heroService.service_general("Clientes/Historial_cliente", {
+      "texto": this.id
+    }).subscribe((value) => {
+      console.log(value);
+      if (value != "") {
+        //console.log(value);
+        this.dataSource_Historial.data = value;
+      }
+      else {
+        this.dataSource_Historial.data = [];
       }
     });
   }
@@ -215,7 +230,7 @@ export class ServicioDetalleComponent implements OnInit {
     this.mostrar_no_cliente = false;
   }
 
-  editar_cliente(){
+  editar_cliente() {
     this.mostrar_no_cliente = true;
     this.sub = this.route.params.subscribe(params => {
       this.id = +params['id'];

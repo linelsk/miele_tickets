@@ -16,7 +16,7 @@ export class BusquedaClienteComponent implements OnInit {
   preventAbuse = false;
   text_busqueda: any = "";
 
-  displayedColumns = ['nombre', 'tipo', 'email', 'telefono', 'celular', 'fecha', 'direccion'];
+  displayedColumns = ['nombre', 'email', 'telefono', 'direccion'];
   dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -48,7 +48,7 @@ export class BusquedaClienteComponent implements OnInit {
       "texto": this.text_busqueda
     }).subscribe((value) => {
       setTimeout(() => {
-        console.log(value);
+        //console.log(value);
         if (value.item == "No hay resultado para la busqueda") {
 
           this.dataSource.data = [];

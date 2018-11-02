@@ -108,11 +108,12 @@
                           <mwl-calendar-month-view *ngSwitchCase="'month'"
                                                    [viewDate]="viewDate"
                                                    [events]="events"
+                                                   [activeDayIsOpen]="activeDayIsOpen"
                                                    [locale]="locale"
                                                    [weekStartsOn]="weekStartsOn"
                                                    [weekendDays]="weekendDays"
                                                    [refresh]="refresh"
-                                                   (dayClicked)="viewDate = $event.day.date; view = 'week'"
+                                                   (dayClicked)="dayClicked($event.day)"
                                                    [cellTemplate]="customCellTemplate"
                                                    [excludeDays]="excludeDays">
                           </mwl-calendar-month-view>

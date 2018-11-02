@@ -1,3 +1,4 @@
+
 <div class="content-wrapper">
   <br class="visible-xs" />
   <br class="visible-xs" />
@@ -15,8 +16,8 @@
                 Status:
                 <span style="color:#E60000">
                   {{servicio_detalle.estatus_servicio}}
-                  <span *ngxPermissionsOnly="['Contact Center'];"><button class="pull-center btn-xs btn-default-rojo" *ngIf="servicio_detalle.id_estatus == 3" (click)="openEstatus(1)">Confirmar visita</button></span> 
-                  <span *ngxPermissionsOnly="['Contact Center'];"><button class="pull-center btn-xs btn-default-rojo" *ngIf="servicio_detalle.id_estatus == 15" (click)="openFinal(1)">Final Approval</button></span>
+                  <span *ngxPermissionsOnly="['Contact Center'];"><button class="pull-center btn-xs btn-default-rojo" *ngIf="servicio_detalle.id_estatus == 3" (click)="openEstatus(1)">Confirmar visita</button></span>
+                  <span *ngxPermissionsOnly="['Service Director'];"><button class="pull-center btn-xs btn-default-rojo" *ngIf="servicio_detalle.id_estatus == 17" (click)="openFinal(1)">Final Approval</button></span>
                 </span>
               </h2>
             </div>
@@ -115,7 +116,7 @@
                   </div>
 
                   <div class="col-xs-12" style="padding:0;">
-                    <div class="form-group col-xs-12 col-md-4">
+                    <div class="form-group col-xs-12 col-md-3">
                       <label>Número IBS</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                       <button class="pull-center btn-xs btn-default-rojo" (click)="editar_ibs(servicio_detalle.ibs)" [hidden]="mostrar_distribuidor" *ngxPermissionsOnly="['Contact Center'];">Editar IBS</button><br />
                       <span [hidden]="mostrar_distribuidor">{{servicio_detalle.ibs}}</span>
@@ -134,13 +135,16 @@
                       </div>
 
                     </div>
-                    <div class="form-group col-xs-12 col-md-4" *ngIf="servicio_detalle.distribuidor_autorizado">
+                    <div class="form-group col-xs-12 col-md-3" *ngIf="servicio_detalle.distribuidor_autorizado">
                       <label>Distribuidor autorizado</label><br />
                       <span>{{servicio_detalle.distribuidor_autorizado}}</span>
                     </div>
-                    <div class="form-group col-xs-12 col-md-4" *ngIf="servicio_detalle.distribuidor_autorizado">
+                    <div class="form-group col-xs-12 col-md-3" *ngIf="servicio_detalle.distribuidor_autorizado">
                       <label>Contacto</label><br />
                       <span>{{servicio_detalle.contacto}}</span>
+                    </div>
+                    <div class="col-md-3">
+
                     </div>
                   </div>
                 </div>
@@ -186,7 +190,7 @@
                       <!-- Weight Column -->
                       <ng-container matColumnDef="Tipo">
                         <mat-header-cell *matHeaderCellDef> Tipo de equipo </mat-header-cell>
-                        <mat-cell *matCellDef="let element"><span *ngIf="element.categoria != 'null'">{{element.categoria | slice:0:20 }}<span *ngIf="element.categoria.length > 20">...</span> </span></mat-cell>
+                        <mat-cell *matCellDef="let element"><span *ngIf="element.categoria != 'null'">{{element.categoria | slice:0:20 }}<!--<span *ngIf="element.categoria.length > 20">...</span>--> </span></mat-cell>
                       </ng-container>
 
                       <!-- Symbol Column -->
@@ -202,7 +206,7 @@
 
                       <ng-container matColumnDef="Estatus">
                         <mat-header-cell *matHeaderCellDef> Dirección de instalación </mat-header-cell>
-                        <mat-cell *matCellDef="let element"><a style="color:inherit; cursor:pointer" title="{{element.direccion}}">{{element.direccion | slice:0:20 }}<span *ngIf="element.direccion.length > 20">...</span></a> </mat-cell>
+                        <mat-cell *matCellDef="let element"><a style="color:inherit; cursor:pointer" title="{{element.direccion}}">{{element.direccion | slice:0:20 }}<!--<span *ngIf="element.direccion.length > 20">...</span>--></a> </mat-cell>
                       </ng-container>
 
                       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
@@ -220,6 +224,7 @@
                       <div class="form-group col-xs-12 col-md-12">
                         <label>Reporte del cliente</label><br />
                         <span>{{servicio_detalle.actividades_realizar}}</span>
+                        
                       </div>
                     </div>
 
@@ -278,7 +283,7 @@
                 <div class="col-xs-12">
                   <mat-accordion>
                     <mat-expansion-panel *ngFor="let value of detalle_visita; let i = index" [attr.data-index]="i">
-                      <mat-expansion-panel-header>
+                      <mat-expansion-panel-header (click)="google_maps(value.latitud_inicio, value.longitud_inicio);">
                         <mat-panel-title>
                           <h4>Visita {{i + 1}} <span *ngIf="value.estatus_visita != '' || value.estatus_visita != null">-</span> {{value.estatus_visita}}</h4>
                         </mat-panel-title>
@@ -291,31 +296,33 @@
                         <div class="form-group col-xs-12 col-md-12" style="text-align:right">
                           <br />
                           <button class="pull-center btn btn-default btn-default-rojo" (click)="openAgenda(i);">Reagendar visita</button>
-                          <button class="pull-center btn btn-default btn-default-rojo" (click)="cancelarVisita(value.id);">Cancelar visita</button>
-                          <button class="pull-center btn btn-default btn-default-rojo" (click)="generar_pdf(value);">Descargar PDF</button>
+                          <!--<button class="pull-center btn btn-default btn-default-rojo" (click)="cancelarVisita(value.id);">Cancelar visita</button>-->
+                          <button class="pull-center btn btn-default btn-default-rojo" (click)="generar_pdf(value);" *ngIf="value.reporte[0].productos !=''">Descargar PDF</button>
                         </div>
                       </div>
                       <div class="col-xs-12" style="padding-left:0; padding-right:0">
                         <br />
-                        <div class="form-group col-xs-12 col-md-4" style="padding-left:0;">
+                        <div class="form-group col-xs-12 col-md-3" style="padding-left:0;">
                           <label>Fecha</label><br />
                           <span>{{value.fecha_visita}}</span>
                         </div>
-                        <div class="form-group col-xs-12 col-md-4">
+                        <div class="form-group col-xs-12 col-md-3" style="padding-left:0;">
                           <label>Técnico</label><br />
                           <span *ngFor="let tecnico of value.tecnico; let i = index">{{tecnico.nombre}}<br /></span>
                         </div>
-                        <div class="form-group col-xs-12 col-md-4">
+                        <div class="form-group col-xs-12 col-md-3" style="padding-left:0;">
                           <label>Hora</label><br />
                           <span>{{value.hora}}:00 hrs</span>
                         </div>
+                        <div class="col-xs-12 col-md-3" style="padding-left:0; padding-right:0; margin-bottom:15px;">
+                          <label>Tiempo transcurrido durante la visita</label><br />
+                          <span>{{tiempo_vista}}</span>
+                        </div>
                       </div>
-
-                      <div class="col-xs-12" style="padding-left:0; padding-right:0; margin-bottom:15px;">
-                        <label>Tiempo transcurrido durante la visita</label><br />
-                        <span>{{tiempo_vista}}</span>
+                      
+                      <div class="col-md-12" style="padding-left:0; padding-right:0;">
+                        <div id="gmap" #gmap style="width:100%;height:200px"></div>
                       </div>
-
                       <div class="col-xs-12" style="padding-left:0; padding-right:0" *ngIf="value.factura">
                         <div class="form-group col-xs-12 col-md-4" style="padding-left:0;">
                           <!--<mat-checkbox>Requiere factura</mat-checkbox>-->
@@ -529,7 +536,7 @@
           </div>
 
           <div *ngxPermissionsOnly="['Technical Mangement'];">
-            <div class="col-md-12" *ngIf="!estatus_prediagnostico && servicio_detalle.estatus_servicio != 'Troubleshooting Resolved'">
+            <div class="col-md-12" *ngIf="!estatus_prediagnostico && servicio_detalle.estatus_servicio != 'Troubleshooting Resolved' && servicio_detalle.id_tipo_servicio != 1">
               <div class="box">
                 <div class="box-header with-border">
                   <h3 class="box-title negritas">Pre diagnóstico</h3>
@@ -584,100 +591,131 @@
             </div>
           </div>
 
-          <div class="col-md-12" *ngIf="estatus_prediagnostico  && servicio_detalle.estatus_servicio != 'Troubleshooting Resolved'">
-            <div class="box">
-              <div class="box-header with-border">
-                <h3 class="box-title negritas">Solicitud de asignación refacciones</h3>
-                <div class="box-tools pull-right">
-                  <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                    <i class="fa fa-minus"></i>
-                  </button>
+          <div *ngxPermissionsOnly="['Field Service'];">
+            <div class="col-md-12" *ngIf="!asignacion_refacciones && estatus_prediagnostico  && servicio_detalle.estatus_servicio != 'Troubleshooting Resolved'">
+              <div class="box">
+                <div class="box-header with-border">
+                  <h3 class="box-title negritas" *ngIf="servicio_detalle.id_tipo_servicio != 1">Solicitud de asignación refacciones</h3>
+                  <h3 class="box-title negritas" *ngIf="servicio_detalle.id_tipo_servicio == 1">Asignación de técnico responsable</h3>
+                  <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                      <i class="fa fa-minus"></i>
+                    </button>
+                  </div>
                 </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+
+                  <div class="col-xs-12 col-md-3" *ngIf="servicio_detalle.id_tipo_servicio != 1">
+                    <label>Refacciones pre diagnóstico</label>
+                    <div class="col-md-12" *ngFor="let value of refacciones_asignadas.refacciones; let i = index" style="padding:0;">
+                      <mat-checkbox (change)="validar_refaccion($event, value);"><strong>{{value.no_material}}</strong> - {{value.descripcion}}</mat-checkbox>
+                    </div>
+                  </div>
+                  <div class="col-xs-12 col-md-2" *ngIf="servicio_detalle.id_tipo_servicio != 1">
+                    <label>Garantía</label>
+                    <div class="col-md-12" *ngFor="let value of refacciones_asignadas.refacciones; let i = index" style="padding:0;">
+                      <mat-checkbox (change)="garantia($event, value);"><span style="color:transparent">rr</span></mat-checkbox>
+                    </div>
+                  </div>
+
+                  <div class="col-xs-12 col-md-3" *ngIf="!asignacion_refacciones">
+                    <label>Seleccionar técnico principal</label>
+                    <div class="col-md-12" style="padding:0;">
+                      <mat-checkbox (change)="validar_tecnico($event, 1, asignacion_tecnico1.id);" id="tecnico1" name="tecnico1" [(ngModel)]="_tecnico1" #tecnico1="ngModel"><strong>{{asignacion_tecnico1.tecnico}}</strong></mat-checkbox><br />
+                      <mat-checkbox (change)="validar_tecnico($event, 2, asignacion_tecnico2.id);" *ngIf="asignacion_tecnico2.length != 0" id="tecnico2" name="tecnico2" [(ngModel)]="_tecnico2" #tecnico2="ngModel"><strong>{{asignacion_tecnico2.tecnico}} </strong></mat-checkbox>
+                    </div>
+                  </div>
+
+                  <div class="col-xs-12 col-md-4" *ngIf="servicio_detalle.id_tipo_servicio != 1">
+                    <label>Fecha de entrega derefacciones</label><br />
+                    <mat-form-field>
+                      <input matInput [matDatepicker]="picker" id="fecha_refacciones" name="fecha_refacciones" [(ngModel)]="fecha_refacciones_entrega" #fecha_refacciones="ngModel" placeholder="Fecha de entrega">
+                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                      <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+
+                  <div class="col-md-12" style="margin: 15px 0 15px 0"></div>
+                  <div class="col-md-12" style="padding:0 0 15px 0;">
+                    <mat-divider></mat-divider>
+                  </div>
+                  <div class="col-xs-12 col-md-12" *ngIf="servicio_detalle.id_tipo_servicio != 1">
+                    <label>Observaciones</label><br />
+                    <span>{{refacciones_asignadas.observaciones}}</span>
+                  </div>
+                  <div class="col-xs-12 text-center" style="padding:15px;">
+                    <button class="pull-center btn btn-default btn-default-rojo" (click)="asignar_refacciones(detalle_visita);">Asignar refacciones</button>
+                  </div>
+                </div>
+                <!-- /.box -->
               </div>
-              <!-- /.box-header -->
-              <div class="box-body">
-                <div class="col-xs-12 col-md-3" *ngIf="detalle_visita[0].asignacion_refacciones">
-                  <label>Refacciones pre diagnóstico</label>
-                  <div class="col-md-12" *ngFor="let value of refacciones_asignadas.refacciones; let i = index" style="padding:0;">
-                    <i class="fa fa-check-square" aria-hidden="true" *ngIf="value.estatus==true"></i>
-                    <i class="fa fa-square-o" aria-hidden="true" *ngIf="value.estatus==false"></i>
-                    <strong>{{value.no_material}}</strong> - {{value.descripcion}}
-                  </div>
-                </div>
-
-                <div class="col-xs-12 col-md-2" *ngIf="detalle_visita[0].asignacion_refacciones">
-                  <label>Garantía</label>
-                  <div class="col-md-12" *ngFor="let value of refacciones_asignadas.refacciones; let i = index" style="padding:0;">
-                    <i class="fa fa-check-square" aria-hidden="true" *ngIf="value.garantia==true"></i>
-                    <i class="fa fa-square-o" aria-hidden="true" *ngIf="value.garantia==false"></i>
-                  </div>
-                </div>
-
-                <div class="col-xs-12 col-md-3" *ngIf="!detalle_visita[0].asignacion_refacciones">
-                  <label>Refacciones pre diagnóstico</label>
-                  <div class="col-md-12" *ngFor="let value of refacciones_asignadas.refacciones; let i = index" style="padding:0;">
-                    <mat-checkbox (change)="validar_refaccion($event, value);"><strong>{{value.no_material}}</strong> - {{value.descripcion}}</mat-checkbox>
-                  </div>
-                </div>
-
-                <div class="col-xs-12 col-md-2" *ngIf="!detalle_visita[0].asignacion_refacciones">
-                  <label>Garantía</label>
-                  <div class="col-md-12" *ngFor="let value of refacciones_asignadas.refacciones; let i = index" style="padding:0;">
-                    <mat-checkbox (change)="garantia($event, value);"><span style="color:transparent">rr</span></mat-checkbox>
-                  </div>
-                </div>
-
-                <div class="col-xs-12 col-md-3" *ngIf="!detalle_visita[0].asignacion_refacciones">
-                  <label>Seleccionar técnico principal</label>
-                  <div class="col-md-12" style="padding:0;">
-                    <mat-checkbox (change)="validar_tecnico($event, 1, asignacion_tecnico1.id);" id="tecnico1" name="tecnico1" [(ngModel)]="_tecnico1" #tecnico1="ngModel"><strong>{{asignacion_tecnico1.tecnico}}</strong></mat-checkbox><br />
-                    <mat-checkbox (change)="validar_tecnico($event, 2, asignacion_tecnico2.id);" *ngIf="asignacion_tecnico2.length != 0" id="tecnico2" name="tecnico2" [(ngModel)]="_tecnico2" #tecnico2="ngModel"><strong>{{asignacion_tecnico2.tecnico}} </strong></mat-checkbox>
-                  </div>
-                </div>
-                <div class="col-xs-12 col-md-3" *ngIf="detalle_visita[0].asignacion_refacciones" style="margin-bottom:15px;">
-                  <label>Seleccionar técnico principal</label>
-                  <div class="col-md-12" style="padding:0;">
-                    <i class="fa fa-check-square" aria-hidden="true" *ngIf="asignacion_tecnico1.tecnico_responsable==true"></i>
-                    <i class="fa fa-square-o" aria-hidden="true" *ngIf="asignacion_tecnico1.tecnico_responsable==false"></i>
-                    <strong>{{asignacion_tecnico1.tecnico}}</strong>
-                    <br />
-                    <i class="fa fa-check-square" aria-hidden="true" *ngIf="asignacion_tecnico2.tecnico_responsable==true"></i>
-                    <i class="fa fa-square-o" aria-hidden="true" *ngIf="asignacion_tecnico2.tecnico_responsable==false"></i>
-                    <strong>{{asignacion_tecnico2.tecnico}}</strong>
-                    <!--<mat-checkbox (change)="validar_tecnico($event, value)"><strong>{{value.tecnico}}</strong></mat-checkbox>-->
-                  </div>
-                </div>
-
-                <div class="col-xs-12 col-md-4" *ngIf="!detalle_visita[0].asignacion_refacciones">
-                  <label>Fecha de entrega derefacciones</label><br />
-                  <
-                  <mat-form-field>
-                    <input matInput [matDatepicker]="picker" id="fecha_refacciones" name="fecha_refacciones" [(ngModel)]="fecha_refacciones_entrega" #fecha_refacciones="ngModel" placeholder="Fecha de entrega">
-                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-datepicker #picker></mat-datepicker>
-                  </mat-form-field>
-                </div>
-
-                <div class="col-xs-12 col-md-4" *ngIf="detalle_visita[0].asignacion_refacciones">
-                  <label>Fecha de entrega de refacciones</label><br />
-                  <i class="fa fa-calendar" aria-hidden="true"></i>
-                  <label>{{refacciones_asignadas.fecha_entrega_refaccion}}</label>
-                </div>
-                <div class="col-md-12" style="margin: 15px 0 15px 0"></div>
-                <div class="col-md-12" style="padding:0 0 15px 0;">
-                  <mat-divider></mat-divider>
-                </div>
-                <div class="col-xs-12 col-md-12">
-                  <label>Observaciones</label><br />
-                  <span>{{refacciones_asignadas.observaciones}}</span>
-                </div>
-                <div class="col-xs-12 text-center" style="padding:15px;" *ngIf="!detalle_visita[0].asignacion_refacciones">
-                  <button class="pull-center btn btn-default btn-default-rojo" (click)="asignar_refacciones();">Asignar refacciones</button>
-                </div>
-              </div>
-              <!-- /.box -->
             </div>
           </div>
+
+          <div>
+            <div class="col-md-12" *ngIf="asignacion_refacciones && estatus_prediagnostico && servicio_detalle.estatus_servicio != 'Troubleshooting Resolved'">
+              <div class="box">
+                <div class="box-header with-border">
+                  <h3 class="box-title negritas">Solicitud de asignación refacciones</h3>
+                  <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                      <i class="fa fa-minus"></i>
+                    </button>
+                  </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                  <div class="col-xs-12 col-md-3">
+                    <label>Refacciones pre diagnóstico</label>
+                    <div class="col-md-12" *ngFor="let value of refacciones_asignadas.refacciones; let i = index" style="padding:0;">
+                      <i class="fa fa-check-square" aria-hidden="true" *ngIf="value.estatus==true"></i>
+                      <i class="fa fa-square-o" aria-hidden="true" *ngIf="value.estatus==false"></i>
+                      <strong>{{value.no_material}}</strong> - {{value.descripcion}}
+                    </div>
+                  </div>
+
+                  <div class="col-xs-12 col-md-2">
+                    <label>Garantía</label>
+                    <div class="col-md-12" *ngFor="let value of refacciones_asignadas.refacciones; let i = index" style="padding:0;">
+                      <i class="fa fa-check-square" aria-hidden="true" *ngIf="value.garantia==true"></i>
+                      <i class="fa fa-square-o" aria-hidden="true" *ngIf="value.garantia==false"></i>
+                    </div>
+                  </div>
+
+                  <div class="col-xs-12 col-md-3" style="margin-bottom:15px;">
+                    <label>Seleccionar técnico principal</label>
+                    <div class="col-md-12" style="padding:0;">
+                      <i class="fa fa-check-square" aria-hidden="true" *ngIf="asignacion_tecnico1.tecnico_responsable==true"></i>
+                      <i class="fa fa-square-o" aria-hidden="true" *ngIf="asignacion_tecnico1.tecnico_responsable==false"></i>
+                      <strong>{{asignacion_tecnico1.tecnico}}</strong>
+                      <br />
+                      <i class="fa fa-check-square" aria-hidden="true" *ngIf="asignacion_tecnico2.tecnico_responsable==true"></i>
+                      <i class="fa fa-square-o" aria-hidden="true" *ngIf="asignacion_tecnico2.tecnico_responsable==false"></i>
+                      <strong>{{asignacion_tecnico2.tecnico}}</strong>
+                      <!--<mat-checkbox (change)="validar_tecnico($event, value)"><strong>{{value.tecnico}}</strong></mat-checkbox>-->
+                    </div>
+                  </div>
+
+                  <div class="col-xs-12 col-md-4">
+                    <label>Fecha de entrega de refacciones</label><br />
+                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                    <label>{{refacciones_asignadas.fecha_entrega_refaccion}}</label>
+                  </div>
+                  <div class="col-md-12" style="margin: 15px 0 15px 0"></div>
+                  <div class="col-md-12" style="padding:0 0 15px 0;">
+                    <mat-divider></mat-divider>
+                  </div>
+                  <div class="col-xs-12 col-md-12">
+                    <label>Observaciones</label><br />
+                    <span>{{refacciones_asignadas.observaciones}}</span>
+                  </div>
+                </div>
+                <!-- /.box -->
+              </div>
+            </div>
+          </div>
+          
         </form>
         <!-- /.col -->
       </div>
@@ -685,4 +723,5 @@
     <!-- /.content -->
   </form>
 </div>
+
 

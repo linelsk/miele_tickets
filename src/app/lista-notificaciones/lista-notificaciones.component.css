@@ -53,32 +53,18 @@ label {
   border-radius: 3px;
 }
 
-input {
-  text-transform: uppercase;
+.alert-danger-aviso-rojo {
+  background-color: #DD4B39;
+  border-color: #DD4B39;
+  color: #fff;
+  padding: 10px 10px 10px 10px;
+  border-radius: 3px;
 }
 
-::-webkit-input-placeholder { /* WebKit browsers */
-  text-transform: none;
+.li_no_leido {
+  background-color: #EDF2FA;
 }
 
-:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-  text-transform: none;
-}
-
-::-moz-placeholder { /* Mozilla Firefox 19+ */
-  text-transform: none;
-}
-
-:-ms-input-placeholder { /* Internet Explorer 10+ */
-  text-transform: none;
-}
-
-.cal-week-hours-view .cal-header:first-child {
-  flex: .53 !important;
-  text-align: left;
-}
-
-b, strong {
-  font-weight: bold;
-  color: #A5000D;
+.li_leido {
+  background-color: #ffffff;
 }

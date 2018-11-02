@@ -16,6 +16,7 @@ import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { CalendarioComponent } from '../calendario/calendario.component';
 import { Clientes, direccion, datosfiscales, servicio, producto, visita } from '../models/cliente';
+import { notificaciones } from '../models/notificaciones';
 import * as jquery from 'jquery';
 
 @Component({
@@ -65,6 +66,12 @@ export class NuevoServicioComponent implements OnInit {
   concepto: string = "";
   terminos_condiciones: boolean = false;
   no_tecnico: number = 0;
+  ver_nuevo_prod: boolean = false;
+  ver_nuevo_producto_detalle: boolean = false;
+  text_busqueda: string = "";
+  //ver_nuevo_producto: boolean = false;
+  public producto = new producto();
+  public values: string[];
 
   public mask = [/[0-9]/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/];
   public mask_telefono = ['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/];
@@ -81,12 +88,16 @@ export class NuevoServicioComponent implements OnInit {
 
   dataSource = new MatTableDataSource();
   dataSource_direccion = new MatTableDataSource();
+
+  displayedColumns_buscar_producto = ['select', 'Modelo', 'SKU', 'Tipo'];
+  dataSource_buscar_producto = new MatTableDataSource();
+
   selection = new SelectionModel<Element>(true, []);
 
   options: any[] = [];
 
   filteredOptions: Observable<any[]>;
-  
+
   set_productos(event, row, index) {
     if (event.checked) {
       this.value_productos.push({
@@ -121,7 +132,7 @@ export class NuevoServicioComponent implements OnInit {
       else {
         if (this.no_tecnico < row.no_tecnicos) {
           this.no_tecnico = row.no_tecnicos;
-        }        
+        }
       }
 
       //if (this.value_productos.length == 1) {
@@ -146,9 +157,11 @@ export class NuevoServicioComponent implements OnInit {
       }
     }
     else {
+      //console.log(this.productos_cliente);
+      console.log(this.value_productos);
       for (var i = 0; i < this.value_productos.length; i++) {
         if (this.value_productos[i].id_producto == row.id) {
-          //console.log(this.value_productos);
+          ////(this.value_productos);
           this.value_productos.splice(i, 1);
           this.productos_cliente.splice(i, 1);
           this.value_productos_servicio.splice(i, 1);
@@ -156,6 +169,7 @@ export class NuevoServicioComponent implements OnInit {
         }
       }
       for (var i = 0; i < this.value_productos.length; i++) {
+        console.log(this.value_productos);
         if (this.value_productos[i].no_tecnicos == 2) {
           this.no_tecnico = this.value_productos[i].no_tecnicos;
           break;
@@ -173,23 +187,238 @@ export class NuevoServicioComponent implements OnInit {
       }
       if (this.servicio.id_tipo_servicio.id != 1 && this.servicio.id_tipo_servicio.id != 2) {
         if (this.value_productos.length > 1) {//Agregar este if a nuevo cliente, nuevo servicio y reagandar 
-          this.categoria_servicio_cantidad = this.categoria_servicio_cantidad + 490;
+          this.categoria_servicio_cantidad = this.categoria_servicio_cantidad - 490;
         }
       }
-      
+
     }
 
   };
+
+  procesarpagoamex(concepto, cantidad) {
+    console.log(concepto + " " + cantidad);
+  }
 
   direccion(row) {
     this.id_direccion = row.id;
   };
 
+  ver_nuevo_producto() {
+    this.ver_nuevo_prod = true;
+  }
+
+  cerrar_producto() {
+    this.ver_nuevo_prod = false;
+  }
+
+  nuevo_producto() {
+    this.ver_nuevo_producto_detalle = true;
+    this.ver_nuevo_prod = false;
+  }
+
+  regresar_busqueda() {
+    this.ver_nuevo_producto_detalle = false;
+    this.ver_nuevo_prod = true;
+  }
+
+  set_productos_nuevo(event, row, index) {
+    this.sub = this.route.params.subscribe(params => {
+      this.id = +params['id'];
+    });
+    if (event.checked) {
+
+      let dialogRef = this.dialog.open(DialogConfirmacion, {
+        width: '400px',
+        disableClose: true,
+        data: row
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        //console.log(result);
+        if (result == undefined) {
+
+        }
+        else {
+          this.heroService.service_general("servicios/Agregar_Cliente_Productos", {
+            FechaCompra: "01/01/1900",
+            FinGarantia: "01/01/1900",
+            Id_Cliente: this.id,
+            Id_EsatusCompra: 1006,
+            Id_Producto: row.id,
+            NoOrdenCompra: "S/N",
+            NoPoliza: "S/N",
+            creado: this.heroService.fecha_hoy(),
+            creadopor: JSON.parse(localStorage.getItem("user")).id,
+            actualizado: this.heroService.fecha_hoy(),
+            actualizadopor: JSON.parse(localStorage.getItem("user")).id
+          })
+            .subscribe((resp) => {
+              if (resp.response == "OK") {
+                //this.dataSource.data = [];
+                this.heroService.service_general("servicios/Productos_Servicio_Solicitado_cliente", {
+                  id_cliente: this.id,
+                  id_tipo: row.id
+                }).subscribe((value) => {
+                  console.log(value);
+                  for (var i = 0; i < value.length; i++) {
+                    this.productos_cliente.push({
+                      "id": value[i].id,
+                      "modelo": value[i].modelo,
+                      "sku": value[i].sku,
+                      "tipo_equipo": value[i].tipo_equipo,
+                      "id_categoria": value[i].id_categoria,
+                      "garantia": value[i].garantia,
+                      "poliza": value[i].poliza,
+                      "estatus": value[i].estatus,
+                      "checked": false,
+                      "no_visitas": value[i].no_visitas,
+                      "hora_tecnico": value[i].hora_tecnico,
+                      "hora_precio": value[i].precio_hora,
+                      "precio_visita": value[i].precio_visita,
+                      "no_tecnicos": value[i].no_tecnico
+                    });
+                  }
+
+                  this.dataSource.data = this.productos_cliente;
+
+                });
+                this.snackBar.open("Producto agregado correctamente", "", {
+                  duration: 5000,
+                  verticalPosition: 'bottom',
+                  horizontalPosition: 'right',
+                  extraClasses: ['blue-snackbar']
+                });
+              }
+            });
+        }
+      });
+    }
+    else {
+      console.log(row);
+    }
+  };
+
+  agregar_cliente_productos() {
+    let dialogRef = this.dialog.open(DialogConfirmacion, {
+      width: '400px',
+      disableClose: true,
+      data: {item: ""}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result == undefined) {
+
+      }
+      else {
+        this.heroService.service_general("Catalogos/Nuevo_Producto", {
+          sku: this.producto.sku,
+          modelo: this.producto.id_categoria.codigo,
+          nombre: this.producto.id_categoria.descripcion,
+          descripcion_corta: this.producto.descripcion_corta,
+          descripcion_larga: this.producto.descripcion_larga,
+          atributos: this.producto.atributos,
+          precio_sin_iva: this.producto.precio_sin_iva,
+          precio_con_iva: this.producto.precio_con_iva,
+          id_categoria: this.producto.id_categoria.id,
+          id_linea: this.producto.id_linea,
+          id_sublinea: this.producto.id_sublinea,
+          ficha_tecnica: this.producto.ficha_tecnica,
+          horas_tecnico: this.producto.horas_tecnico,
+          precio_hora: this.producto.precio_hora,
+          estatus: this.producto.estatus,
+          creado: this.producto.creado,
+          creadopor: this.producto.creadopor,
+          actualizado: this.producto.actualizado,
+          actualizadopor: this.producto.actualizadopor,
+          tipo: this.producto.tipo
+        })
+          .subscribe((value) => {
+            //console.log(value.value.item[0].id);
+            if (value.value.response == "Producto agregado correctamente") {
+              this.heroService.service_general("servicios/Agregar_Cliente_Productos", {
+                FechaCompra: "01/01/1900",
+                FinGarantia: "01/01/1900",
+                Id_Cliente: this.id,
+                Id_EsatusCompra: 1006,
+                Id_Producto: value.value.item[0].id,
+                NoOrdenCompra: "S/N",
+                NoPoliza: "S/N",
+                creado: this.heroService.fecha_hoy(),
+                creadopor: JSON.parse(localStorage.getItem("user")).id,
+                actualizado: this.heroService.fecha_hoy(),
+                actualizadopor: JSON.parse(localStorage.getItem("user")).id
+              })
+                .subscribe((result) => {
+                  if (result.response == "OK") {
+                    this.heroService.service_general("servicios/Productos_Servicio_Solicitado_cliente", {
+                      id_cliente: this.id,
+                      id_tipo: value.value.item[0].id
+                    }).subscribe((value) => {
+                      console.log(value);
+                      for (var i = 0; i < value.length; i++) {
+                        this.productos_cliente.push({
+                          "id": value[i].id,
+                          "modelo": value[i].modelo,
+                          "sku": value[i].sku,
+                          "tipo_equipo": value[i].tipo_equipo,
+                          "id_categoria": value[i].id_categoria,
+                          "garantia": value[i].garantia,
+                          "poliza": value[i].poliza,
+                          "estatus": value[i].estatus,
+                          "checked": false,
+                          "no_visitas": value[i].no_visitas,
+                          "hora_tecnico": value[i].hora_tecnico,
+                          "hora_precio": value[i].precio_hora,
+                          "precio_visita": value[i].precio_visita,
+                          "no_tecnicos": value[i].no_tecnico
+                        });
+                      }
+
+                      this.dataSource.data = this.productos_cliente;
+
+                    });
+                    
+                    this.snackBar.open("Producto agregado correctamente", "", {
+                      duration: 5000,
+                      verticalPosition: 'bottom',
+                      horizontalPosition: 'right',
+                      extraClasses: ['blue-snackbar']
+                    });
+                  }
+                });
+            }
+          });
+      }
+    });
+   
+  }
+
+  buscar() {
+    if (this.text_busqueda == "") {
+      this.snackBar.open("Ingresa un parametro de busqueda", "", {
+        duration: 5000,
+        verticalPosition: 'bottom',
+        horizontalPosition: 'right',
+        extraClasses: ['blue-snackbar']
+      });
+    }
+    else {
+      this.heroService.service_general("Clientes/Busqueda_producto", {
+        "texto": this.text_busqueda,
+        "id": this.servicio.id_tipo_servicio.id
+      }).subscribe((value) => {
+        console.log(value);
+        this.dataSource_buscar_producto.data = value;
+      });
+    }
+  }
+
   tecnicos_visita: any[] = [];
   rel_tecnico_visita: any[] = [];
+  //pre_dianostico: boolean = false;
   guardar_servicio(obj) {
 
-    //console.log(JSON.parse(localStorage.getItem("tecnicos_visita")));
+    ////(JSON.parse(localStorage.getItem("tecnicos_visita")));
     for (var i = 0; i < JSON.parse(localStorage.getItem("tecnicos_visita")).length; i++) {
       this.rel_tecnico_visita.push({
         id_tecnico: JSON.parse(localStorage.getItem("tecnicos_visita"))[i].id,
@@ -205,7 +434,7 @@ export class NuevoServicioComponent implements OnInit {
       actividades_realizar: this.servicio.descripcion_actividades,
       concepto: this.concepto,
       cantidad: this.categoria_servicio_cantidad,
-      pagado: true,
+      pagado: !this.visita.pago_pendiente,
       pago_pendiente: this.visita.pago_pendiente,
       garantia: false,
       fecha_deposito: "01/01/1900",
@@ -214,7 +443,7 @@ export class NuevoServicioComponent implements OnInit {
       terminos_condiciones: this.visita.terminos_condiciones,
       factura: this.visita.factura,
       servicio_producto: this.value_productos,
-      hora_fin: parseInt(localStorage.getItem("fecha_fin")),
+      hora_fin: parseFloat(localStorage.getItem("fecha_fin")),
       rel_tecnico_visita: this.rel_tecnico_visita,
       asignacion_refacciones: false,
       pre_diagnostico: false,
@@ -243,15 +472,37 @@ export class NuevoServicioComponent implements OnInit {
         IBS: this.servicio.IBS,
         id_motivo_cierre: this.servicio.id_motivo_cierre,
         fecha_inicio_servicio: "01/01/1900",
-        visita: this.tecnicos_visita        
+        visita: this.tecnicos_visita
       }).subscribe((value) => {
-        //console.log(value.value.response);
-        this.openIBS(value.value);
-        this.heroService.service_general("servicios/Actualizar_Folio", {
-          "id": value.value.response
-        }).subscribe((value) => {
-          //console.log(value);
-        });
+        ////(value.value.response);
+        if (value.value.response != undefined) {
+          this.openIBS(value.value);
+          this.heroService.service_notificacion({
+            descripcion: 'El servicio número ' + value.value.response + ' esta listo para comenzar un prediagnostico',
+            estatus_leido: false,
+            evento: 'Servicio Pre Scheduled',
+            rol_notificado: 10009,
+            creado: this.heroService.fecha_hoy(),
+            creadopor: JSON.parse(localStorage.getItem("user")).id
+          }).subscribe((notificacion) => {
+            //(notificacion);
+          });
+          this.heroService.service_general("servicios/Actualizar_Folio", {
+            "id": value.value.response
+          }).subscribe((value) => {
+            ////(value);
+          });
+
+          if (this.servicio.id_tipo_servicio.id == 1) {
+            this.heroService.service_general("Refacciones/Prediagnostico", {
+              id_visita: value.value.id_visita,
+              observaciones: "",
+              refacciones: []
+            }).subscribe((value) => {
+
+            });
+          }
+        }
       });
     }
     else {
@@ -324,7 +575,7 @@ export class NuevoServicioComponent implements OnInit {
   //      ]
   //    }]
   //  }).subscribe((value) => {
-  //    //console.log(value);
+  //    ////(value);
   //    this.snackBar.open("Borrador guardado correctamente", "", {
   //      duration: 5000,
   //      verticalPosition: 'bottom',
@@ -336,7 +587,7 @@ export class NuevoServicioComponent implements OnInit {
   //}
 
   guardar_direccion(ev) {
-    //console.log(this.direccion_cliente.id);
+    ////(this.direccion_cliente.id);
     this.sub = this.route.params.subscribe(params => {
       this.id = +params['id'];
     });
@@ -346,7 +597,7 @@ export class NuevoServicioComponent implements OnInit {
           this.getdireccioncliente(this.id);
           this.heroService.service_general_get("Clientes/" + this.id, {}).subscribe((value) => {
             this.detalle = value[0];
-            console.log(this.detalle);
+            //(this.detalle);
           });
         }
         this.view_editar_direccion = false;
@@ -377,7 +628,7 @@ export class NuevoServicioComponent implements OnInit {
     });
 
     this.heroService.service_general_get("Clientes/" + this.id, {}).subscribe((value) => {
-      console.log(value);
+      //(value);
       this.detalle = value[0];
       this.detalle.datos_fiscales = value[0].datos_fiscales[0];
       if (value[0].direcciones != "") {
@@ -404,6 +655,7 @@ export class NuevoServicioComponent implements OnInit {
     });
 
     this.getdireccioncliente(this.id);
+    this.getproducto();
   }
 
   ngOnDestroy() {
@@ -412,14 +664,23 @@ export class NuevoServicioComponent implements OnInit {
     this.body.classList.remove('sidebar-mini');
   }
 
+  getproducto(): void {
+    this.heroService.service_catalogos("Catalogos/CategoriaProducto")
+      .subscribe((value) => {
+
+        //console.log(value);
+        this.values = value;
+      });
+  }
+
   filter(val: string) {
-    //console.log(this.options);
+    ////(this.options);
     return this.options.filter(option =>
       option.desc_distribuidor.toLowerCase().indexOf(val.toLowerCase()) === 0);
   }
 
   sepomex() {
-    console.log(this.direccion_cliente.cp.length);
+    //(this.direccion_cliente.cp.length);
     if (this.direccion_cliente.cp.length == 5) {
       this.heroService.service_general("Servicios/Sepomex", { id: this.direccion_cliente.cp })
         .subscribe((value) => {
@@ -434,7 +695,7 @@ export class NuevoServicioComponent implements OnInit {
   }
 
   sepomexdatosfiscales() {
-    console.log(this.detalle.datos_fiscales.cp);
+    //(this.detalle.datos_fiscales.cp);
     if (this.detalle.datos_fiscales.cp.length == 5) {
       this.heroService.service_general("Servicios/Sepomex", { id: this.detalle.datos_fiscales.cp })
         .subscribe((value) => {
@@ -473,7 +734,7 @@ export class NuevoServicioComponent implements OnInit {
       id_cliente: this.id,
       id_tipo: this.servicio.id_tipo_servicio.id
     }).subscribe((value) => {
-      //console.log(value);
+      console.log(value);
       this.categoria_servicio_cantidad = 0;
       for (var i = 0; i < value.length; i++) {
         if (this.servicio.id_tipo_servicio.id == 1) {
@@ -516,7 +777,7 @@ export class NuevoServicioComponent implements OnInit {
         }
 
         if (this.servicio.id_tipo_servicio.id == 2 || this.servicio.id_tipo_servicio.id == 3) {
-         // console.log(value[i].estatus + "==" + "Installed");
+          // //(value[i].estatus + "==" + "Installed");
           if (value[i].estatus.trim() == "Installed" || value[i].estatus.trim() == "Completed") {
             this.productos_cliente.push({
               "id": value[i].id,
@@ -606,7 +867,7 @@ export class NuevoServicioComponent implements OnInit {
             hora_tecnico: this.productos_cliente[i].hora_tecnico,
             hora_precio: this.productos_cliente[i].hora_precio,
             precio_visita: this.productos_cliente[i].precio_visita,
-            no_tecnicos: this.productos_cliente[i].no_tecnico,
+            no_tecnicos: this.productos_cliente[i].no_tecnicos,
             primera_visita: true
           });
 
@@ -622,43 +883,49 @@ export class NuevoServicioComponent implements OnInit {
         }
       }
       if (this.value_productos.length != 0) {
-        if (this.productos_cliente.length == 1 && this.servicio.id_tipo_servicio.id != 1) {
+        //console.log(this.value_productos.length);
+        //console.log(this.servicio.id_tipo_servicio.id);
+        if (this.value_productos.length == 1 && this.servicio.id_tipo_servicio.id != 1) {
+          //(this.productos_cliente[0].precio_visita);
           this.categoria_servicio_cantidad = this.productos_cliente[0].precio_visita;
         }
         else {
-          if (this.servicio.id_tipo_servicio.id != 1) {
-            //console.log(this.productos_cliente);
-            this.categoria_servicio_cantidad = this.productos_cliente[0].precio_visita + 490
+          if (this.value_productos.length > 1 && this.servicio.id_tipo_servicio.id != 1) {
+            //this.categoria_servicio_cantidad = this.value_productos[0].precio_visita;
+            for (var i = 1; i < this.value_productos.length; i++) {
+              this.categoria_servicio_cantidad = this.categoria_servicio_cantidad + 490;
+            }
+            this.categoria_servicio_cantidad = this.categoria_servicio_cantidad + this.value_productos[0].precio_visita;
           }
           if (this.servicio.id_tipo_servicio.id == 1) {
             this.categoria_servicio_cantidad = 0
           }
         }
       }
-     
+
       this.dataSource.data = this.productos_cliente;
 
     });
 
     if (this.servicio.id_tipo_servicio.id == 1) {
-      console.log("Instalación");
+      //("Instalación");
 
       this.concepto = "Instalación";
     }
     if (this.servicio.id_tipo_servicio.id == 2) {
-      console.log("Matenimiento");
+      //("Matenimiento");
       this.concepto = "Matenimiento";
     }
     if (this.servicio.id_tipo_servicio.id == 3) {
-      console.log("Reparación");
+      //("Reparación");
       this.concepto = "Reparación";
     }
     if (this.servicio.id_tipo_servicio.id == 4) {
-      console.log("Entrega");
+      //("Entrega");
       this.concepto = "Entrega";
     }
     if (this.servicio.id_tipo_servicio.id == 5) {
-      console.log("Diagnostico en taller");
+      //("Diagnostico en taller");
       this.concepto = "Diagnostico en taller";
     }
   }
@@ -667,7 +934,7 @@ export class NuevoServicioComponent implements OnInit {
   gettiposervicio(): void {
     this.heroService.service_catalogos("Catalogos/TipoServicio")
       .subscribe((value) => {
-        console.log(value);
+        //(value);
         this.tiposervicio = value;
       });
   }
@@ -681,13 +948,13 @@ export class NuevoServicioComponent implements OnInit {
   }
 
   getcategoriaservicio(): void {
-    console.log(this.ddltipo_servicio);
+    //(this.ddltipo_servicio);
     this.heroService.service_general("Catalogos/CategoriaServicio", {
       "id": this.ddltipo_servicio.id
     })
       .subscribe((value) => {
 
-        //console.log(value);
+        ////(value);
         this.categoriaservicio = value;
       });
   }
@@ -697,7 +964,7 @@ export class NuevoServicioComponent implements OnInit {
       "id": id
     })
       .subscribe((value) => {
-        //console.log(value);
+        ////(value);
         this.dataSource_direccion.data = value;
       });
   }
@@ -721,7 +988,7 @@ export class NuevoServicioComponent implements OnInit {
   getfacturaestados(): void {
     this.heroService.service_general("Catalogos/Estados", {})
       .subscribe((value) => {
-        console.log(value);
+        //(value);
         this.estadosFactura = value;
       });
   }
@@ -743,13 +1010,13 @@ export class NuevoServicioComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      //console.log(result);
+      ////(result);
       this.router.navigate(['/buscacarservicio/']);
     });
   }
 
   tecnicos: any[] = [];
-  openAgenda(obj): void {    
+  openAgenda(obj): void {
 
     if (this.servicio.id_tipo_servicio != undefined) {
       if (this.value_productos.length != 0) {
@@ -759,9 +1026,9 @@ export class NuevoServicioComponent implements OnInit {
         for (var i = 0; i < this.value_productos.length; i++) {
           this.id_producto_enviar += this.value_productos[i].id_categoria + ",";
         }
-        //console.log(this.id_producto_enviar);
+        ////(this.id_producto_enviar);
         this.heroService.service_general("servicios/TecnicoAgenda", { id: this.servicio.id_tipo_servicio.id, productos: this.id_producto_enviar }).subscribe((value) => {
-          console.log(value);
+          //(value);
           for (var i = 0; i < value.length; i++) {
             this.tecnicos.push({
               id: value[i].id,
@@ -776,7 +1043,7 @@ export class NuevoServicioComponent implements OnInit {
             data: { tecnicos: this.tecnicos, tipo_servicio: this.servicio.id_tipo_servicio, horas_tecnico: this.categoria_servicio, no_tecnico: this.no_tecnico, id_producto_enviar: this.id_producto_enviar }
           });
           dialogRef.afterClosed().subscribe(result => {
-            console.log(localStorage.getItem("agenda"));
+            //(localStorage.getItem("agenda"));
             if (result == undefined) {
               this.txttecnico_servicio = "";
               this.visita.fecha_visita = "";
@@ -785,7 +1052,7 @@ export class NuevoServicioComponent implements OnInit {
             }
             else {
               if (localStorage.getItem("agenda") != "") {
-                console.log(JSON.parse(localStorage.getItem("agenda")).tecnico[0]);
+                //(JSON.parse(localStorage.getItem("agenda")).tecnico[0]);
                 this.visita.id_tecnico = JSON.parse(localStorage.getItem("agenda")).tecnico[0].id;
                 this.txttecnico_servicio = JSON.parse(localStorage.getItem("agenda")).tecnico[0].tecnico;
                 this.visita.fecha_visita = JSON.parse(localStorage.getItem("agenda")).fecha;
@@ -816,19 +1083,19 @@ export class NuevoServicioComponent implements OnInit {
   }
 
   view_direccion(row) {
-    //console.log(row);
+    ////(row);
     this.view_editar_direccion = true;
   }
 
   view_direccion_regresar() {
-    //console.log(row);
+    ////(row);
     this.view_editar_direccion = false;
   }
 
   validaciones(event) {
 
     for (var i = 0; i < event.length; i++) {
-      console.log(event[i].name);
+      //(event[i].name);
       if (!event[i].valid) {
         $("#" + event[i].name).focus();
         break;
@@ -875,11 +1142,34 @@ export class DialogIbsDialog {
 }
 
 @Component({
-  selector: 'snack-bar-component-example-snack',
-  templateUrl: 'snack-bar-component-example-snack.html',
-  styles: [`.example-pizza-party { color: hotpink; }`],
+  selector: 'dialog-confirmacion',
+  templateUrl: './dialog-confirmacion.html',
 })
-export class PizzaPartyComponent { }
+export class DialogConfirmacion {
+
+  constructor(
+    public dialogRef: MatDialogRef<DialogConfirmacion>,
+    @Inject(MAT_DIALOG_DATA) public data: any, private heroService: DatosService, public snackBar: MatSnackBar, private route: ActivatedRoute, private router: Router) { }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
+  ////guardar_ibs(): void {
+  ////  this.heroService.service_general("servicios/Actualizar_ibs", {
+  ////    "id": this.data.response,
+  ////    "numero": this.data.ibs
+  ////  }).subscribe((value) => {
+  ////    this.snackBar.open("Servicio e IBS guardados correctamente", "", {
+  ////      duration: 5000,
+  ////      verticalPosition: 'bottom',
+  ////      horizontalPosition: 'right',
+  ////      extraClasses: ['blue-snackbar']
+  ////    });
+  ////    this.router.navigate(['/buscacarservicio/']);
+  ////  });
+  ////}
+}
 
 export class Element {
   modelo: string;
@@ -923,3 +1213,4 @@ export class Productos_Servicio {
   no_tecnicos: number;
   primera_visita: boolean = true;
 }
+

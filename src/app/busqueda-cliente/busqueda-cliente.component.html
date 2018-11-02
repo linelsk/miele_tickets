@@ -53,55 +53,55 @@
 
                       <!-- Position Column -->
                       <ng-container matColumnDef="nombre">
-                        <mat-header-cell *matHeaderCellDef> Nombre. </mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef> NOMBRE </mat-header-cell>
                         <mat-cell *matCellDef="let element">
-                          <a style="cursor:pointer; color:inherit" [routerLink]="['/serviciodetalle', element.id]">{{element.nombre}}</a>
+                          <a style="cursor:pointer; color:inherit" [routerLink]="['/serviciodetalle', element.id]"><span>{{element.nombre}}</span></a>
                         </mat-cell>
                       </ng-container>
 
                       <!-- Name Column -->
-                      <ng-container matColumnDef="tipo">
+                      <!--<ng-container matColumnDef="tipo">
                         <mat-header-cell *matHeaderCellDef> Tipo </mat-header-cell>
                         <mat-cell *matCellDef="let element">
                           <a style="cursor:pointer; color:inherit" [routerLink]="['/serviciodetalle', element.id]">{{element.tipo_persona}}</a>
                         </mat-cell>
-                      </ng-container>
+                      </ng-container>-->
 
                       <!-- Weight Column -->
                       <ng-container matColumnDef="email">
-                        <mat-header-cell *matHeaderCellDef> Email </mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef> EMAIL </mat-header-cell>
                         <mat-cell *matCellDef="let element">
-                          <a style="cursor:pointer; color:inherit" [routerLink]="['/serviciodetalle', element.id]">{{element.email}}</a>
+                          <a style="cursor:pointer; color:inherit" [routerLink]="['/serviciodetalle', element.id]"><span>{{element.email}}</span></a>
                         </mat-cell>
                       </ng-container>
 
                       <!-- Symbol Column -->
                       <ng-container matColumnDef="telefono">
-                        <mat-header-cell *matHeaderCellDef> Teléfono </mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef> TELÉFONO </mat-header-cell>
                         <mat-cell *matCellDef="let element">
-                          <a style="cursor:pointer; color:inherit" [routerLink]="['/serviciodetalle', element.id]">{{element.telefono}}</a>
+                          <a style="cursor:pointer; color:inherit" [routerLink]="['/serviciodetalle', element.id]"><span>{{element.telefono}}</span></a>
                         </mat-cell>
                       </ng-container>
 
                       <!-- Symbol Column -->
-                      <ng-container matColumnDef="celular">
-                        <mat-header-cell *matHeaderCellDef> Celular </mat-header-cell>
+                      <!--<ng-container matColumnDef="celular">
+                        <mat-header-cell *matHeaderCellDef> CELULAR </mat-header-cell>
                         <mat-cell *matCellDef="let element">
-                          <a style="cursor:pointer; color:inherit" [routerLink]="['/serviciodetalle', element.id]">{{element.telefono_movil}}</a>
+                          <a style="cursor:pointer; color:inherit" [routerLink]="['/serviciodetalle', element.id]"><span>{{element.telefono_movil}}</span></a>
                         </mat-cell>
-                      </ng-container>
+                      </ng-container>-->
 
-                      <ng-container matColumnDef="fecha">
+                      <!--<ng-container matColumnDef="fecha">
                         <mat-header-cell *matHeaderCellDef> Fecha de alta </mat-header-cell>
                         <mat-cell *matCellDef="let element">
                           <a style="cursor:pointer; color:inherit" [routerLink]="['/serviciodetalle', element.id]">{{element.fecha_alta}}</a>
                         </mat-cell>
-                      </ng-container>
+                      </ng-container>-->
 
                       <ng-container matColumnDef="direccion">
-                        <mat-header-cell *matHeaderCellDef> Dirección </mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef> DIRECCIÓN </mat-header-cell>
                         <mat-cell *matCellDef="let element">
-                          <a style="cursor:pointer; color:inherit" [routerLink]="['/serviciodetalle', element.id]">{{element.direccion}}</a>
+                          <a style="cursor:pointer; color:inherit" [routerLink]="['/serviciodetalle', element.id]"><span>{{element.direccion}}</span></a>
                         </mat-cell>
                       </ng-container>
 
@@ -117,7 +117,7 @@
                 </div>
 
                 <div class="col-md-12" *ngIf="result_personas == 0 && result_direcciones == 0 && result_telefonos == 0 && result_ordenes == 0">
-                  <h4>No hay resultados para la busqueda <span style="color:#A5000D; font-weight:bold;">{{text_busqueda}}</span></h4>
+                  <h4>NO HAY RESULTADOS PARA LA BUSQUEDA <span style="color:#A5000D; font-weight:bold;">{{text_busqueda}}</span></h4>
                 </div>
               </div>
             </div>
