@@ -173,7 +173,7 @@ export class EditarServicioComponent implements OnInit {
       //this.asignacion_refacciones_validar = value[0].visitas[0].asignacion_refacciones;
       this.detalle_visita = value[0].visitas;
 
-      console.log(value[0].visitas);
+      //console.log(value[0].visitas);
       if (value[0].visitas.length != 0) {
         let hora1: any = (value[0].visitas[0].hora_fin).split(":"),
           hora2: any = (value[0].visitas[0].hora_inicio).split(":"),

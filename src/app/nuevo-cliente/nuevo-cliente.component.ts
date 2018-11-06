@@ -24,7 +24,7 @@ import * as jquery from 'jquery';
 })
 export class NuevoClienteComponent implements OnInit {
 
-  public mask_telefono = ['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/];
+  public mask_telefono = ['(', /[1-9]/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
   public cliente = new Clientes();
   public direccion = new direccion();
   //public direccion_servicio = new direccion();
@@ -77,7 +77,7 @@ export class NuevoClienteComponent implements OnInit {
     this.servicio.id_solicitado_por = 1;
     this.servicio.id_solicitud_via = 1;
     this.visita.factura = true;
-    //this.visita.terminos_condiciones = true;
+    this.visita.terminos_condiciones = true;
 
     // add the the body classes
     this.body.classList.add('skin-blue');
@@ -634,7 +634,7 @@ export class NuevoClienteComponent implements OnInit {
   tecnicos_visita: any[] = [];
   rel_tecnico_visita: any[] = [];
   guardar_cliente() {
-    console.log(this.value_productos);
+    //console.log(this.value_productos);
     for (var i = 0; i < JSON.parse(localStorage.getItem("tecnicos_visita")).length; i++) {
       this.rel_tecnico_visita.push({
         id_tecnico: JSON.parse(localStorage.getItem("tecnicos_visita"))[i].id,
@@ -706,7 +706,7 @@ export class NuevoClienteComponent implements OnInit {
           visita: this.tecnicos_visita
         }]
       }).subscribe((data) => {
-        //console.log(data.value.ordenes[0].id_direccion[0].id);
+        console.log(data);
         this.openIBS(data.value.ordenes[0].id);
         this.heroService.service_notificacion({
           descripcion: 'El servicio número ' + data.value.ordenes[0].id + ' esta listo para comenzar un prediagnostico',

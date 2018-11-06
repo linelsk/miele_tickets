@@ -169,7 +169,7 @@ export class NuevoServicioComponent implements OnInit {
         }
       }
       for (var i = 0; i < this.value_productos.length; i++) {
-        console.log(this.value_productos);
+        //console.log(this.value_productos);
         if (this.value_productos[i].no_tecnicos == 2) {
           this.no_tecnico = this.value_productos[i].no_tecnicos;
           break;
@@ -611,6 +611,7 @@ export class NuevoServicioComponent implements OnInit {
     this.gettiposervicio();
     this.getdistribuidor();
     //this.getfacturaestados();
+    this.visita.terminos_condiciones = true;
 
     this.filteredOptions = this.myControl.valueChanges
       .pipe(
