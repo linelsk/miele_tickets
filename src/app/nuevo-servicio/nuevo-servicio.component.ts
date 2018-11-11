@@ -493,7 +493,7 @@ export class NuevoServicioComponent implements OnInit {
             ////(value);
           });
 
-          if (this.servicio.id_tipo_servicio.id == 1) {
+          /* if (this.servicio.id_tipo_servicio.id == 1) {
             this.heroService.service_general("Refacciones/Prediagnostico", {
               id_visita: value.value.id_visita,
               observaciones: "",
@@ -501,7 +501,7 @@ export class NuevoServicioComponent implements OnInit {
             }).subscribe((value) => {
 
             });
-          }
+          } */
         }
       });
     }

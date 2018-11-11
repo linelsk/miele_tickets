@@ -99,7 +99,7 @@
                       <ng-container matColumnDef="ibs">
                         <mat-header-cell *matHeaderCellDef> IBS </mat-header-cell>
                         <mat-cell *matCellDef="let element">
-                          <a style="cursor:pointer; color:inherit" [routerLink]="['/editarservicio', element.id_servicio]">{{element.ibs}}</a>
+                          <a style="cursor:pointer; color:inherit" [routerLink]="['/editarservicio', element.id_servicio]"><span>{{element.ibs}}</span></a>
                         </mat-cell>
                       </ng-container>
 

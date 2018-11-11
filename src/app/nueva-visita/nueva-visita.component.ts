@@ -84,7 +84,7 @@ export class NuevaVisitaComponent implements OnInit {
   dataSource = new MatTableDataSource();
   dataSource_direccion = new MatTableDataSource();
   selection = new SelectionModel<Element>(true, []);
-
+  
   options: any[] = [];
 
   filteredOptions: Observable<any[]>;
@@ -283,7 +283,7 @@ export class NuevaVisitaComponent implements OnInit {
     this.servicio.id_solicitado_por = 1;
     this.servicio.id_solicitud_via = 1;
     this.visita.factura = false;
-
+    this.visita.terminos_condiciones = true;
     this.filteredOptions = this.myControl.valueChanges
       .pipe(
         startWith(''),

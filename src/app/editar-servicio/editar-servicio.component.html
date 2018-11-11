@@ -401,7 +401,7 @@
                             </div>
                             <div class="col-md-2" style="padding:0">
                               <div class="col-md-12">
-                                {{productos.estatus_servicio}}
+                                {{productos.estatus_producto}}
                               </div>
                             </div>
                             <div class="col-md-12" style="padding:10px 10px 10px 10px"><mat-divider></mat-divider></div>
@@ -409,9 +409,22 @@
                         </div>
 
                         <br />
+                        <div style="margin-bottom: 15px;">
+
+                        </div>
                       </div>
-
-
+                     
+                      <div *ngIf="detalle_visita[i].reporte[0].productos == ''">
+                          <div *ngIf="detalle_visita[0].reporte[0].productos.length != 0">
+                              <div class="col-md-12" style="padding: 20px 10px 10px 0;" *ngIf='detalle_visita[0].reporte[0].productos[0].piezas_repuesto.length > 0'>                                                                        
+                                <label>Pre-diagnostico</label><br />
+                                <div *ngFor="let pre of detalle_visita[0].reporte[0].productos[0].piezas_repuesto; let j = index" [attr.data-index]="j">
+                                    {{pre.refaccion}}
+                                </div> 
+                              </div>
+                            </div>
+                      </div>  
+                    
                       <br /><br />
                       <div class="col-md-12" style="padding:0;">
                         <mat-tab-group>
@@ -536,7 +549,7 @@
           </div>
 
           <div *ngxPermissionsOnly="['Technical Mangement'];">
-            <div class="col-md-12" *ngIf="!estatus_prediagnostico && servicio_detalle.estatus_servicio != 'Troubleshooting Resolved' && servicio_detalle.id_tipo_servicio != 1">
+            <div class="col-md-12" *ngIf="!estatus_prediagnostico && servicio_detalle.estatus_servicio != 'Troubleshooting Resolved'">
               <div class="box">
                 <div class="box-header with-border">
                   <h3 class="box-title negritas">Pre diagnóstico</h3>
@@ -595,8 +608,8 @@
             <div class="col-md-12" *ngIf="!asignacion_refacciones && estatus_prediagnostico  && servicio_detalle.estatus_servicio != 'Troubleshooting Resolved'">
               <div class="box">
                 <div class="box-header with-border">
-                  <h3 class="box-title negritas" *ngIf="servicio_detalle.id_tipo_servicio != 1">Solicitud de asignación refacciones</h3>
-                  <h3 class="box-title negritas" *ngIf="servicio_detalle.id_tipo_servicio == 1">Asignación de técnico responsable</h3>
+                  <h3 class="box-title negritas">Solicitud de asignación refacciones</h3>
+                  <!-- <h3 class="box-title negritas" *ngIf="servicio_detalle.id_tipo_servicio == 1">Asignación de técnico responsable</h3> -->
                   <div class="box-tools pull-right">
                     <button type="button" class="btn btn-box-tool" data-widget="collapse">
                       <i class="fa fa-minus"></i>
@@ -606,13 +619,13 @@
                 <!-- /.box-header -->
                 <div class="box-body">
 
-                  <div class="col-xs-12 col-md-3" *ngIf="servicio_detalle.id_tipo_servicio != 1">
+                  <div class="col-xs-12 col-md-3">
                     <label>Refacciones pre diagnóstico</label>
                     <div class="col-md-12" *ngFor="let value of refacciones_asignadas.refacciones; let i = index" style="padding:0;">
                       <mat-checkbox (change)="validar_refaccion($event, value);"><strong>{{value.no_material}}</strong> - {{value.descripcion}}</mat-checkbox>
                     </div>
                   </div>
-                  <div class="col-xs-12 col-md-2" *ngIf="servicio_detalle.id_tipo_servicio != 1">
+                  <div class="col-xs-12 col-md-2">
                     <label>Garantía</label>
                     <div class="col-md-12" *ngFor="let value of refacciones_asignadas.refacciones; let i = index" style="padding:0;">
                       <mat-checkbox (change)="garantia($event, value);"><span style="color:transparent">rr</span></mat-checkbox>
@@ -627,7 +640,7 @@
                     </div>
                   </div>
 
-                  <div class="col-xs-12 col-md-4" *ngIf="servicio_detalle.id_tipo_servicio != 1">
+                  <div class="col-xs-12 col-md-4">
                     <label>Fecha de entrega derefacciones</label><br />
                     <mat-form-field>
                       <input matInput [matDatepicker]="picker" id="fecha_refacciones" name="fecha_refacciones" [(ngModel)]="fecha_refacciones_entrega" #fecha_refacciones="ngModel" placeholder="Fecha de entrega">
@@ -640,7 +653,7 @@
                   <div class="col-md-12" style="padding:0 0 15px 0;">
                     <mat-divider></mat-divider>
                   </div>
-                  <div class="col-xs-12 col-md-12" *ngIf="servicio_detalle.id_tipo_servicio != 1">
+                  <div class="col-xs-12 col-md-12">
                     <label>Observaciones</label><br />
                     <span>{{refacciones_asignadas.observaciones}}</span>
                   </div>

@@ -626,7 +626,7 @@ export class EditarServicioComponent implements OnInit {
     });
 
     let dialogRef = this.dialog.open(DialogEditarEstatusVisita, {
-      width: '350px',
+      width: '400px',
       disableClose: true,
       data: { id: id, id_servicio: this.id }
     });
